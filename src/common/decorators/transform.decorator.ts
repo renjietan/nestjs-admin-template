@@ -2,7 +2,7 @@ import { Transform } from 'class-transformer'
 import { castArray, isArray, isNil, trim } from 'lodash'
 
 /**
- * convert string to number
+ * 转换string 为 number
  */
 export function ToNumber(): PropertyDecorator {
   return Transform(
@@ -19,7 +19,7 @@ export function ToNumber(): PropertyDecorator {
 }
 
 /**
- * convert string to int
+ * 转换string 为 int
  */
 export function ToInt(): PropertyDecorator {
   return Transform(
@@ -36,7 +36,7 @@ export function ToInt(): PropertyDecorator {
 }
 
 /**
- * convert string to boolean
+ * 转换string 为 boolean
  */
 export function ToBoolean(): PropertyDecorator {
   return Transform(
@@ -55,7 +55,7 @@ export function ToBoolean(): PropertyDecorator {
 }
 
 /**
- * convert string to Date
+ * 转换string 为 date
  */
 export function ToDate(): PropertyDecorator {
   return Transform(
@@ -72,7 +72,7 @@ export function ToDate(): PropertyDecorator {
 }
 
 /**
- * transforms to array, specially for query params
+ * 转换为数组，特别是对于查询参数
  */
 export function ToArray(): PropertyDecorator {
   return Transform(
@@ -89,7 +89,7 @@ export function ToArray(): PropertyDecorator {
 }
 
 /**
- * trim spaces from start and end, replace multiple spaces with one.
+ * 可作用与数组 或者 字符串， 去掉空格
  */
 export function ToTrim(): PropertyDecorator {
   return Transform(
@@ -106,7 +106,7 @@ export function ToTrim(): PropertyDecorator {
 }
 
 /**
- * lowercase value
+ * 作用域字符串 或者 数组，转为小写
  */
 export function ToLowerCase(): PropertyDecorator {
   return Transform(
@@ -126,7 +126,7 @@ export function ToLowerCase(): PropertyDecorator {
 }
 
 /**
- * uppercase value
+ * 作用域字符串 或者 数组，转为大写
  */
 export function ToUpperCase(): PropertyDecorator {
   return Transform(
