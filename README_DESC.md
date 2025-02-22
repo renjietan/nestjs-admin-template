@@ -2,29 +2,44 @@
 #### 命令解释
 ```
 "scripts": {
-    // 1、postinstall 是 npm install 自带的钩子，在 npm install 之后，会立即进入postinstall的生命周期， 
-    // 2、此处命令，将在npm install 后自动运行 scripts/genEnvTypes文件, 读取所有的.env .env.development .env.production 文件，
-    // 3、并生成全局的类型声明，并写入到 types/env.d.ts 文件中
+    - 1、postinstall 是 npm install 自带的钩子，在 npm install 之后，会立即进入postinstall的生命周期，
+    - 2、此处命令，将在npm install 后自动运行 scripts/genEnvTypes文件, 读取所有的.env .env.development .env.production 文件，
+    - 3、并生成全局的类型声明，并写入到 types/env.d.ts 文件中
     "postinstall": "npm run gen-env-types",
-    // 删除 构建的 dist 文件
+
+    - 删除 构建的 dist 文件
     "prebuild": "rimraf dist",
-    // 打包: 将 TypeScript 代码编译为 JavaScript，并输出到 dist 目录
+
+    - 打包: 将 TypeScript 代码编译为 JavaScript，并输出到 dist 目录
     "build": "nest build",
-    // 开发环境中运行
+
+    - 开发环境中运行
     "dev": "npm run start",
-    // 以 调试模式 运行 可设置断点
+
+    - 以 调试模式 运行 可设置断点
     "dev:debug": "npm run start:debug",
-    // 以 REPL 运行: 交互式编程环境，允许开发者逐行输入代码并立即查看结果
+
+    - 以 REPL 运行: 交互式编程环境，允许开发者逐行输入代码并立即查看结果
     "repl": "npm run start -- --entryFile repl",
-    // 使用 ncc 将项目打包成一个单独的文件，并输出到 out 目录。
-    // -o out 指定输出目录为 out。
-    // -m 表示启用最小化(minify)输出文件。
-    // -t  表示启用 TypeScript 支持（如果项目使用 TypeScript）。
-    // 注意 需要 安装 ncc: npm i -g @vercel/ncc
+
+    - 执行命令前需要先安装ncc、chmod：npm i -g @vercel/ncc
+    - 命令说明：
+      - 使用 ncc 将项目打包成一个单独的文件，并输出到 out 目录。
+      - -o out 指定输出目录为 out。
+      - -m 表示启用最小化(minify)输出文件。
+      - -t  表示启用 TypeScript 支持（如果项目使用 TypeScript）。
     "bundle": "rimraf out && npm run build && ncc build dist/main.js -o out -m -t && chmod +x out/index.js",
+
+    - 开发环境中运行
     "start": "cross-env NODE_ENV=development nest start -w --path tsconfig.json",
+
+    - 开发环境中以debug模式运行
     "start:debug": "cross-env NODE_ENV=development nest start --debug --watch",
+
+    - 开发环境中以生成模式运行
     "start:prod": "cross-env NODE_ENV=production node dist/main",
+
+    - 生产环境运行
     "prod": "cross-env NODE_ENV=production pm2-runtime start ecosystem.config.js",
     "prod:pm2": "cross-env NODE_ENV=production pm2 restart ecosystem.config.js",
     "prod:stop": "pm2 stop ecosystem.config.js",
@@ -33,16 +48,43 @@
     "lint:fix": "eslint . --fix",
     "test": "jest",
     "test:watch": "jest --watch",
-    // 生成API 说明文档
+
+    - 生成API 说明文档
     "doc": "compodoc -p tsconfig.json -s",
-    // 读取所有的.env .env.development .env.production 文件, 并生成全局的类型声明，并写入到 types/env.d.ts 文件中
+
+    - 读取所有的.env .env.development .env.production 文件, 并生成全局的类型声明，并写入到 types/env.d.ts 文件中
     "gen-env-types": "npx tsx scripts/genEnvTypes.ts || true",
+
+    - 基础命令，供其他命令使用
+    - typeorm-ts-node-esm 说明
+      - 与 typeorm 配套使用
+      - 支持 ESM 和 CommonJS
+      - 自动支持 ESM 配置文件
+      - -d 指定数据源，读取配置文件，通过配置文件的配置，告知typeorm从哪里加载数据库
     "typeorm": "cross-env NODE_ENV=development typeorm-ts-node-esm -d ./dist/config/database.config.js",
+
+    - 更新数据库(或初始化数据)
     "migration:create": "npm run typeorm migration:create ./src/migrations/initData",
-    "migration:generate": "npm run typeorm migration:generate ./src/migrations/update-table_$(echo $npm_package_version | sed 's/\\./_/g')",
+
+    - 注意：
+      - 暂时去掉 _$(echo $npm_package_version | sed 's/\\./_/g')
+    - 说明
+      - 数据库迁移
+      - 生成的迁移文件是一个 TypeScript 或 JavaScript 文件，包含 up 和 down 两个方法：
+        - up：用于执行变更（例如创建表、添加列等）。
+        - down：用于回滚变更（例如删除表、删除列等）。
+    "migration:generate": "npm run typeorm migration:generate ./src/migrations/update-table",
+
+    - 更新数据库(或初始化数据)
     "migration:run": "npm run typeorm -- migration:run",
+
+    - 回滚到最后一次更新
     "migration:revert": "npm run typeorm -- migration:revert",
+
+    - 清除日志文件夹
     "cleanlog": "rimraf logs",
+
+    - docker相关命令
     "docker:build:dev": "docker compose --env-file .env --env-file .env.development up --build",
     "docker:build": "docker compose --env-file .env --env-file .env.production up --build",
     "docker:prod:up": "docker compose -f docker-compose.prod.yml --env-file .env --env-file .env.production up -d --pull=always",
@@ -59,10 +101,10 @@
 |   scripts  |
 |*|*|*|*|   genEnvTypes.ts  | 自动创建env.d.ts文件
 |*|*|*|*|   resetScheduler.ts   | 用于测试: 每天凌晨 *.*0 恢复初始数据
-|   types    |*|*|*|*|   公用的.d.ts文件     
+|   types    |*|*|*|*|   公用的.d.ts文件
 |   src      |*|*|*|*|   工程主目录
-|*|   assets  |*|*|*|   中、英文邮件模板    
-|*|   common  |*|*|*|   封装的公用工具    
+|*|   assets  |*|*|*|   中、英文邮件模板
+|*|   common  |*|*|*|   封装的公用工具
 |*|*|   adapters   |*|*|    适配器
 |*|*|*|*|   fastify.adapter.ts  |   fast适配器：nestJs默认是Express适配器
 |*|*|*|*|   socket.adapter.ts   |   redis适配器cron-once.decorator.ts
@@ -122,28 +164,14 @@
 |*|*|*|*|   env.ts  |   环境变量相关方法
 |*|*|   helper   |*|*|    针对service 封装的 辅助类
 |*|*|*|    crud   |*|   增删改查公用类，便于继承
-|*|*|*|*|   crud.factory.ts    |   公用Service 类  
-|*|*|*|*|   crud.factory.ts    |   公用Service curd 工厂类   
+|*|*|*|*|   crud.factory.ts    |   公用Service 类
+|*|*|*|*|   crud.factory.ts    |   公用Service curd 工厂类
 |*|*|*|    paginate   |*|   公用 service 分页类
 |*|*|*|*|   create-pagination.ts    |   *
-|*|*|*|*|   index.ts    |   *   
-|*|*|*|*|   interface.ts    |   *   
-|*|*|*|*|   pagination.ts   |   *   
+|*|*|*|*|   index.ts    |   *
+|*|*|*|*|   interface.ts    |   *
+|*|*|*|*|   pagination.ts   |   *
 |*|*|*|*|   catchError.ts   |    *
 |*|*|*|*|   genRedisKey.ts   |    获取redis key
 |*|*|   migrations   |*|*|    typeorm 数据库迁移
 |*|*|   modles   |*|*|    业务逻辑
-
-
-
-
-
-
-
-
-
-
-
-
-
-
