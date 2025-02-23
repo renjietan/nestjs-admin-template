@@ -4,7 +4,6 @@ import { FastifyRequest } from 'fastify'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 
-import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { AllowAnon } from '~/modules/auth/decorators/allow-anon.decorator'
 import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
 
@@ -17,7 +16,7 @@ import { AccountMenus, AccountUpdateDto } from '../dto/account.dto'
 import { JwtAuthGuard } from '../guards/jwt-auth.guard'
 
 @ApiTags('Account - 账户模块')
-@ApiSecurityAuth()
+// @ApiSecurityAuth()
 @ApiExtraModels(AccountInfo)
 @UseGuards(JwtAuthGuard)
 @Controller('account')

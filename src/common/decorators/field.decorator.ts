@@ -30,19 +30,19 @@ interface IOptionalOptions {
 }
 
 interface INumberFieldOptions extends IOptionalOptions {
-  each?: boolean
-  int?: boolean
-  min?: number
-  max?: number
-  positive?: boolean
+  each?: boolean // 如果是数组，设置为 true， 检验数组中每个数字
+  int?: boolean // 是否为整数
+  min?: number // 最小值
+  max?: number // 最大值
+  positive?: boolean // 检验是否为正数
 }
 
 interface IStringFieldOptions extends IOptionalOptions {
-  each?: boolean
-  minLength?: number
-  maxLength?: number
-  lowerCase?: boolean
-  upperCase?: boolean
+  each?: boolean // 如果是数组，设置为 true， 检验数组中每个字符串
+  minLength?: number // 最小长度
+  maxLength?: number // 最大长度
+  lowerCase?: boolean // 小写 转换
+  upperCase?: boolean // 大写 转换
 }
 
 export function NumberField(

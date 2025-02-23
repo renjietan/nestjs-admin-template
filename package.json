@@ -9,6 +9,7 @@
     "pnpm": ">=8"
   },
   "scripts": {
+    "res": "cd ./src/modules && nest g --no-spec resource",
     "postinstall": "npm run gen-env-types",
     "prebuild": "rimraf dist",
     "build": "nest build",

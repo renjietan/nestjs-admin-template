@@ -1,6 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common'
-
 import { MailerService as NestMailerService } from '@nestjs-modules/mailer'
+
+import { Inject, Injectable } from '@nestjs/common'
 import dayjs from 'dayjs'
 
 import Redis from 'ioredis'
@@ -96,6 +96,11 @@ export class MailerService {
     content: string,
     type: 'text' | 'html' = 'text',
   ): Promise<any> {
+    console.log('to==========', to)
+    console.log('subject==========', subject)
+    console.log('content==========', content)
+    console.log('type==========', type)
+
     if (type === 'text') {
       return this.mailerService.sendMail({
         to,

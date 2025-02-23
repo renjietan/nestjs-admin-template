@@ -1,5 +1,6 @@
-### <center>框架说明</center>
-#### 命令解释
+<center>框架说明</center>
+
+### 命令解释
 ```
 "scripts": {
     - 1、postinstall 是 npm install 自带的钩子，在 npm install 之后，会立即进入postinstall的生命周期，
@@ -94,7 +95,8 @@
     "docker:logs": "docker compose --env-file .env --env-file .env.production logs -f"
   },
 ```
-#### 目录结构
+
+### 目录结构
 
 |  根目录   |  一级目录  |  二级目录  |  三级目录  |  文件  |  备注  |
 | --------- | --------- | --------- | --------- |--------- | --------- |
@@ -175,3 +177,254 @@
 |*|*|*|*|   genRedisKey.ts   |    获取redis key
 |*|*|   migrations   |*|*|    typeorm 数据库迁移
 |*|*|   modles   |*|*|    业务逻辑
+
+### 装饰器用法
+
+- api-result.decorator.ts: 接口返回使用
+```
+export class DictItemController {
+  constructor() {}
+
+  // ApiResult 配置分页
+  @ApiResult({ type: [DictItemEntity], isPage: true })
+  async list(): Promise<Pagination<DictItemEntity>> {
+
+  }
+
+  // ApiResult 非分页
+  @ApiResult({ type: DictItemEntity })
+  async info(): Promise<DictItemEntity> {
+  }
+
+  // 查询接口 其他接口 不加  ApiResult
+  async delete(): Promise<void> {
+
+  }
+}
+```
+
+- bypass.decorator.ts： 当不需要转换成基础返回格式时添加该装饰器
+```
+// @Bypass()
+export class TestController {
+  constructor(
+  ) {}
+
+  @Bypass
+  async list() {
+  }
+}
+
+```
+
+- cookie.decorator.ts: Cookies 缓存装饰器
+
+- cron-once.decorator.ts:
+  - 如果当前进程是主进程（isMainProcess 为 true），则执行定时任务。
+  - 如果当前进程是 cluster 模式下的 Worker 进程，并且是第一个 Worker（cluster.worker.id === 1），则执行定时任务。
+  - 否则，返回一个空的装饰器（returnNothing），即不执行定时任务。
+```
+@Injectable()
+export class CronService {
+  private logger: Logger = new Logger(CronService.name)
+  constructor(
+    private readonly configService: ConfigService<ConfigKeyPaths>,
+  ) {}
+
+  @CronOnce(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async deleteExpiredJWT() {
+    this.logger.log('--> 开始扫表，清除过期的 token')
+
+    const expiredTokens = await AccessTokenEntity.find({
+      where: {
+        expired_at: LessThan(new Date()),
+      },
+    })
+
+    let deleteCount = 0
+    await Promise.all(
+      expiredTokens.map(async (token) => {
+        const { value, created_at } = token
+
+        await AccessTokenEntity.remove(token)
+
+        this.logger.debug(
+          `--> 删除过期的 token：${value}, 签发于 ${dayjs(created_at).format(
+            'YYYY-MM-DD H:mm:ss',
+          )}`,
+        )
+
+        deleteCount += 1
+      }),
+    )
+
+    this.logger.log(`--> 删除了 ${deleteCount} 个过期的 token`)
+  }
+}
+```
+
+- field.decorator.ts: 字段装饰器
+  - NumberField
+  - StringField
+  - BooleanField
+  - DateField
+  ```
+  export class TestCreateDto extends OperatorDto {
+    @ApiProperty({
+        description: '字段1'
+    })
+    @NumberField({
+        each: true
+    })
+    field_arr_number: number[]
+
+    @ApiProperty({
+        description: '字段2'
+    })
+    @NumberField({
+        min: 1,
+        max: 3,
+        int: true,
+        positive: true
+    })
+    field_number: number
+  }
+  ```
+
+- http.decorator.ts
+  - Ip: 快速获取Ip
+  - Uri: 快速获取request path，并不包括url params
+  ```
+  export class TestController {
+    constructor() {
+    }
+
+    @Post()
+    create(@Body() data: TestCreateDto, @Ip() ip: string, @Uri() uri) {
+      console.log('ip============', ip);
+      console.log('uri============', uri);
+    }
+  }
+  ```
+
+- id-param.decorator.ts： 主要用于 Controller 的参数 id 转换
+```
+export class TestController {
+  constructor(private readonly testService: TestService) {
+
+  }
+
+  @Post(":id")
+  create(@IdParam() id: number) {
+      console.log('id========', id);
+  }
+}
+
+```
+
+- idempotence.decorator.ts:  接口拦截器中，实际开发中一般用不上
+
+- inject-redis.decorator.ts: redis 专用装饰器
+```
+@Injectable()
+export class TestService {
+  constructor(
+    @InjectRedis() private redis: Redis,
+  ) {}
+
+  async set() {
+    await this.redis.set(`str`, code, 'EX', 60 * 5)
+  }
+
+  async get() {
+    await this.redis.get(`str`)
+  }
+}
+```
+
+- swagger.decorator.ts：作用是在 Swagger/OpenAPI 文档中标记某个类或方法需要安全认证
+```
+@ApiSecurityAuth()
+
+export class DeptController {
+  constructor() {
+
+  }
+}
+```
+
+- transform.decorator.ts: 参数转换装饰器
+  - ToNumber: 转换string 为 number
+  - ToInt: 转换 string 为 int
+  - ToBoolean: 转换string 为 boolean
+  - ToDate: 转换string 为 date
+  - ToArray: 转换为数组，特别是对于查询参数
+  - ToTrim: 可作用与数组 或者 字符串， 去掉空格
+  - ToLowerCase: 作用域字符串 或者 数组，转为小写
+  - ToUpperCase: 作用域字符串 或者 数组，转为大写
+  ```
+  export class TestCreateDto extends OperatorDto {
+    @ToLowerCase()
+    str_low: string
+
+    @ToUpperCase()
+    str_up: string
+  }
+  ```
+
+### dto 继承
+- CursorDto(cursor.dto.ts): 游标
+- PagerDto(pager.dto.ts): 列表
+```
+// CursorDto、PagerDto 举例
+export class UserQueryDto extends IntersectionType(PagerDto<UserDto>, PartialType(UserDto)) {
+  @ApiProperty({ description: '归属大区', example: 1, required: false })
+  @IsInt()
+  @IsOptional()
+  deptId?: number
+
+  @ApiProperty({ description: '状态', example: 0, required: false })
+  @IsInt()
+  @IsOptional()
+  status?: number
+}
+```
+
+- BatchDeleteDto(delete.dto.ts): 批量删除
+- IdDto(id.dto.ts): 批量删除
+- OperatorDto(operator.dto.ts): 操作者dto，用于新增、更新
+```
+// BatchDeleteDto、IdDto、OperatorDto 举例说明
+export class testDto extends OperatorDto {}
+```
+
+### 实体类
+- common.entity.ts
+  - CommonEntity
+  ```
+  export class CaptchaLogEntity extends CommonEntity {
+  }
+  ```
+
+- CompleteEntity: 常用于 联表实体类
+```
+export class DeptEntity extends CompleteEntity {
+
+}
+```
+
+### 异常类
+- BusinessException(biz.exception.ts): 常用异常类
+```
+throw new BusinessException('str')
+```
+
+- CannotFindException(not-found.exception.ts): 抛出404错误
+```
+throw new CannotFindException()
+```
+
+- SocketException(socket.exception.ts): socket 专用异常类
+```
+throw new SocketException('str')
+```

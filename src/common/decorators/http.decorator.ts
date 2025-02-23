@@ -18,5 +18,6 @@ export const Ip = createParamDecorator((_, context: ExecutionContext) => {
  */
 export const Uri = createParamDecorator((_, context: ExecutionContext) => {
   const request = context.switchToHttp().getRequest<FastifyRequest>()
-  return request.routerPath
+  // return request.routerPath //已启用
+  return request.routeOptions.url
 })
