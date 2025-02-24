@@ -428,3 +428,28 @@ throw new CannotFindException()
 ```
 throw new SocketException('str')
 ```
+
+### 权限 解释器
+- AllowAnon(allow-anon.decorator.ts): 可作用在 conntroller 上 或者 conntroller 的接口上
+  - 当接口不需要检测用户是否具有操作权限时添加该装饰器
+  - 但是会检查是否已登录
+```
+export class ServeController {
+  constructor(private serveService: ServeService) {}
+
+  @AllowAnon()
+  async stat(): Promise<ServeStatInfo> {
+    return this.serveService.getServeStat()
+  }
+}
+```
+
+### 权限 解释器
+```
+- AuthUser(auth-user.decorator.ts): 获取当前登录用户信息, 并挂载到request上
+- Perm(permission.decorator.ts): 作用于接口上的特定权限
+- Public(public.decorator.ts): 适合开发阶段 使用
+  - 当接口不需要检测用户登录时添加该装饰器
+  - 而且不会检查用户是否已登录
+- Resource(resource.decorator.ts): 资源访问
+
