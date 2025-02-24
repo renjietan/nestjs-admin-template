@@ -8,7 +8,7 @@ export class TestCreateDto extends OperatorDto {
   @ApiProperty({
     description: '数字-数组',
     example: [1],
-  })
+  })  
   @NumberField({
     each: true,
   })

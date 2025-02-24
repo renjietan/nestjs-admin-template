@@ -26,7 +26,7 @@ export const permissions = definePermission('netdisk:manage', {
 
 @ApiTags('System - 测试')
 @Controller('test')
-// @Public()
+@Public()
 export class TestController {
   constructor(private readonly testService: TestService) {
 

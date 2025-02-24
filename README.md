@@ -443,8 +443,6 @@ export class ServeController {
 ```
 - AuthUser(auth-user.decorator.ts): 获取当前登录用户信息, 并挂载到request上
 - Perm(permission.decorator.ts): 作用于接口上的特定权限
-```
-```
 - Public(public.decorator.ts): 适合开发阶段 使用
   - 当接口不需要检测用户登录时添加该装饰器
   - 而且不会检查用户是否已登录
