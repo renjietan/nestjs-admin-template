@@ -452,4 +452,3 @@ export class ServeController {
   - 当接口不需要检测用户登录时添加该装饰器
   - 而且不会检查用户是否已登录
 - Resource(resource.decorator.ts): 资源访问
-
