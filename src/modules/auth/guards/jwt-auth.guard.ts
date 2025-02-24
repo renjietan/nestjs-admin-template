@@ -55,7 +55,9 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
       context.getHandler(),
       context.getClass(),
     ])
+    
     const request = context.switchToHttp().getRequest<FastifyRequest<RequestType>>()
+    
     // const response = context.switchToHttp().getResponse<FastifyReply>()
     if (RouterWhiteList.includes(request.routeOptions.url))
       return true
@@ -82,6 +84,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     let result: any = false
     try {
       result = await super.canActivate(context)
+      console.log('resu=========', result);
     }
     catch (err) {
       // 需要后置判断 这样携带了 token 的用户就能够解析到 request.user
