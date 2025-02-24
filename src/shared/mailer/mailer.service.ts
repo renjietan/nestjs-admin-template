@@ -96,11 +96,6 @@ export class MailerService {
     content: string,
     type: 'text' | 'html' = 'text',
   ): Promise<any> {
-    console.log('to==========', to)
-    console.log('subject==========', subject)
-    console.log('content==========', content)
-    console.log('type==========', type)
-
     if (type === 'text') {
       return this.mailerService.sendMail({
         to,

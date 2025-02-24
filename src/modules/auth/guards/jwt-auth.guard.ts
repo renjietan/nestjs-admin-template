@@ -55,7 +55,9 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
       context.getHandler(),
       context.getClass(),
     ])
+    
     const request = context.switchToHttp().getRequest<FastifyRequest<RequestType>>()
+    
     // const response = context.switchToHttp().getResponse<FastifyReply>()
     if (RouterWhiteList.includes(request.routeOptions.url))
       return true
