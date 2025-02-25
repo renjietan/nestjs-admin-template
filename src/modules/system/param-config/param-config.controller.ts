@@ -6,7 +6,7 @@ import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { Pagination } from '~/helper/paginate/pagination'
 import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
-import { ParamConfigEntity } from '~/modules/system/param-config/param-config.entity'
+import { ParamConfigEntity } from '~/entities/param-config.entity'
 
 import { ParamConfigDto, ParamConfigQueryDto } from './param-config.dto'
 import { ParamConfigService } from './param-config.service'

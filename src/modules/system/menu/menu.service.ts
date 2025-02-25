@@ -11,7 +11,7 @@ import { RedisKeys } from '~/constants/cache.constant'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { genAuthPermKey, genAuthTokenKey } from '~/helper/genRedisKey'
 import { SseService } from '~/modules/sse/sse.service'
-import { MenuEntity } from '~/modules/system/menu/menu.entity'
+import { MenuEntity } from '~/entities/menu.entity'
 
 import { deleteEmptyChildren, generatorMenu, generatorRouters } from '~/utils'
 

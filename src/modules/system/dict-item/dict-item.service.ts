@@ -5,7 +5,7 @@ import { Like, Repository } from 'typeorm'
 
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
-import { DictItemEntity } from '~/modules/system/dict-item/dict-item.entity'
+import { DictItemEntity } from '~/entities/dict-item.entity'
 
 import { DictItemDto, DictItemQueryDto } from './dict-item.dto'
 

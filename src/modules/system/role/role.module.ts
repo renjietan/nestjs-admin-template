@@ -6,7 +6,7 @@ import { SseService } from '~/modules/sse/sse.service'
 import { MenuModule } from '../menu/menu.module'
 
 import { RoleController } from './role.controller'
-import { RoleEntity } from './role.entity'
+import { RoleEntity } from '../../../entities/role.entity'
 import { RoleService } from './role.service'
 
 const providers = [RoleService, SseService]

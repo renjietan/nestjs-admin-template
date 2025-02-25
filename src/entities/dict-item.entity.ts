@@ -3,7 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 
 import { CompleteEntity } from '~/common/entity/common.entity'
 
-import { DictTypeEntity } from '../dict-type/dict-type.entity'
+import { DictTypeEntity } from './dict-type.entity'
 
 @Entity({ name: 'sys_dict_item' })
 export class DictItemEntity extends CompleteEntity {

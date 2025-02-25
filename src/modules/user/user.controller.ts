@@ -10,7 +10,7 @@ import { MenuService } from '~/modules/system/menu/menu.service'
 import { definePermission, Perm } from '../auth/decorators/permission.decorator'
 import { UserPasswordDto } from './dto/password.dto'
 import { UserDto, UserQueryDto, UserUpdateDto } from './dto/user.dto'
-import { UserEntity } from './user.entity'
+import { UserEntity } from '../../entities/user.entity'
 import { UserService } from './user.service'
 
 export const permissions = definePermission('system:user', {

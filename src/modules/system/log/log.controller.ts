@@ -11,12 +11,12 @@ import {
   LoginLogQueryDto,
   TaskLogQueryDto,
 } from './dto/log.dto'
-import { CaptchaLogEntity } from './entities/captcha-log.entity'
-import { TaskLogEntity } from './entities/task-log.entity'
 import { LoginLogInfo } from './models/log.model'
 import { CaptchaLogService } from './services/captcha-log.service'
 import { LoginLogService } from './services/login-log.service'
 import { TaskLogService } from './services/task-log.service'
+import { TaskLogEntity } from '~/entities/task-log.entity'
+import { CaptchaLogEntity } from '~/entities/captcha-log.entity'
 
 export const permissions = definePermission('system:log', {
   TaskList: 'task:list',

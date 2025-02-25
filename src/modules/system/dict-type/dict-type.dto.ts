@@ -5,7 +5,7 @@ import { PagerDto } from '~/common/dto/pager.dto'
 
 import { IsUnique } from '~/shared/database/constraints/unique.constraint'
 
-import { DictTypeEntity } from './dict-type.entity'
+import { DictTypeEntity } from '../../../entities/dict-type.entity'
 
 export class DictTypeDto extends PartialType(DictTypeEntity) {
   @ApiProperty({ description: '字典类型名称' })

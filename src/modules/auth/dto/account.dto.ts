@@ -8,7 +8,7 @@ import {
   MinLength,
 } from 'class-validator'
 
-import { MenuEntity } from '~/modules/system/menu/menu.entity'
+import { MenuEntity } from '~/entities/menu.entity'
 
 export class AccountUpdateDto {
   @ApiProperty({ description: '用户呢称' })

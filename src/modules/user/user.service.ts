@@ -19,15 +19,15 @@ import { QQService } from '~/shared/helper/qq.service'
 
 import { md5, randomValue } from '~/utils'
 
-import { AccessTokenEntity } from '../auth/entities/access-token.entity'
-import { DeptEntity } from '../system/dept/dept.entity'
+import { AccessTokenEntity } from '../../entities/access-token.entity'
+import { DeptEntity } from '../../entities/dept.entity'
 import { ParamConfigService } from '../system/param-config/param-config.service'
-import { RoleEntity } from '../system/role/role.entity'
+import { RoleEntity } from '../../entities/role.entity'
 
 import { UserStatus } from './constant'
 import { PasswordUpdateDto } from './dto/password.dto'
 import { UserDto, UserQueryDto, UserUpdateDto } from './dto/user.dto'
-import { UserEntity } from './user.entity'
+import { UserEntity } from '../../entities/user.entity'
 import { AccountInfo } from './user.model'
 
 @Injectable()

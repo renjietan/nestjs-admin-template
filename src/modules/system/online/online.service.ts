@@ -11,7 +11,6 @@ import { ErrorEnum } from '~/constants/error-code.constant'
 
 import { genOnlineUserKey } from '~/helper/genRedisKey'
 import { AuthService } from '~/modules/auth/auth.service'
-import { AccessTokenEntity } from '~/modules/auth/entities/access-token.entity'
 
 import { TokenService } from '~/modules/auth/services/token.service'
 import { SseService } from '~/modules/sse/sse.service'
@@ -20,6 +19,7 @@ import { getIpAddress } from '~/utils'
 import { UserService } from '../../user/user.service'
 
 import { OnlineUserInfo } from './online.model'
+import { AccessTokenEntity } from '~/entities/access-token.entity'
 
 @Injectable()
 export class OnlineService {

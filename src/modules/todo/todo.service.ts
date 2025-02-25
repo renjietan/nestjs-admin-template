@@ -4,7 +4,7 @@ import { Repository } from 'typeorm'
 
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
-import { TodoEntity } from '~/modules/todo/todo.entity'
+import { TodoEntity } from '~/entities/todo.entity'
 
 import { TodoDto, TodoQueryDto, TodoUpdateDto } from './todo.dto'
 

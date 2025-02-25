@@ -11,7 +11,7 @@ import {
 
 import { CompleteEntity } from '~/common/entity/common.entity'
 
-import { UserEntity } from '../../user/user.entity'
+import { UserEntity } from './user.entity'
 
 @Entity({ name: 'sys_dept' })
 @Tree('materialized-path')

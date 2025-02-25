@@ -8,7 +8,7 @@ import { CreatorPipe } from '~/common/pipes/creator.pipe'
 import { UpdaterPipe } from '~/common/pipes/updater.pipe'
 import { Pagination } from '~/helper/paginate/pagination'
 import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
-import { DictTypeEntity } from '~/modules/system/dict-type/dict-type.entity'
+import { DictTypeEntity } from '~/entities/dict-type.entity'
 
 import { DictTypeDto, DictTypeQueryDto } from './dict-type.dto'
 import { DictTypeService } from './dict-type.service'

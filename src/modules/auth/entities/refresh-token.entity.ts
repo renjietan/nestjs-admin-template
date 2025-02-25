@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm'
 
-import { AccessTokenEntity } from './access-token.entity'
+import { AccessTokenEntity } from '../../../entities/access-token.entity'
 
 @Entity('user_refresh_tokens')
 export class RefreshTokenEntity extends BaseEntity {

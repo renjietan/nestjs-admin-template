@@ -5,7 +5,7 @@ import { Repository } from 'typeorm'
 
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
-import { ParamConfigEntity } from '~/modules/system/param-config/param-config.entity'
+import { ParamConfigEntity } from '~/entities/param-config.entity'
 
 import { ParamConfigDto, ParamConfigQueryDto } from './param-config.dto'
 

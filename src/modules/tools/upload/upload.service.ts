@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import { isNil } from 'lodash'
 import { Repository } from 'typeorm'
 
-import { Storage } from '~/modules/tools/storage/storage.entity'
+import { Storage } from '~/entities/storage.entity'
 
 import {
   fileRename,

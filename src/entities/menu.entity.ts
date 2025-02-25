@@ -2,7 +2,7 @@ import { Column, Entity, ManyToMany, Relation } from 'typeorm'
 
 import { CompleteEntity } from '~/common/entity/common.entity'
 
-import { RoleEntity } from '../role/role.entity'
+import { RoleEntity } from './role.entity'
 
 @Entity({ name: 'sys_menu' })
 export class MenuEntity extends CompleteEntity {

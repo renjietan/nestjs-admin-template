@@ -7,7 +7,7 @@ import { ParamConfigModule } from '../system/param-config/param-config.module'
 import { RoleModule } from '../system/role/role.module'
 
 import { UserController } from './user.controller'
-import { UserEntity } from './user.entity'
+import { UserEntity } from '../../entities/user.entity'
 import { UserService } from './user.service'
 
 const providers = [UserService]

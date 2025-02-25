@@ -12,10 +12,10 @@ import {
 
 import { CommonEntity } from '~/common/entity/common.entity'
 
-import { AccessTokenEntity } from '~/modules/auth/entities/access-token.entity'
 
-import { DeptEntity } from '~/modules/system/dept/dept.entity'
-import { RoleEntity } from '~/modules/system/role/role.entity'
+import { DeptEntity } from '~/entities/dept.entity'
+import { RoleEntity } from '~/entities/role.entity'
+import { AccessTokenEntity } from './access-token.entity'
 
 @Entity({ name: 'sys_user' })
 export class UserEntity extends CommonEntity {

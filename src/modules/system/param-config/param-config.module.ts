@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { ParamConfigController } from './param-config.controller'
-import { ParamConfigEntity } from './param-config.entity'
+import { ParamConfigEntity } from '../../../entities/param-config.entity'
 import { ParamConfigService } from './param-config.service'
 
 const services = [ParamConfigService]

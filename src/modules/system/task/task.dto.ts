@@ -21,7 +21,7 @@ import { isEmpty } from 'lodash'
 import { PagerDto } from '~/common/dto/pager.dto'
 import { IsUnique } from '~/shared/database/constraints/unique.constraint'
 
-import { TaskEntity } from './task.entity'
+import { TaskEntity } from '../../../entities/task.entity'
 
 // cron 表达式验证，bull lib下引用了cron-parser
 @ValidatorConstraint({ name: 'isCronExpression', async: false })

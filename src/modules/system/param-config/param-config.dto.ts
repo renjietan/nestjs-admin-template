@@ -4,7 +4,7 @@ import { IsOptional, IsString, MinLength } from 'class-validator'
 import { PagerDto } from '~/common/dto/pager.dto'
 import { IsUnique } from '~/shared/database/constraints/unique.constraint'
 
-import { ParamConfigEntity } from './param-config.entity'
+import { ParamConfigEntity } from '../../../entities/param-config.entity'
 
 export class ParamConfigDto {
   @ApiProperty({ description: '参数名称' })

@@ -6,7 +6,7 @@ import { LessThan, Repository } from 'typeorm'
 import { paginate } from '~/helper/paginate'
 
 import { CaptchaLogQueryDto } from '../dto/log.dto'
-import { CaptchaLogEntity } from '../entities/captcha-log.entity'
+import { CaptchaLogEntity } from '~/entities/captcha-log.entity'
 
 @Injectable()
 export class CaptchaLogService {

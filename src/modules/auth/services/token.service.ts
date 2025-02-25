@@ -8,10 +8,10 @@ import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 import { ISecurityConfig, SecurityConfig } from '~/config'
 import { genOnlineUserKey } from '~/helper/genRedisKey'
 import { RoleService } from '~/modules/system/role/role.service'
-import { UserEntity } from '~/modules/user/user.entity'
+import { UserEntity } from '~/entities/user.entity'
 import { generateUUID } from '~/utils'
 
-import { AccessTokenEntity } from '../entities/access-token.entity'
+import { AccessTokenEntity } from '../../../entities/access-token.entity'
 import { RefreshTokenEntity } from '../entities/refresh-token.entity'
 
 /**

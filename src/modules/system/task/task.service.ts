@@ -21,7 +21,7 @@ import { ErrorEnum } from '~/constants/error-code.constant'
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
 
-import { TaskEntity } from '~/modules/system/task/task.entity'
+import { TaskEntity } from '~/entities/task.entity'
 import { MISSION_DECORATOR_KEY } from '~/modules/tasks/mission.decorator'
 
 import {

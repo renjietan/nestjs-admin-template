@@ -5,7 +5,7 @@ import { UserModule } from '../../user/user.module'
 import { RoleModule } from '../role/role.module'
 
 import { DeptController } from './dept.controller'
-import { DeptEntity } from './dept.entity'
+import { DeptEntity } from '../../../entities/dept.entity'
 import { DeptService } from './dept.service'
 
 const services = [DeptService]

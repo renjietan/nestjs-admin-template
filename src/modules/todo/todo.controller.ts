@@ -18,7 +18,7 @@ import { definePermission, Perm } from '~/modules/auth/decorators/permission.dec
 import { Resource } from '~/modules/auth/decorators/resource.decorator'
 
 import { ResourceGuard } from '~/modules/auth/guards/resource.guard'
-import { TodoEntity } from '~/modules/todo/todo.entity'
+import { TodoEntity } from '~/entities/todo.entity'
 
 import { TodoDto, TodoQueryDto, TodoUpdateDto } from './todo.dto'
 import { TodoService } from './todo.service'

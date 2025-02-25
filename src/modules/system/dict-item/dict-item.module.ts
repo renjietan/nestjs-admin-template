@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { DictItemController } from './dict-item.controller'
-import { DictItemEntity } from './dict-item.entity'
+import { DictItemEntity } from '../../../entities/dict-item.entity'
 import { DictItemService } from './dict-item.service'
 
 const services = [DictItemService]

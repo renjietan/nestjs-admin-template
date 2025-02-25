@@ -10,7 +10,7 @@ import { UpdaterPipe } from '~/common/pipes/updater.pipe'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
 import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
-import { DeptEntity } from '~/modules/system/dept/dept.entity'
+import { DeptEntity } from '~/entities/dept.entity'
 
 import { DeptDto, DeptQueryDto } from './dept.dto'
 import { DeptService } from './dept.service'

@@ -3,7 +3,7 @@ import { IsInt, IsOptional, IsString, MinLength } from 'class-validator'
 
 import { PagerDto } from '~/common/dto/pager.dto'
 
-import { DictItemEntity } from './dict-item.entity'
+import { DictItemEntity } from '../../../entities/dict-item.entity'
 
 export class DictItemDto extends PartialType(DictItemEntity) {
   @ApiProperty({ description: '字典类型 ID' })
