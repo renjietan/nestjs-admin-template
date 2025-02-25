@@ -23,7 +23,6 @@ import { NetdiskModule } from './modules/netdisk/netdisk.module'
 import { SseModule } from './modules/sse/sse.module'
 import { SystemModule } from './modules/system/system.module'
 import { TasksModule } from './modules/tasks/tasks.module'
-import { TodoModule } from './modules/todo/todo.module'
 import { ToolsModule } from './modules/tools/tools.module'
 import { DatabaseModule } from './shared/database/database.module'
 
@@ -69,7 +68,6 @@ import { SocketModule } from './socket/socket.module'
 
     // end biz
 
-    TodoModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
