@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
+import { UserEntity } from '../../entities/user.entity'
 import { MenuModule } from '../system/menu/menu.module'
+
 import { ParamConfigModule } from '../system/param-config/param-config.module'
 
 import { RoleModule } from '../system/role/role.module'
-
 import { UserController } from './user.controller'
-import { UserEntity } from '../../entities/user.entity'
 import { UserService } from './user.service'
 
 const providers = [UserService]

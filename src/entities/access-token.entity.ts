@@ -11,7 +11,7 @@ import {
 
 import { UserEntity } from '~/entities/user.entity'
 
-import { RefreshTokenEntity } from '../modules/auth/entities/refresh-token.entity'
+import { RefreshTokenEntity } from './refresh-token.entity'
 
 @Entity('user_access_tokens')
 export class AccessTokenEntity extends BaseEntity {

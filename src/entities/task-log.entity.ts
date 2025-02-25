@@ -4,7 +4,6 @@ import { Column, Entity, JoinColumn, ManyToOne, Relation } from 'typeorm'
 import { CommonEntity } from '~/common/entity/common.entity'
 import { TaskEntity } from './task.entity'
 
-
 @Entity({ name: 'sys_task_log' })
 export class TaskLogEntity extends CommonEntity {
   @Column({ type: 'tinyint', default: 0 })

@@ -12,7 +12,6 @@ import {
 
 import { CommonEntity } from '~/common/entity/common.entity'
 
-
 import { DeptEntity } from '~/entities/dept.entity'
 import { RoleEntity } from '~/entities/role.entity'
 import { AccessTokenEntity } from './access-token.entity'

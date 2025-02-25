@@ -5,10 +5,10 @@ import { EntityManager, In, Like, Repository } from 'typeorm'
 
 import { PagerDto } from '~/common/dto/pager.dto'
 import { ROOT_ROLE_ID } from '~/constants/system.constant'
-import { paginate } from '~/helper/paginate'
-import { Pagination } from '~/helper/paginate/pagination'
 import { MenuEntity } from '~/entities/menu.entity'
 import { RoleEntity } from '~/entities/role.entity'
+import { paginate } from '~/helper/paginate'
+import { Pagination } from '~/helper/paginate/pagination'
 
 import { RoleDto, RoleQueryDto, RoleUpdateDto } from './role.dto'
 

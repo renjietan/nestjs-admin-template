@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import { Like, Repository } from 'typeorm'
 
+import { DictItemEntity } from '~/entities/dict-item.entity'
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
-import { DictItemEntity } from '~/entities/dict-item.entity'
 
 import { DictItemDto, DictItemQueryDto } from './dict-item.dto'
 

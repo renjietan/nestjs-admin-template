@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import { Repository } from 'typeorm'
 
+import { ParamConfigEntity } from '~/entities/param-config.entity'
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
-import { ParamConfigEntity } from '~/entities/param-config.entity'
 
 import { ParamConfigDto, ParamConfigQueryDto } from './param-config.dto'
 

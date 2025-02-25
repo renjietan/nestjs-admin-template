@@ -9,17 +9,17 @@ import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
 
+import { AccessTokenEntity } from '~/entities/access-token.entity'
 import { genOnlineUserKey } from '~/helper/genRedisKey'
-import { AuthService } from '~/modules/auth/auth.service'
 
+import { AuthService } from '~/modules/auth/auth.service'
 import { TokenService } from '~/modules/auth/services/token.service'
 import { SseService } from '~/modules/sse/sse.service'
+
 import { getIpAddress } from '~/utils'
 
 import { UserService } from '../../user/user.service'
-
 import { OnlineUserInfo } from './online.model'
-import { AccessTokenEntity } from '~/entities/access-token.entity'
 
 @Injectable()
 export class OnlineService {

@@ -3,8 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { UserEntity } from '~/entities/user.entity'
 
-import { StorageController } from './storage.controller'
 import { Storage } from '../../../entities/storage.entity'
+import { StorageController } from './storage.controller'
 import { StorageService } from './storage.service'
 
 const services = [StorageService]

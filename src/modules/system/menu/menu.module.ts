@@ -3,10 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { SseService } from '~/modules/sse/sse.service'
 
-import { RoleModule } from '../role/role.module'
-
-import { MenuController } from './menu.controller'
 import { MenuEntity } from '../../../entities/menu.entity'
+
+import { RoleModule } from '../role/role.module'
+import { MenuController } from './menu.controller'
 import { MenuService } from './menu.service'
 
 const providers = [MenuService, SseService]

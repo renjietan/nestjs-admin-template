@@ -6,13 +6,13 @@ import Redis from 'ioredis'
 import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 
 import { ISecurityConfig, SecurityConfig } from '~/config'
+import { UserEntity } from '~/entities/user.entity'
 import { genOnlineUserKey } from '~/helper/genRedisKey'
 import { RoleService } from '~/modules/system/role/role.service'
-import { UserEntity } from '~/entities/user.entity'
 import { generateUUID } from '~/utils'
 
 import { AccessTokenEntity } from '../../../entities/access-token.entity'
-import { RefreshTokenEntity } from '../entities/refresh-token.entity'
+import { RefreshTokenEntity } from '../../../entities/refresh-token.entity'
 
 /**
  * 令牌服务

@@ -3,9 +3,11 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+import { CaptchaLogEntity } from '~/entities/captcha-log.entity'
+import { TaskLogEntity } from '~/entities/task-log.entity'
+
 import { Pagination } from '~/helper/paginate/pagination'
 import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
-
 import {
   CaptchaLogQueryDto,
   LoginLogQueryDto,
@@ -15,8 +17,6 @@ import { LoginLogInfo } from './models/log.model'
 import { CaptchaLogService } from './services/captcha-log.service'
 import { LoginLogService } from './services/login-log.service'
 import { TaskLogService } from './services/task-log.service'
-import { TaskLogEntity } from '~/entities/task-log.entity'
-import { CaptchaLogEntity } from '~/entities/captcha-log.entity'
 
 export const permissions = definePermission('system:log', {
   TaskList: 'task:list',

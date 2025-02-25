@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
+import { TodoEntity } from '~/entities/todo.entity'
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
-import { TodoEntity } from '~/entities/todo.entity'
 
 import { TodoDto, TodoQueryDto, TodoUpdateDto } from './todo.dto'
 

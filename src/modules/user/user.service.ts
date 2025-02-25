@@ -21,13 +21,13 @@ import { md5, randomValue } from '~/utils'
 
 import { AccessTokenEntity } from '../../entities/access-token.entity'
 import { DeptEntity } from '../../entities/dept.entity'
-import { ParamConfigService } from '../system/param-config/param-config.service'
 import { RoleEntity } from '../../entities/role.entity'
+import { UserEntity } from '../../entities/user.entity'
 
+import { ParamConfigService } from '../system/param-config/param-config.service'
 import { UserStatus } from './constant'
 import { PasswordUpdateDto } from './dto/password.dto'
 import { UserDto, UserQueryDto, UserUpdateDto } from './dto/user.dto'
-import { UserEntity } from '../../entities/user.entity'
 import { AccountInfo } from './user.model'
 
 @Injectable()

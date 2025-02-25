@@ -9,9 +9,9 @@ import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { RedisKeys } from '~/constants/cache.constant'
 import { ErrorEnum } from '~/constants/error-code.constant'
+import { MenuEntity } from '~/entities/menu.entity'
 import { genAuthPermKey, genAuthTokenKey } from '~/helper/genRedisKey'
 import { SseService } from '~/modules/sse/sse.service'
-import { MenuEntity } from '~/entities/menu.entity'
 
 import { deleteEmptyChildren, generatorMenu, generatorRouters } from '~/utils'
 

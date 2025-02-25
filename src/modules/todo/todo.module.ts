@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { TodoController } from './todo.controller'
 import { TodoEntity } from '../../entities/todo.entity'
+import { TodoController } from './todo.controller'
 import { TodoService } from './todo.service'
 
 const services = [TodoService]
