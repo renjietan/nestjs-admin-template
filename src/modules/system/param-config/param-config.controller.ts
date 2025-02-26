@@ -2,11 +2,11 @@ import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
+import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { ParamConfigEntity } from '~/entities/param-config.entity'
 import { Pagination } from '~/helper/paginate/pagination'
-import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
 
 import { ParamConfigDto, ParamConfigQueryDto } from './param-config.dto'
 import { ParamConfigService } from './param-config.service'

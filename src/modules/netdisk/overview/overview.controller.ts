@@ -10,7 +10,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 
-import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
+import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
 
 import { OverviewSpaceInfo } from './overview.dto'
 import { NetDiskOverviewService } from './overview.service'

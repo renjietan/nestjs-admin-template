@@ -10,8 +10,8 @@ import { BusinessException } from '~/common/exceptions/biz.exception'
 
 import { ErrorEnum } from '~/constants/error-code.constant'
 
+import { ResourceObject } from '../../../common/decorators/auth/resource.decorator'
 import { PUBLIC_KEY, RESOURCE_KEY, Roles } from '../auth.constant'
-import { ResourceObject } from '../decorators/resource.decorator'
 
 @Injectable()
 export class ResourceGuard implements CanActivate {

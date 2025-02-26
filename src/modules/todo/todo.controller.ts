@@ -11,13 +11,13 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
+import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
+
+import { Resource } from '~/common/decorators/auth/resource.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
-
 import { TodoEntity } from '~/entities/todo.entity'
-import { Pagination } from '~/helper/paginate/pagination'
-import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
 
-import { Resource } from '~/modules/auth/decorators/resource.decorator'
+import { Pagination } from '~/helper/paginate/pagination'
 import { ResourceGuard } from '~/modules/auth/guards/resource.guard'
 
 import { TodoDto, TodoQueryDto, TodoUpdateDto } from './todo.dto'

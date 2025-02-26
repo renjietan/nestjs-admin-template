@@ -4,9 +4,9 @@ import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 
-import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+import { AllowAnon } from '~/common/decorators/auth/allow-anon.decorator'
 
-import { AllowAnon } from '~/modules/auth/decorators/allow-anon.decorator'
+import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 
 import { ServeStatInfo } from './serve.model'
 import { ServeService } from './serve.service'

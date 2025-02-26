@@ -5,11 +5,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 
+import { AuthUser } from '~/common/decorators/auth/auth-user.decorator'
+import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
 import { BusinessException } from '~/common/exceptions/biz.exception'
-import { ErrorEnum } from '~/constants/error-code.constant'
-import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
 
-import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
+import { ErrorEnum } from '~/constants/error-code.constant'
 
 import { checkIsDemoMode } from '~/utils'
 

@@ -1,13 +1,11 @@
 import { Body, Controller, Ip, Post } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { Uri } from '~/common/decorators/http.decorator'
-import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+import { AllowAnon } from '../../common/decorators/auth/allow-anon.decorator'
+import { definePermission, Perm } from '../../common/decorators/auth/permission.decorator'
+import { Public } from '../../common/decorators/auth/public.decorator'
 import { TestCreateDto } from './dto/create.dto'
 import { TestService } from './test.service'
-import { PUBLIC_KEY } from '../auth/auth.constant'
-import { Public } from '../auth/decorators/public.decorator'
-import { AllowAnon } from '../auth/decorators/allow-anon.decorator'
-import { definePermission, Perm } from '../auth/decorators/permission.decorator'
 
 export const permissions = definePermission('netdisk:manage', {
   LIST: 'list',
@@ -51,9 +49,9 @@ export class TestController {
   @ApiOperation({
     summary: '编辑',
   })
-  @Post(":id")
+  @Post(':id')
   @AllowAnon()
   update() {
-   console.log('111111111111');
+    console.log('111111111111')
   }
 }

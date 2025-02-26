@@ -2,7 +2,7 @@ import { applyDecorators, SetMetadata } from '@nestjs/common'
 
 import { isPlainObject } from 'lodash'
 
-import { PERMISSION_KEY } from '../auth.constant'
+import { PERMISSION_KEY } from '../../../modules/auth/auth.constant'
 
  type TupleToObject<T extends string, P extends ReadonlyArray<string>> = {
    [K in Uppercase<P[number]>]: `${T}:${Lowercase<K>}`

@@ -4,8 +4,8 @@ import { FastifyRequest } from 'fastify'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 
-import { AllowAnon } from '~/modules/auth/decorators/allow-anon.decorator'
-import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
+import { AllowAnon } from '~/common/decorators/auth/allow-anon.decorator'
+import { AuthUser } from '~/common/decorators/auth/auth-user.decorator'
 
 import { PasswordUpdateDto } from '~/modules/user/dto/password.dto'
 

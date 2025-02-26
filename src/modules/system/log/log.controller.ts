@@ -2,12 +2,12 @@ import { Controller, Get, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
+import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { CaptchaLogEntity } from '~/entities/captcha-log.entity'
-import { TaskLogEntity } from '~/entities/task-log.entity'
 
+import { TaskLogEntity } from '~/entities/task-log.entity'
 import { Pagination } from '~/helper/paginate/pagination'
-import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
 import {
   CaptchaLogQueryDto,
   LoginLogQueryDto,

@@ -7,7 +7,7 @@ import { Ip } from '~/common/decorators/http.decorator'
 
 import { MailerService } from '~/shared/mailer/mailer.service'
 
-import { Public } from '../decorators/public.decorator'
+import { Public } from '../../../common/decorators/auth/public.decorator'
 
 import { SendEmailCodeDto } from '../dto/captcha.dto'
 

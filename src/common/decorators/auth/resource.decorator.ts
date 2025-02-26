@@ -2,7 +2,7 @@ import { applyDecorators, SetMetadata } from '@nestjs/common'
 
 import { ObjectLiteral, ObjectType, Repository } from 'typeorm'
 
-import { RESOURCE_KEY } from '../auth.constant'
+import { RESOURCE_KEY } from '../../../modules/auth/auth.constant'
 
 export type Condition<E extends ObjectLiteral = any> = (Repository: Repository<E>, items: number[], user: IAuthUser) => Promise<boolean>
 

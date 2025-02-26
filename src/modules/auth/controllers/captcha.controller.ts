@@ -10,7 +10,7 @@ import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 import { genCaptchaImgKey } from '~/helper/genRedisKey'
 import { generateUUID } from '~/utils'
 
-import { Public } from '../decorators/public.decorator'
+import { Public } from '../../../common/decorators/auth/public.decorator'
 
 import { ImageCaptchaDto } from '../dto/captcha.dto'
 import { ImageCaptcha } from '../models/auth.model'
@@ -37,8 +37,8 @@ export class CaptchaController {
       height: isEmpty(height) ? 50 : height,
       charPreset: '1234567890',
     })
-    console.log('svg tezxt:', svg.text);
-    
+    console.log('svg tezxt:', svg.text)
+
     const result = {
       img: `data:image/svg+xml;base64,${Buffer.from(svg.data).toString(
         'base64',
