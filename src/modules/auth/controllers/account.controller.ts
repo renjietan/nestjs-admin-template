@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Put, Req, UseGuards } from '@nestjs/common'
-import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiExcludeController, ApiExcludeEndpoint, ApiExpectationFailedResponse, ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { FastifyRequest } from 'fastify'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
@@ -41,6 +41,7 @@ export class AccountController {
     await this.authService.clearLoginStatus(user, req.accessToken)
   }
 
+  @ApiExcludeEndpoint()
   @Get('menus')
   @ApiOperation({ summary: '获取菜单列表' })
   @ApiResult({ type: [AccountMenus] })
@@ -49,6 +50,7 @@ export class AccountController {
     return this.authService.getMenus(user.uid)
   }
 
+  @ApiExcludeEndpoint()
   @Get('permissions')
   @ApiOperation({ summary: '获取权限列表' })
   @ApiResult({ type: [String] })

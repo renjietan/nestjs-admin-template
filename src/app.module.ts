@@ -53,6 +53,7 @@ import { SocketModule } from './socket/socket.module'
       },
     }),
     SharedModule,
+    // 数据库
     DatabaseModule,
 
     TestModule,
@@ -76,7 +77,6 @@ import { SocketModule } from './socket/socket.module'
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RbacGuard },
     { provide: APP_GUARD, useClass: ThrottlerGuard },
-
   ],
 })
 export class AppModule {}

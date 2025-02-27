@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common'
 
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiExcludeController, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
@@ -18,6 +18,7 @@ export const permissions = definePermission('tool:storage', {
   DELETE: 'delete',
 } as const)
 
+@ApiExcludeController()
 @ApiTags('Tools - 文件存储模块')
 @ApiSecurityAuth()
 @Controller('storage')

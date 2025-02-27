@@ -15,6 +15,7 @@ import { CommonEntity } from '~/common/entity/common.entity'
 import { DeptEntity } from '~/entities/dept.entity'
 import { RoleEntity } from '~/entities/role.entity'
 import { AccessTokenEntity } from './access-token.entity'
+import { ApiHideProperty } from '@nestjs/swagger'
 
 @Entity({ name: 'sys_user' })
 export class UserEntity extends CommonEntity {
@@ -37,6 +38,7 @@ export class UserEntity extends CommonEntity {
   @Column({ type: 'tinyint', nullable: true, default: 1 })
   status: number
 
+  @ApiHideProperty()
   @ManyToMany(() => RoleEntity, role => role.users)
   @JoinTable({
     name: 'sys_user_roles',
@@ -45,10 +47,12 @@ export class UserEntity extends CommonEntity {
   })
   roles: Relation<RoleEntity[]>
 
+  @ApiHideProperty()
   @ManyToOne(() => DeptEntity, dept => dept.users)
   @JoinColumn({ name: 'dept_id' })
   dept: Relation<DeptEntity>
 
+  @ApiHideProperty()
   @OneToMany(() => AccessTokenEntity, accessToken => accessToken.user, {
     cascade: true,
   })

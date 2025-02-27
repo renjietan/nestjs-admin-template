@@ -1,4 +1,4 @@
-import { ApiExcludeEndpoint, ApiHideProperty, ApiProperty, IntersectionType, PartialType } from '@nestjs/swagger'
+import { ApiExcludeController, ApiExcludeEndpoint, ApiHideProperty, ApiProperty, IntersectionType, PartialType } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
 import {
   ArrayMaxSize,
@@ -19,10 +19,6 @@ import { isEmpty } from 'lodash'
 import { PagerDto } from '~/common/dto/pager.dto'
 
 export class UserDto {
-  @ApiProperty({ description: '头像' })
-  @IsOptional()
-  @IsString()
-  avatar?: string
 
   @ApiProperty({ description: '登录账号', example: 'admin' })
   @IsString()
@@ -38,17 +34,19 @@ export class UserDto {
   })
   password: string
 
-  @ApiProperty({ description: '归属角色', type: [Number] })
-  @ArrayNotEmpty()
-  @ArrayMinSize(1)
-  @ArrayMaxSize(3)
-  roleIds: number[]
+  // @ApiHideProperty()
+  // @ApiProperty({ description: '归属角色', type: [Number], required: false })
+  // @ArrayNotEmpty()
+  // @ArrayMinSize(1)
+  // @ArrayMaxSize(3)
+  // roleIds: number[]
 
-  @ApiProperty({ description: '归属大区', type: Number, required: false })
-  @Type(() => Number)
-  @IsInt()
-  @IsOptional()
-  deptId?: number
+  // @ApiHideProperty()
+  // @ApiProperty({ description: '归属大区', type: Number, required: false })
+  // @Type(() => Number)
+  // @IsInt()
+  // @IsOptional()
+  // deptId?: number
 
   @ApiProperty({ description: '呢称', example: 'admin' })
   @IsOptional()

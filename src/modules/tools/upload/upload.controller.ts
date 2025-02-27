@@ -1,5 +1,5 @@
 import { BadRequestException, Controller, Post, Req } from '@nestjs/common'
-import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiConsumes, ApiExcludeController, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { FastifyRequest } from 'fastify'
 
 import { AuthUser } from '~/common/decorators/auth/auth-user.decorator'
@@ -14,6 +14,7 @@ export const permissions = definePermission('upload', {
   UPLOAD: 'upload',
 } as const)
 
+@ApiExcludeController()
 @ApiSecurityAuth()
 @ApiTags('Tools - 上传模块')
 @Controller('upload')

@@ -11,7 +11,7 @@ export class PasswordUpdateDto {
 
   @ApiProperty({ description: '新密码' })
   @Matches(/^\S*(?=\S{6})(?=\S*\d)(?=\S*[A-Z])\S*$/i, {
-    message: '密码必须包含数字、字母，长度为6-16',
+    message: '密码必须包含数字、字母,长度为6-16',
   })
   newPassword: string
 }
