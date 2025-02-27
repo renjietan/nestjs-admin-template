@@ -24,6 +24,7 @@ import { checkIsDemoMode } from '~/utils'
 
 import { AuthStrategy, PUBLIC_KEY } from '../auth.constant'
 import { TokenService } from '../services/token.service'
+import { env } from '~/global/env'
 
 /** @type {import('fastify').RequestGenericInterface} */
 interface RequestType {
@@ -55,9 +56,9 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
       context.getHandler(),
       context.getClass(),
     ])
-    
+
     const request = context.switchToHttp().getRequest<FastifyRequest<RequestType>>()
-    
+
     // const response = context.switchToHttp().getResponse<FastifyReply>()
     if (RouterWhiteList.includes(request.routeOptions.url))
       return true
@@ -76,8 +77,11 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     const token = this.jwtFromRequestFn(request)
 
     // 检查 token 是否在黑名单中
-    if (await this.redis.get(genTokenBlacklistKey(token)))
+    if (await this.redis.get(genTokenBlacklistKey(token))) {
+      console.log('JwtAuthGuard1 token in black===========', token);
       throw new BusinessException(ErrorEnum.INVALID_LOGIN)
+    }
+
 
     request.accessToken = token
 
@@ -87,15 +91,20 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     }
     catch (err) {
       // 需要后置判断 这样携带了 token 的用户就能够解析到 request.user
-      if (isPublic)
+      let env_public = env('IS_PUBLIC')
+      if (isPublic || env_public)
         return true
 
-      if (isEmpty(token))
+      if (isEmpty(token)) {
+        console.log('JwtAuthGuard2 no login===========', token);
         throw new UnauthorizedException('未登录')
+      }
 
       // 在 handleRequest 中 user 为 null 时会抛出 UnauthorizedException
-      if (err instanceof UnauthorizedException)
+      if (err instanceof UnauthorizedException) {
+        console.log('JwtAuthGuard 3 user is null===========', err);
         throw new BusinessException(ErrorEnum.INVALID_LOGIN)
+      }
 
       // 判断 token 是否有效且存在, 如果不存在则认证失败
       const isValid = isNil(token)
@@ -103,20 +112,29 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
         : await this.tokenService.checkAccessToken(token!)
 
       if (!isValid)
-        throw new BusinessException(ErrorEnum.INVALID_LOGIN)
+        console.log('JwtAuthGuard 4 token valid===========', token);
+      throw new BusinessException(ErrorEnum.INVALID_LOGIN)
     }
 
     // SSE 请求
     if (isSse) {
       const { uid } = request.params
-
-      if (Number(uid) !== request.user.uid)
+      console.log('uid==============', uid);
+      console.log('request.user==============', request.user.uid);
+      console.log(Object.prototype.toString.call(uid));
+      console.log(Object.prototype.toString.call(request.user.uid));
+      console.log(Number(uid) !== request.user.uid);
+      
+      if (Number(uid) !== request.user.uid) {
+        console.log('JwtAuthGuard 5 ===========', "路径参数 uid 与当前 token 登录的用户 uid 不一致");
         throw new UnauthorizedException('路径参数 uid 与当前 token 登录的用户 uid 不一致')
+      }
     }
 
     const pv = await this.authService.getPasswordVersionByUid(request.user.uid)
     if (pv !== `${request.user.pv}`) {
       // 密码版本不一致，登录期间已更改过密码
+      console.log('JwtAuthGuard 6 ===========', "密码版本不一致，登录期间已更改过密码");
       throw new BusinessException(ErrorEnum.INVALID_LOGIN)
     }
 
@@ -126,6 +144,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
 
       if (token !== cacheToken) {
         // 与redis保存不一致 即二次登录
+        console.log('JwtAuthGuard 7 ===========', "与redis保存不一致 即二次登录");
         throw new BusinessException(ErrorEnum.ACCOUNT_LOGGED_IN_ELSEWHERE)
       }
     }

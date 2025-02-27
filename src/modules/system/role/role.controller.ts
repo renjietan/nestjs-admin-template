@@ -10,7 +10,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiExcludeController, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
@@ -34,6 +34,7 @@ export const permissions = definePermission('system:role', {
   DELETE: 'delete',
 } as const)
 
+@ApiExcludeController()
 @ApiTags('System - 角色模块')
 @ApiSecurityAuth()
 @Controller('roles')

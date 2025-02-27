@@ -22,7 +22,7 @@ export const permissions = definePermission('netdisk:manage', {
   COPY: 'copy',
 } as const)
 
-@ApiTags('System - 测试')
+@ApiTags('Mock - 测试')
 @Controller('test')
 @Public()
 export class TestController {

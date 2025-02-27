@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Req } from '@nestjs/common'
-import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiExcludeController, ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { FastifyRequest } from 'fastify'
 
@@ -16,6 +16,8 @@ import { OnlineService } from './online.service'
 
 export const permissions = definePermission('system:online', ['list', 'kick'] as const)
 
+
+@ApiExcludeController()
 @ApiTags('System - 在线用户模块')
 @ApiSecurityAuth()
 @ApiExtraModels(OnlineUserInfo)

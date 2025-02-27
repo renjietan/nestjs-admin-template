@@ -18,7 +18,7 @@ export const permissions = definePermission('tool:storage', {
   DELETE: 'delete',
 } as const)
 
-@ApiTags('Tools - 存储模块')
+@ApiTags('Tools - 文件存储模块')
 @ApiSecurityAuth()
 @Controller('storage')
 export class StorageController {

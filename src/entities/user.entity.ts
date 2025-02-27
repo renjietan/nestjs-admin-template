@@ -31,18 +31,6 @@ export class UserEntity extends CommonEntity {
   @Column({ nullable: true })
   nickname: string
 
-  @Column({ name: 'avatar', nullable: true })
-  avatar: string
-
-  @Column({ nullable: true })
-  qq: string
-
-  @Column({ nullable: true })
-  email: string
-
-  @Column({ nullable: true })
-  phone: string
-
   @Column({ nullable: true })
   remark: string
 

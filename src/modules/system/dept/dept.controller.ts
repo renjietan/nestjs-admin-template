@@ -1,19 +1,19 @@
 import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiExcludeController, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
-import { AuthUser } from '~/common/decorators/auth/auth-user.decorator'
-import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { CreatorPipe } from '~/common/pipes/creator.pipe'
 import { UpdaterPipe } from '~/common/pipes/updater.pipe'
 import { ErrorEnum } from '~/constants/error-code.constant'
-import { DeptEntity } from '~/entities/dept.entity'
 
 import { DeptDto, DeptQueryDto } from './dept.dto'
 import { DeptService } from './dept.service'
+import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
+import { DeptEntity } from '~/entities/dept.entity'
+import { AuthUser } from '~/common/decorators/auth/auth-user.decorator'
 
 export const permissions = definePermission('system:dept', {
   LIST: 'list',
@@ -23,6 +23,7 @@ export const permissions = definePermission('system:dept', {
   DELETE: 'delete',
 } as const)
 
+@ApiExcludeController()
 @ApiSecurityAuth()
 @ApiTags('System - 部门模块')
 @Controller('depts')

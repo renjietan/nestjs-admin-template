@@ -93,17 +93,7 @@ export class UserService {
 
     const data = {
       ...(info.nickname ? { nickname: info.nickname } : null),
-      ...(info.avatar ? { avatar: info.avatar } : null),
-      ...(info.email ? { email: info.email } : null),
-      ...(info.phone ? { phone: info.phone } : null),
-      ...(info.qq ? { qq: info.qq } : null),
       ...(info.remark ? { remark: info.remark } : null),
-    }
-
-    if (!info.avatar && info.qq) {
-      // 如果qq不等于原qq，则更新qq头像
-      if (info.qq !== user.qq)
-        data.avatar = await this.qqService.getAvater(info.qq)
     }
 
     await this.userRepository.update(uid, data)
@@ -272,7 +262,6 @@ export class UserService {
     username,
     nickname,
     deptId,
-    email,
     status,
   }: UserQueryDto): Promise<Pagination<UserEntity>> {
     const queryBuilder = this.userRepository
@@ -283,7 +272,6 @@ export class UserService {
       .where({
         ...(username ? { username: Like(`%${username}%`) } : null),
         ...(nickname ? { nickname: Like(`%${nickname}%`) } : null),
-        ...(email ? { email: Like(`%${email}%`) } : null),
         ...(!isNil(status) ? { status } : null),
       })
 

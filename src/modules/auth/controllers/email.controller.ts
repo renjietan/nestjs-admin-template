@@ -1,5 +1,5 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiExcludeController, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler'
 
@@ -11,6 +11,7 @@ import { Public } from '../../../common/decorators/auth/public.decorator'
 
 import { SendEmailCodeDto } from '../dto/captcha.dto'
 
+@ApiExcludeController()
 @ApiTags('Auth - 认证模块')
 @UseGuards(ThrottlerGuard)
 @Controller('auth/email')

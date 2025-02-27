@@ -11,28 +11,31 @@ import { ErrorEnum } from '~/constants/error-code.constant'
 import { AuthService } from '~/modules/auth/auth.service'
 
 import { ALLOW_ANON_KEY, PERMISSION_KEY, PUBLIC_KEY, Roles } from '../auth.constant'
+import { env } from '~/global/env'
 
 @Injectable()
 export class RbacGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private authService: AuthService,
-  ) {}
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<any> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ])
-
-    if (isPublic)
+    let env_public = env('IS_PUBLIC')
+    if (isPublic || env_public)
       return true
 
     const request = context.switchToHttp().getRequest<FastifyRequest>()
 
     const { user } = request
-    if (!user)
+    if (!user) {
+      console.log('RbacGuard user==========', user);
       throw new BusinessException(ErrorEnum.INVALID_LOGIN)
+    }
 
     // allowAnon 是需要登录后可访问(无需权限), Public 则是无需登录也可访问.
     const allowAnon = this.reflector.get<boolean>(
@@ -67,8 +70,10 @@ export class RbacGuard implements CanActivate {
     if (typeof payloadPermission === 'string')
       canNext = allPermissions.includes(payloadPermission)
 
-    if (!canNext)
+    if (!canNext) {
       throw new BusinessException(ErrorEnum.NO_PERMISSION)
+      console.log('RbacGuard canNext==========', canNext);
+    }
 
     return true
   }

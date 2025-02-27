@@ -1,4 +1,4 @@
-import { ApiProperty, IntersectionType, PartialType } from '@nestjs/swagger'
+import { ApiExcludeEndpoint, ApiHideProperty, ApiProperty, IntersectionType, PartialType } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
 import {
   ArrayMaxSize,
@@ -44,7 +44,7 @@ export class UserDto {
   @ArrayMaxSize(3)
   roleIds: number[]
 
-  @ApiProperty({ description: '归属大区', type: Number })
+  @ApiProperty({ description: '归属大区', type: Number, required: false })
   @Type(() => Number)
   @IsInt()
   @IsOptional()
@@ -54,24 +54,6 @@ export class UserDto {
   @IsOptional()
   @IsString()
   nickname: string
-
-  @ApiProperty({ description: '邮箱', example: 'bqy.dev@qq.com' })
-  @IsEmail()
-  @ValidateIf(o => !isEmpty(o.email))
-  email: string
-
-  @ApiProperty({ description: '手机号' })
-  @IsOptional()
-  @IsString()
-  phone?: string
-
-  @ApiProperty({ description: 'QQ' })
-  @IsOptional()
-  @IsString()
-  @Matches(/^[1-9]\d{4,10}$/)
-  @MinLength(5)
-  @MaxLength(11)
-  qq?: string
 
   @ApiProperty({ description: '备注' })
   @IsOptional()
@@ -86,7 +68,8 @@ export class UserDto {
 export class UserUpdateDto extends PartialType(UserDto) {}
 
 export class UserQueryDto extends IntersectionType(PagerDto<UserDto>, PartialType(UserDto)) {
-  @ApiProperty({ description: '归属大区', example: 1, required: false })
+  @ApiHideProperty()
+  @ApiProperty({ description: '归属大区', example: 1, required: false, })
   @IsInt()
   @IsOptional()
   deptId?: number

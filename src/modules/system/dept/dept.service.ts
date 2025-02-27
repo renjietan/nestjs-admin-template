@@ -5,12 +5,12 @@ import { EntityManager, Repository, TreeRepository } from 'typeorm'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
-import { DeptEntity } from '~/entities/dept.entity'
-import { UserEntity } from '~/entities/user.entity'
 
 import { deleteEmptyChildren } from '~/utils/list2tree.util'
 
 import { DeptDto, DeptQueryDto, MoveDept } from './dept.dto'
+import { UserEntity } from '~/entities/user.entity'
+import { DeptEntity } from '~/entities/dept.entity'
 
 @Injectable()
 export class DeptService {

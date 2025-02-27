@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiExcludeController, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
@@ -23,6 +23,7 @@ export const permissions = definePermission('system:task', {
   STOP: 'stop',
 } as const)
 
+@ApiExcludeController()
 @ApiTags('System - 任务调度模块')
 @ApiSecurityAuth()
 @Controller('tasks')
