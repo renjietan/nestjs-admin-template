@@ -5,7 +5,7 @@ import { CommonEntity, CompleteEntity } from '~/common/entity/common.entity'
 import { UserEntity } from './user.entity'
 
 @Entity({ name: 'f_hopping' })
-export class HoppingFreq extends CompleteEntity {
+export class FHoppingEntity extends CompleteEntity {
     @Column('integer', { name: 'f_table_id' })
     f_hopping_table_id: number
   

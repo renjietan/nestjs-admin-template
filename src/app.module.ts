@@ -27,6 +27,7 @@ import { ToolsModule } from './modules/tools/tools.module'
 
 import { DatabaseModule } from './shared/database/database.module'
 import { SocketModule } from './socket/socket.module'
+import { HopFreqModule } from './modules/hop-freq/hop-freq.module'
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { SocketModule } from './socket/socket.module'
     SocketModule,
     HealthModule,
     SseModule,
+    HopFreqModule
     // NetdiskModule,
   ],
   providers: [
