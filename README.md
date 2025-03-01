@@ -64,7 +64,7 @@
       - -d 指定数据源，读取配置文件，通过配置文件的配置，告知typeorm从哪里加载数据库
     "typeorm": "cross-env NODE_ENV=development typeorm-ts-node-esm -d ./dist/config/database.config.js",
 
-    - 更新数据库(或初始化数据)
+    - 
     "migration:create": "npm run typeorm migration:create ./src/migrations/initData",
 
     - 注意：
@@ -76,7 +76,7 @@
         - down：用于回滚变更（例如删除表、删除列等）。
     "migration:generate": "npm run typeorm migration:generate ./src/migrations/update-table",
 
-    - 更新数据库(或初始化数据)
+    - 更新数据库(或初始化数据), 需要删除 数据库 migrations 表的数据，或新增一条
     "migration:run": "npm run typeorm -- migration:run",
 
     - 回滚到最后一次更新

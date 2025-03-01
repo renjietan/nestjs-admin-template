@@ -60,3 +60,19 @@ export const hashString = function (str, seed = 0) {
 }
 
 export const uniqueSlash = (path: string) => path.replace(/(https?:\/)|(\/)+/g, '$1$2')
+
+/**
+ * @path: src\main\nest\utils\index.ts
+ * @functionName roundToNearest0025
+ * @param {}
+ * @description 俩个数字相除，以倍数作为基础四舍五入
+ * @author 谭人杰
+ * @date 2025-01-08 15:46:46
+ */
+export function b_diff(start: number, end: number, count: number, n: number) {
+  const diff_total = end - start
+  const increment = diff_total / count
+  const roundedIncrement = Math.round(increment / n) * n
+  return roundedIncrement
+}
+

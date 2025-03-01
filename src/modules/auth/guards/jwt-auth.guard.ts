@@ -97,7 +97,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
 
       if (isEmpty(token)) {
         console.log('JwtAuthGuard2 no login===========', token);
-        throw new UnauthorizedException('未登录')
+        throw new UnauthorizedException(ErrorEnum.NO_LOGIN)
       }
 
       // 在 handleRequest 中 user 为 null 时会抛出 UnauthorizedException
@@ -119,15 +119,16 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     // SSE 请求
     if (isSse) {
       const { uid } = request.params
-      console.log('uid==============', uid);
-      console.log('request.user==============', request.user.uid);
-      console.log(Object.prototype.toString.call(uid));
-      console.log(Object.prototype.toString.call(request.user.uid));
-      console.log(Number(uid) !== request.user.uid);
+      // JWT权限  打印
+      // console.log('uid==============', uid);
+      // console.log('request.user==============', request.user.uid);
+      // console.log(Object.prototype.toString.call(uid));
+      // console.log(Object.prototype.toString.call(request.user.uid));
+      // console.log(Number(uid) !== request.user.uid);
       
       if (Number(uid) !== request.user.uid) {
         console.log('JwtAuthGuard 5 ===========', "路径参数 uid 与当前 token 登录的用户 uid 不一致");
-        throw new UnauthorizedException('路径参数 uid 与当前 token 登录的用户 uid 不一致')
+        throw new UnauthorizedException('The parameter uId does not match the uId of the currently logged-in user.')
       }
     }
 

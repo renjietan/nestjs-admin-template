@@ -31,6 +31,7 @@ export enum ErrorEnum {
   ACCOUNT_LOGGED_IN_ELSEWHERE = '1105:您的账号已在其他地方登录',
   GUEST_ACCOUNT_RESTRICTED_OPERATION = '1106:游客账号不允许操作',
   REQUESTED_RESOURCE_NOT_FOUND = '1107:所请求的资源不存在',
+  NO_LOGIN = '1108:Please log in and try again',
 
   TOO_MANY_REQUESTS = '1201:请求频率过快，请一分钟后再试',
   MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY = '1202:一天最多发送5条验证码',
@@ -39,10 +40,5 @@ export enum ErrorEnum {
   INSECURE_MISSION = '1301:不安全的任务，确保执行的加入@Mission注解',
   EXECUTED_MISSION_NOT_FOUND = '1302:所执行的任务不存在',
   MISSION_EXECUTION_FAILED = '1303:任务执行失败',
-  MISSION_NOT_FOUND = '1304:任务不存在',
-
-  // OSS相关
-  OSS_FILE_OR_DIR_EXIST = '1401:当前创建的文件或目录已存在',
-  OSS_NO_OPERATION_REQUIRED = '1402:无需操作',
-  OSS_EXCEE_MAXIMUM_QUANTITY = '1403:已超出支持的最大处理数量',
+  MISSION_NOT_FOUND = '1304:任务不存在'
 }

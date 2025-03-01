@@ -1,6 +1,6 @@
 import { IsDefined, IsNotEmpty, IsNumber } from 'class-validator'
 
-export class BatchDeleteDto {
+export class IdsDto {
   @IsDefined()
   @IsNotEmpty()
   @IsNumber({}, { each: true })
