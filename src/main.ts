@@ -66,16 +66,8 @@ async function bootstrap() {
       exceptionFactory: errors => {
         console.log('ValidationPipe errors==============', errors);
         let _errors = deepFindValidateError(errors)
-        return new UnprocessableEntityException(
-          _errors![0]
-          // errors.map((e) => {
-          //   console.log('ValidationPipe msg=========', e);
-          //   const rule = Object.keys(e.constraints!)[0]
-          //   const msg = e.constraints![rule]
-          //   console.log('ValidationPipe msg=========', msg);
-          //   return msg
-          // })[0],
-        )
+        let error = _errors?.[0]
+        return new UnprocessableEntityException(error)
       },
     }),
   )

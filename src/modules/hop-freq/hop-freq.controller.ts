@@ -5,7 +5,7 @@ import { CoverFreqHopDto } from './freq_dto/cover-freq-hop.dto';
 import { GFreqHopDto } from './freq_dto/g-freq-hop.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FTableEntity } from '~/entities/f-table';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { CreateFreqTableDto } from './dto/create-freq-table.dto';
 import { default_hopping_conf } from '~/utils/init.mock.data';
 import { BaseFreqTableDto } from './dto/base-freq-table.dto';
@@ -23,6 +23,7 @@ import { ErrorEnum } from '~/constants/error-code.constant';
 import { ApiResult } from '~/common/decorators/api-result.decorator';
 import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator';
 import { instanceToPlain, plainToClass, plainToInstance } from 'class-transformer';
+import { FHoppingEntity } from '~/entities/f-hopping';
 
 export const permissions = definePermission('confg:hopFreq', {
   LIST: 'list',
@@ -49,7 +50,7 @@ export class HopFreqController {
   })
   @ApiResult({ type: String })
   @Perm(permissions.CREATE)
-  async create(@Body() createFreqTableDto: CreateFreqTableDto, @AuthUser() user: IAuthUser,) {
+  async init(@Body() createFreqTableDto: CreateFreqTableDto, @AuthUser() user: IAuthUser,) {
     let {
       law_conf,
     } = createFreqTableDto
@@ -72,19 +73,16 @@ export class HopFreqController {
       return cur
     }, {})
     law_conf = law_conf.reduce((cur, pre, index) => {
-      try {
-        const hc_obj = _hc[pre.type]
-        pre.id = hc_obj.id
-        pre.point_count = pre.point_count ? pre.point_count : hc_obj.point_count
-        pre.law_end = pre.law_end ? pre.law_end : hc_obj.law_end
-        pre.count = pre.count ? pre.count : hc_obj.count
-        pre.law_start = pre.law_start ? pre.law_start : hc_obj.law_start
-        if (!pre.law_spacing) {
-          pre.law_spacing = b_diff(pre.law_start, pre.law_end, pre.point_count, hc_obj.law_spacing)
-        }
-        cur.push(pre)
-      } catch (error) {
+      const hc_obj = _hc[pre.type]
+      pre.id = hc_obj.id
+      pre.point_count = pre.point_count ? pre.point_count : hc_obj.point_count
+      pre.law_end = pre.law_end ? pre.law_end : hc_obj.law_end
+      pre.count = pre.count ? pre.count : hc_obj.count
+      pre.law_start = pre.law_start ? pre.law_start : hc_obj.law_start
+      if (!pre.law_spacing) {
+        pre.law_spacing = b_diff(pre.law_start, pre.law_end, pre.point_count, hc_obj.law_spacing)
       }
+      cur.push(pre)
       return cur
     }, [])
     const data = law_conf.sort((a, b) => a.id - b.id).map((item, index) => {
@@ -96,34 +94,33 @@ export class HopFreqController {
           law_start,
           type,
           createById,
+          point_count
         }
-        const points = Array.from({
-          length: point_count,
-        }).map((item, index) => {
-          const value = law_start + index * law_spacing
-          return value > law_end ? law_end : value
-        })
-        return { ...obj, points }
+        return { ...obj }
       })
       return arr
     }).flat()
+    let all_data = await this.f_table_entity.find()
+    let total_len = data.length + all_data.length
+    if (total_len >= 80) {
+      throw new BusinessException('500:The number of data must not exceed 80')
+    }
+    
     try {
       let res = await this.f_table_entity.manager.transaction(async (manager) => {
-        data.forEach(async (item, index) => {
-          const t_res = await this.f_table_seivce.create(`Table No.${index}`, createById, {
-            law_end: item.law_end,
+        let index = 1
+        for (const item of data) {
+          await this.f_table_seivce.create_table({
+            type: item.type,
+            alias: `Table No.${index}`,
+            point_count: item.point_count,
             law_start: item.law_start,
             law_spacing: item.law_spacing,
-            type: item.type,
-          })
-          item.points.forEach(async (c) => {
-            await this.f_table_seivce.create_freq({
-              createById,
-              value: c,
-              f_table_id: t_res.id,
-            })
-          })
-        })
+            law_end: item.law_end,
+          }, createById)
+          index++
+        }
+        return "success"
       })
       return res
     }
@@ -144,17 +141,21 @@ export class HopFreqController {
   }
 
   @ApiOperation({
-    summary: '更新: 名称不可重复',
+    summary: '更新表-别名: 名称不可重复',
   })
   @Put('update/:id/:alias')
+  @ApiResult({ type: FTableEntity })
+  @Perm(permissions.UPDATE)
   async update(@Param('id') id: string, @Param('alias') alias: string) {
     return await this.f_table_seivce.update(+id, alias)
   }
 
   @ApiOperation({
-    summary: '删除调频表  且 删除频点',
+    summary: '删除调频表  且 删除频点, 传0 删除所有',
   })
-  @Post('del/:id')
+  @Delete('del/:id')
+  @ApiResult({ type: String })
+  @Perm(permissions.DELETE)
   remove(@Param('id') id: string) {
     return this.f_table_seivce.remove(+id)
   }
@@ -163,6 +164,8 @@ export class HopFreqController {
     summary: '调频表: 只查询调频表， 不查询频点，数据量太大',
   })
   @Get('list')
+  @ApiResult({ type:  [FTableEntity], isPage: true})
+  @Perm(permissions.LIST)
   async findAll() {
     return await this.f_table_seivce.findAll()
   }
@@ -171,6 +174,8 @@ export class HopFreqController {
     summary: '根据调频表类型 查询表以及频点',
   })
   @Get('findByType/:type')
+  @ApiResult({ type:  [FTableEntity]})
+  @Perm(permissions.LIST)
   async findByType(@Param('type') type: string) {
     return await this.f_table_seivce.findByTableType(type)
   }
@@ -179,6 +184,8 @@ export class HopFreqController {
     summary: '批量删除表以及频点',
   })
   @Delete('batch_remove_table')
+  @ApiResult({ type: String })
+  @Perm(permissions.DELETE)
   async batch_remove_table(@Body() data: IdsDto) {
     return await this.f_table_seivce.batch_remove_table(data)
   }
@@ -187,6 +194,8 @@ export class HopFreqController {
     summary: '根据表ID获取 这个表所有频点',
   })
   @Get(':f_table_id')
+  @ApiResult({ type: [FHoppingEntity] })
+  @Perm(permissions.LIST)
   findHopByTableId(@Param('f_table_id') f_table_id: string) {
     return this.f_table_seivce.findHopByTableId(+f_table_id)
   }
@@ -195,6 +204,7 @@ export class HopFreqController {
     summary: '根据调频表ID 新增频点',
   })
   @Post('create_hop')
+  @Perm(permissions.CREATE)
   createFreq(@Body() freqhop_dto: CreateFreqHopDto) {
     return this.f_table_seivce.create_freq(freqhop_dto)
   }
@@ -203,6 +213,8 @@ export class HopFreqController {
     summary: '批量删除频点',
   })
   @Delete('batch_remove_hop')
+  @ApiResult({ type: String })
+  @Perm(permissions.DELETE)
   batchRemoveFreq(@Body() ids: IdsDto) {
     return this.f_table_seivce.batch_remove_freq(ids)
   }
@@ -212,6 +224,8 @@ export class HopFreqController {
     summary: '根据ID 批量更新频点',
   })
   @Put('update_hop')
+  @ApiResult({ type: [UpdateResult] })
+  @Perm(permissions.UPDATE)
   updateHop(@Body() updateFreqDto: UpdateFreqHopDto) {
     return this.f_table_seivce.update_hop(updateFreqDto)
   }
@@ -220,6 +234,8 @@ export class HopFreqController {
     summary: '重置频点: 传入的type值, 不要做修改; 此处type值 用于 计算law_spacing',
   })
   @Put('reset')
+  @ApiResult({ type: [UpdateResult] })
+  @Perm(permissions.UPDATE)
   resetHopByIds(@Body() resetFreqHopDto: ResetFreqHopDto) {
     return this.f_table_seivce.resetHopByIds(resetFreqHopDto)
   }
@@ -228,6 +244,8 @@ export class HopFreqController {
     summary: '生成频点随机数据，不存库',
   })
   @Post('g_random_freq')
+  @ApiResult({ type: [Object],  isPage: true})
+  @Perm(permissions.LIST)
   g_random_freq(@Body() data: GFreqHopDto) {
     return this.f_table_seivce.g_random_freq(data)
   }
@@ -236,6 +254,8 @@ export class HopFreqController {
     summary: '根据跳频表  覆盖频点数据',
   })
   @Put('cover_freq')
+  @ApiResult({  type: String })
+  @Perm(permissions.UPDATE)
   cover_freq(@Body() data: CoverFreqHopDto) {
     return this.f_table_seivce.cover_freq(data)
   }

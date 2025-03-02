@@ -7,6 +7,7 @@ import { CommonEntity } from './common/entity/common.entity'
 import { ResOp, TreeResult } from './common/model/response.model'
 import { ConfigKeyPaths, IAppConfig, ISwaggerConfig } from './config'
 import { Pagination } from './helper/paginate/pagination'
+import { envNumber, envString } from './global/env'
 
 export function setupSwagger(
   app: INestApplication,
