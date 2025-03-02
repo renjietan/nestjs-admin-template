@@ -164,7 +164,7 @@ export class HopFreqController {
     summary: '调频表: 只查询调频表， 不查询频点，数据量太大',
   })
   @Get('list')
-  @ApiResult({ type:  [FTableEntity], isPage: true})
+  @ApiResult({ type:  [FTableEntity]})
   @Perm(permissions.LIST)
   async findAll() {
     return await this.f_table_seivce.findAll()
