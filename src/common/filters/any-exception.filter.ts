@@ -60,7 +60,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     // 返回基础响应结果
     const resBody: IBaseResponse = {
-      code: apiErrorCode,
+      status: apiErrorCode,
       message,
       data: null,
     }

@@ -1,28 +1,30 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiExcludeEndpoint, ApiExtraModels, ApiHideProperty, ApiProperty } from '@nestjs/swagger'
+import { Exclude, Expose } from 'class-transformer'
 import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator'
 
 export class BaseFreqTableDto {
+  @ApiHideProperty() // 完全隐藏
   @ApiProperty({
     description: 'id',
-    example: '后台逻辑需要，前端不需要填',
+    required: false,
   })
   id?: number
 
+  @IsNotEmpty()
   @ApiProperty({
     description: '类型',
     example: 'VHF',
   })
   type: string
 
-  @IsNotEmpty({
-    message: 'count cannot be empty',
-  })
+  @IsNotEmpty()
   @ApiProperty({
     description: '数量：生成的表的数量',
     example: 10,
   })
   count?: number
 
+  @IsNotEmpty()
   @ApiProperty({
     description: '数量：生成的频率值的数量',
     example: 232,

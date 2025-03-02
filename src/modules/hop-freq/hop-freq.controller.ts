@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { HopFreqService } from './hop-freq.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CoverFreqHopDto } from './freq_dto/cover-freq-hop.dto';
@@ -34,8 +34,7 @@ export const permissions = definePermission('confg:hopFreq', {
 
 @ApiTags('Config - 调频表')
 @ApiSecurityAuth()
-@Controller('hop-freq')
-
+@Controller('freq-table')
 export class HopFreqController {
   constructor(
     private readonly f_table_seivce: HopFreqService,
@@ -43,18 +42,17 @@ export class HopFreqController {
   ) { }
 
 
-  @Post()
+  @Patch()
   @ApiOperation({
     summary: '批量新增: 初始化 80张表时, law_conf可传空',
     description: '查看最下方 CreateFreqTableDto 参数说明',
   })
   @ApiResult({ type: String })
   @Perm(permissions.CREATE)
-  async create(@Query() createFreqTableDto: CreateFreqTableDto, @AuthUser() user: IAuthUser,) {
+  async create(@Body() createFreqTableDto: CreateFreqTableDto, @AuthUser() user: IAuthUser,) {
     let {
       law_conf,
     } = createFreqTableDto
-    console.log('data====================', instanceToPlain(createFreqTableDto));
     let createById = user?.uid
     const isExsit = (law_conf?.length ?? 0) > 0
     // NOTE(2025-01-08 10:28:30 谭人杰): 如果为空，则按照默认配置来执行
@@ -140,14 +138,15 @@ export class HopFreqController {
     description: '查看最下方 BaseTableDto 参数说明',
   })
   @ApiResult({ type: FTableEntity })
+  @Perm(permissions.CREATE)
   async create_table(@Body() data: BaseTableDto, @AuthUser() user: IAuthUser) {
-    return await this.f_table_seivce.create_table(data, user.uid)
+    return await this.f_table_seivce.create_table(data, user?.uid)
   }
 
   @ApiOperation({
     summary: '更新: 名称不可重复',
   })
-  @Post('update/:id/:alias')
+  @Put('update/:id/:alias')
   async update(@Param('id') id: string, @Param('alias') alias: string) {
     return await this.f_table_seivce.update(+id, alias)
   }
@@ -179,12 +178,10 @@ export class HopFreqController {
   @ApiOperation({
     summary: '批量删除表以及频点',
   })
-  @Post('batch_remove_table')
+  @Delete('batch_remove_table')
   async batch_remove_table(@Body() data: IdsDto) {
     return await this.f_table_seivce.batch_remove_table(data)
   }
-
-
 
   @ApiOperation({
     summary: '根据表ID获取 这个表所有频点',
@@ -205,7 +202,7 @@ export class HopFreqController {
   @ApiOperation({
     summary: '批量删除频点',
   })
-  @Post('batch_remove_hop')
+  @Delete('batch_remove_hop')
   batchRemoveFreq(@Body() ids: IdsDto) {
     return this.f_table_seivce.batch_remove_freq(ids)
   }
@@ -214,7 +211,7 @@ export class HopFreqController {
   @ApiOperation({
     summary: '根据ID 批量更新频点',
   })
-  @Post('update_hop')
+  @Put('update_hop')
   updateHop(@Body() updateFreqDto: UpdateFreqHopDto) {
     return this.f_table_seivce.update_hop(updateFreqDto)
   }
@@ -222,7 +219,7 @@ export class HopFreqController {
   @ApiOperation({
     summary: '重置频点: 传入的type值, 不要做修改; 此处type值 用于 计算law_spacing',
   })
-  @Post('reset')
+  @Put('reset')
   resetHopByIds(@Body() resetFreqHopDto: ResetFreqHopDto) {
     return this.f_table_seivce.resetHopByIds(resetFreqHopDto)
   }
@@ -238,7 +235,7 @@ export class HopFreqController {
   @ApiOperation({
     summary: '根据跳频表  覆盖频点数据',
   })
-  @Post('cover_freq')
+  @Put('cover_freq')
   cover_freq(@Body() data: CoverFreqHopDto) {
     return this.f_table_seivce.cover_freq(data)
   }

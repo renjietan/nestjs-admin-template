@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm'
 import { CompleteEntity } from '~/common/entity/common.entity'
+import { FHoppingEntity } from './f-hopping'
 
 @Entity('f_table')
 export class FTableEntity  extends CompleteEntity{
@@ -17,4 +18,7 @@ export class FTableEntity  extends CompleteEntity{
 
   @Column('integer', { name: 'law_end' })
   law_end: number
+
+  @OneToMany(() => FHoppingEntity, f_hopping => f_hopping.f_table)
+  hoppings: Relation<FHoppingEntity[]>
 }

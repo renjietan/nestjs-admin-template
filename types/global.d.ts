@@ -11,7 +11,7 @@ declare global {
 
   export interface IBaseResponse<T = any> {
     message: string
-    code: number
+    status: number
     data?: T
   }
 

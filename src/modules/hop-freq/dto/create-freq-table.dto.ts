@@ -17,6 +17,7 @@ export class CreateFreqTableDto {
   })
   law_conf: BaseFreqTableDto[]
 
+
   // @IsNotEmpty({
   //   message: 'createById cannot be empty',
   // })

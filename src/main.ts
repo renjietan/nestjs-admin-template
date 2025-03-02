@@ -22,6 +22,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 import { isDev, isMainProcess } from './global/env'
 import { setupSwagger } from './setup-swagger'
 import { LoggerService } from './shared/logger/logger.service'
+import { deepFindValidateError } from './utils'
 
 declare const module: any
 
@@ -55,20 +56,25 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
-      transform: true,
-      whitelist: true,
+      transform: true, //通过网络传入的有效负载是纯 JavaScript 对象。可以 ValidationPipe 自动将请求参数转为对应的 DTO 对象。要启动自动转换，只要设置transform属性为 true 即可。具体的代码如下：
+      enableDebugMessages: true,  //如果设置为 true，当出现问题时，验证器将向控制台打印额外的警告消息
+      whitelist: true, // 如果设置为 true，验证器将删除已验证（返回）对象的任何不使用任何验证装饰器的属性 
       transformOptions: { enableImplicitConversion: true },
       // forbidNonWhitelisted: true, // 禁止 无装饰器验证的数据通过
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
       stopAtFirstError: true,
       exceptionFactory: errors => {
         console.log('ValidationPipe errors==============', errors);
+        let _errors = deepFindValidateError(errors)
         return new UnprocessableEntityException(
-          errors.map((e) => {
-            const rule = Object.keys(e.constraints!)[0]
-            const msg = e.constraints![rule]
-            return msg
-          })[0],
+          _errors![0]
+          // errors.map((e) => {
+          //   console.log('ValidationPipe msg=========', e);
+          //   const rule = Object.keys(e.constraints!)[0]
+          //   const msg = e.constraints![rule]
+          //   console.log('ValidationPipe msg=========', msg);
+          //   return msg
+          // })[0],
         )
       },
     }),

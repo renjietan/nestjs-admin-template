@@ -10,13 +10,13 @@ export class ResOp<T = any> {
   data?: T
 
   @ApiProperty({ type: 'number', default: RESPONSE_SUCCESS_CODE })
-  code: number
+  status: number
 
   @ApiProperty({ type: 'string', default: RESPONSE_SUCCESS_MSG })
   message: string
 
   constructor(code: number, data: T, message = RESPONSE_SUCCESS_MSG) {
-    this.code = code
+    this.status = code
     this.data = data
     this.message = message
   }

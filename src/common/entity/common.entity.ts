@@ -41,15 +41,15 @@ export abstract class CompleteEntity extends CommonEntity {
   @Column({ name: 'update_by', comment: '更新者', nullable: true })
   updateBy: number
 
-  /**
-   * 不会保存到数据库中的虚拟列，数据量大时可能会有性能问题，有性能要求请考虑在 service 层手动实现
-   * @see https://typeorm.io/decorator-reference#virtualcolumn
-   */
-  @ApiProperty({ description: '创建者' })
-  @VirtualColumn({ query: alias => `SELECT username FROM sys_user WHERE id = ${alias}.create_by` })
-  creator: string
+  // /**
+  //  * 不会保存到数据库中的虚拟列，数据量大时可能会有性能问题，有性能要求请考虑在 service 层手动实现
+  //  * @see https://typeorm.io/decorator-reference#virtualcolumn
+  //  */
+  // @ApiProperty({ description: '创建者' })
+  // @VirtualColumn({ query: alias => `SELECT username FROM sys_user WHERE id = ${alias}.create_by` })
+  // creator: string
 
-  @ApiProperty({ description: '更新者' })
-  @VirtualColumn({ query: alias => `SELECT username FROM sys_user WHERE id = ${alias}.update_by` })
-  updater: string
+  // @ApiProperty({ description: '更新者' })
+  // @VirtualColumn({ query: alias => `SELECT username FROM sys_user WHERE id = ${alias}.update_by` })
+  // updater: string
 }

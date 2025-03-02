@@ -1,6 +1,7 @@
 import { customAlphabet, nanoid } from 'nanoid'
 
 import { md5 } from './crypto.util'
+import { ValidationError } from 'class-validator'
 
 export function getAvatar(mail: string | undefined) {
   if (!mail)
@@ -76,3 +77,20 @@ export function b_diff(start: number, end: number, count: number, n: number) {
   return roundedIncrement
 }
 
+
+
+export const deepFindValidateError = (data: ValidationError[]) => {
+  let errors = []
+  const fun = (nodes: ValidationError[]) => {
+    if (nodes.length == 0)
+      return
+    nodes.forEach((item) => {
+      const constraints = Object.values(item?.constraints ?? {})
+      const children = item?.children ?? []
+      errors = [...errors, ...constraints]
+      children.length > 0 && fun(children)
+    })
+  }
+  fun(data)
+  return errors
+}

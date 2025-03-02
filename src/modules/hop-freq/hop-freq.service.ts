@@ -164,7 +164,8 @@ export class HopFreqService {
       async create_freq(freqhop_dto: CreateFreqHopDto) {
         const db = new FHoppingEntity()
         db.createBy = freqhop_dto.createById
-        db.f_table_id = freqhop_dto.f_table_id
+        db.f_table = new FTableEntity()
+        db.f_table.id  = freqhop_dto.f_table_id
         db.value = freqhop_dto.value
         return await this.f_hopping_entity.save(db)
       }
@@ -181,9 +182,11 @@ export class HopFreqService {
         if (!_temp) {
           throw new BusinessException('500:table type does not exist')
         }
-        await this.f_hopping_entity.delete({
-          f_table_id,
-        })
+        let cur_table_entity = new FTableEntity()
+        cur_table_entity.id = f_table_id
+        // await this.f_hopping_entity.delete({
+        //   f_table: cur_table_entity,
+        // })
         await this.f_table_entity.createQueryBuilder().update(FTableEntity).set({
           type: data.type,
           law_start: data.law_start,
@@ -197,7 +200,9 @@ export class HopFreqService {
         for (const item of _values) {
           const db = new FHoppingEntity()
           db.createBy = createById
-          db.f_table_id = f_table_id
+          let _f_table = new FTableEntity()
+          _f_table.id = f_table_id
+          db.f_table = _f_table
           db.value = Number(item)
           await this.f_hopping_entity.save(db)
         }
@@ -209,11 +214,9 @@ export class HopFreqService {
       }
     
       async findHopByTableId(f_table_id: number) {
-        let res = await this.f_hopping_entity.find({
-          where: {
-            f_table_id,
-          },
-        })
+        let _fh = new FTableEntity()
+        _fh.id = f_table_id
+        let res = await this.f_hopping_entity.find()
         return res
       }
     
