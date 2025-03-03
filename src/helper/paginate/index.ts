@@ -159,6 +159,7 @@ export async function paginate<T extends ObjectLiteral>(
   options: IPaginationOptions,
   searchOptions?: FindOptionsWhere<T> | FindManyOptions<T>,
 ): Promise<Pagination<T>>
+
 export async function paginate<T>(
   queryBuilder: SelectQueryBuilder<T>,
   options: IPaginationOptions,
