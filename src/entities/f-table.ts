@@ -6,11 +6,11 @@ import { ApiProperty } from '@nestjs/swagger'
 @Entity('f_table')
 export class FTableEntity  extends CompleteEntity{
   @ApiProperty({ description: '别名' })
-  @Column('text', { name: 'alias' })
+  @Column("varchar", { name: 'alias' })
   alias: string
 
   @ApiProperty({ description: '类型' })
-  @Column('text', { name: 'type' })
+  @Column('varchar', { name: 'type' })
   type: string
 
   @ApiProperty({ description: '最小数' })
