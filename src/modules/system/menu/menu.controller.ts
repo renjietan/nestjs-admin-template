@@ -13,7 +13,7 @@ import { flattenDeep } from 'lodash'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { definePermission, getDefinePermissions, Perm } from '~/common/decorators/auth/permission.decorator'
-import { IdParam } from '~/common/decorators/id-param.decorator'
+import { IdParam } from '~/common/decorators/path-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { CreatorPipe } from '~/common/pipes/creator.pipe'
 import { UpdaterPipe } from '~/common/pipes/updater.pipe'

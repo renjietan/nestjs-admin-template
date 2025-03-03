@@ -32,9 +32,9 @@ export class DictItemDto extends PartialType(DictItemEntity) {
 }
 
 export class DictItemQueryDto extends PagerDto {
-  @ApiProperty({ description: '字典类型 ID', required: true })
+  @ApiProperty({ description: '字典类型 ID', required: false })
   @IsInt()
-  typeId: number
+  typeId?: number
 
   @ApiProperty({ description: '字典项键名' })
   @IsString()

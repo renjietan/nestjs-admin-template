@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseArrayPipe, Post, Put, Query 
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
-import { IdParam } from '~/common/decorators/id-param.decorator'
+import { IdParam } from '~/common/decorators/path-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 
 import { MenuService } from '~/modules/system/menu/menu.service'

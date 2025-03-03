@@ -1,7 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsInstance, IsInt, IsNotEmpty, registerDecorator, ValidatorOptions } from "class-validator";
+import { PagerDto } from "~/common/dto/pager.dto";
 
-export class SearchDto {
+export class SearchDto extends PagerDto {
     @ApiProperty({ description: "设备号", example: 'SN001', required: false })
     SN: string;
 
@@ -19,10 +20,4 @@ export class SearchDto {
 
     @ApiProperty({ description: "备注", example: "MR9530", required: false })
     remarks: string;
-
-    @ApiProperty({ description: "页码", example: 1, required: false })
-    pageNum: string;
-
-    @ApiProperty({ description: "条数", example: 10, required: false })
-    pageSize: string;
 }

@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common'
 import { ApiExcludeController, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
-import { IdParam } from '~/common/decorators/id-param.decorator'
+import { IdParam } from '~/common/decorators/path-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { CreatorPipe } from '~/common/pipes/creator.pipe'

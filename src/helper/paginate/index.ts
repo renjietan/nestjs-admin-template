@@ -18,7 +18,11 @@ function resolveOptions(
 ): [number, number, PaginationTypeEnum] {
   const { page, pageSize, paginationType } = options
 
-  return [
+  return paginationType == PaginationTypeEnum.INCLUDE_NO_PAGE ? [
+    page,
+    pageSize,
+    paginationType
+  ] : [
     page || DEFAULT_PAGE,
     pageSize || DEFAULT_LIMIT,
     paginationType || PaginationTypeEnum.TAKE_AND_SKIP,
@@ -32,14 +36,38 @@ async function paginateRepository<T>(
 ): Promise<Pagination<T>> {
   const [page, limit] = resolveOptions(options)
 
-  const promises: [Promise<T[]>, Promise<number> | undefined] = [
-    repository.find({
-      skip: limit * (page - 1),
-      take: limit,
-      ...searchOptions,
-    }),
-    repository.count(searchOptions),
-  ]
+  let promises: [Promise<T[]>, Promise<number> | undefined]
+
+  if (options.paginationType == PaginationTypeEnum.INCLUDE_NO_PAGE) {
+    let where = {}
+    let order = { "createdAt": searchOptions?.["order"] ?? "DESC" }
+    let skip_take = !!page && !!limit && { skip: (Number(page) - 1) * Number(limit), take: Number(limit) }
+    for (const key in searchOptions) {
+      if (key != "page" && key != "pageSize" && key != "order") {
+        where = {
+          ...where,
+          ...(!!searchOptions[key] && { [key]: searchOptions[key] }),
+        }
+      }
+      promises = [
+        repository.find({
+          where,
+          ...skip_take,
+          order
+        }),
+        repository.count(skip_take),
+      ]
+    }
+  } else {
+    promises = [
+      repository.find({
+        skip: limit * (page - 1),
+        take: limit,
+        ...searchOptions,
+      }),
+      repository.count(searchOptions),
+    ]
+  }
 
   const [items, total] = await Promise.all(promises)
 
@@ -106,12 +134,12 @@ export async function paginateRawAndEntities<T>(
     Promise<{ entities: T[], raw: T[] }>,
     Promise<number> | undefined,
   ] = [
-    (paginationType === PaginationTypeEnum.LIMIT_AND_OFFSET
-      ? queryBuilder.limit(limit).offset((page - 1) * limit)
-      : queryBuilder.take(limit).skip((page - 1) * limit)
-    ).getRawAndEntities<T>(),
-    queryBuilder.getCount(),
-  ]
+      (paginationType === PaginationTypeEnum.LIMIT_AND_OFFSET
+        ? queryBuilder.limit(limit).offset((page - 1) * limit)
+        : queryBuilder.take(limit).skip((page - 1) * limit)
+      ).getRawAndEntities<T>(),
+      queryBuilder.getCount(),
+    ]
 
   const [itemObject, total] = await Promise.all(promises)
 

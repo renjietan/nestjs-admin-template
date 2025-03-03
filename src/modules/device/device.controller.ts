@@ -11,6 +11,8 @@ import { definePermission, Perm } from '~/common/decorators/auth/permission.deco
 import { DeleteResult, UpdateResult } from 'typeorm'
 import { AuthUser } from '~/common/decorators/auth/auth-user.decorator'
 import { DictItemService } from '../system/dict-item/dict-item.service'
+import { DictItemEntity } from '~/entities/dict-item.entity'
+import { BusinessException } from '~/common/exceptions/biz.exception'
 
 export const permissions = definePermission('device:manager', {
   LIST: 'list',
@@ -33,51 +35,71 @@ export class DeviceController {
     summary: '列表',
   })
   @Get()
-  @ApiResult({ type: [ DeviceEntity ] })
+  @ApiResult({ type: [DeviceEntity] })
   @Perm(permissions.LIST)
   async search(@Query() data: SearchDto) {
     return await this.deviceService.search(data)
   }
 
-  // @ApiOperation({
-  //   summary: '新增',
-  // })
-  // @Post()
-  // @ApiResult({ type: DeviceEntity })
-  // @Perm(permissions.CREATE)
-  // async create(@Body() data: DeviceDto, @AuthUser() user: IAuthUser) {
-  //   return await this.deviceService.create(data, user?.uid)
-  // }
+  @ApiOperation({
+    summary: '新增',
+  })
+  @Post()
+  @ApiResult({ type: DeviceEntity })
+  @Perm(permissions.CREATE)
+  async create(@Body() data: DeviceDto, @AuthUser() user: IAuthUser) {
+    let { device_type, model, status } = data
+    let res = await this.dict_item_service.page({})
+    let { items } = res
+    let dict_entity = items.reduce((cur, pre: DictItemEntity) => {
+      if (pre.value == device_type) {
+        cur.device_type = device_type
+      } else if (pre.value == model) {
+        cur.model = model
+      } else if (pre.value == status) {
+        cur.status = status
+      }
+      return cur
+    }, {
+      device_type: null,
+      model: null,
+      status: null
+    })
+    if(Object.values(dict_entity).every(item => !!item)) {
+      throw new BusinessException('The dictionary does not exist ')
+    }
+    return await this.deviceService.create(data, user?.uid)
+  }
 
-  // @ApiOperation({
-  //   summary: '编辑',
-  // })
-  // @Post('update/:id')
-  // @ApiResult({ type: UpdateResult })
-  // @Perm(permissions.UPDATE)
-  // async update(@Param('id') id: string, @Body() updateDto: DeviceDto,  @AuthUser() user: IAuthUser) {
-  //   console.log('update', id, updateDto)
-  //   return await this.deviceService.update(+id, updateDto, user?.uid)
-  // }
+  @ApiOperation({
+    summary: '编辑',
+  })
+  @Post('update/:id')
+  @ApiResult({ type: UpdateResult })
+  @Perm(permissions.UPDATE)
+  async update(@Param('id') id: string, @Body() updateDto: DeviceDto,  @AuthUser() user: IAuthUser) {
+    console.log('update', id, updateDto)
+    return await this.deviceService.update(+id, updateDto, user?.uid)
+  }
 
-  // @ApiOperation({
-  //   summary: '删除',
-  // })
-  // @Post('del')
-  // @ApiResult({ type: DeleteResult })
-  // @Perm(permissions.DELETE)
-  // async remove(@Body() idsDto: IdsDto) {
-  //   console.log('remove', idsDto)
-  //   return await this.deviceService.remove(idsDto)
-  // }
+  @ApiOperation({
+    summary: '删除',
+  })
+  @Post('del')
+  @ApiResult({ type: DeleteResult })
+  @Perm(permissions.DELETE)
+  async remove(@Body() idsDto: IdsDto) {
+    console.log('remove', idsDto)
+    return await this.deviceService.remove(idsDto)
+  }
 
-  // @ApiOperation({
-  //   summary: '根据ID查询设备详情',
-  // })
-  // @Post('findById/:id')
-  // @ApiResult({ type: DeviceEntity })
-  // @Perm(permissions.READ)
-  // async findById(@Param('id') id: string) {
-  //   return await this.deviceService.findById(+id)
-  // }
+  @ApiOperation({
+    summary: '根据ID查询设备详情',
+  })
+  @Post('findById/:id')
+  @ApiResult({ type: DeviceEntity })
+  @Perm(permissions.READ)
+  async findById(@Param('id') id: string) {
+    return await this.deviceService.findById(+id)
+  }
 }

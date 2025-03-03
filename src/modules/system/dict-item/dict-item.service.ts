@@ -14,7 +14,7 @@ export class DictItemService {
   constructor(
     @InjectRepository(DictItemEntity)
     private dictItemRepository: Repository<DictItemEntity>,
-  ) {}
+  ) { }
 
   /**
    * 罗列所有配置
@@ -29,9 +29,7 @@ export class DictItemService {
     const queryBuilder = this.dictItemRepository.createQueryBuilder('dict_item').orderBy({ orderNo: 'ASC' }).where({
       ...(label && { label: Like(`%${label}%`) }),
       ...(value && { value: Like(`%${value}%`) }),
-      type: {
-        id: typeId,
-      },
+      ...(typeId && { type: { id: typeId } }),
     })
 
     return paginate(queryBuilder, { page, pageSize })
@@ -82,5 +80,12 @@ export class DictItemService {
    */
   async findOne(id: number): Promise<DictItemEntity> {
     return this.dictItemRepository.findOneBy({ id })
+  }
+
+  /**
+ * 根据 value 值 查询单个
+ */
+  async findOneByCode(code: string): Promise<DictItemEntity> {
+    return this.dictItemRepository.findOneBy({ value: code })
   }
 }

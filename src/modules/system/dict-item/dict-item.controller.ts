@@ -1,10 +1,10 @@
-import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { AuthUser } from '~/common/decorators/auth/auth-user.decorator'
 import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
-import { IdParam } from '~/common/decorators/id-param.decorator'
+import { IdParam } from '~/common/decorators/path-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { UpdaterPipe } from '~/common/pipes/updater.pipe'
 import { DictItemEntity } from '~/entities/dict-item.entity'
@@ -48,6 +48,14 @@ export class DictItemController {
   @Perm(permissions.READ)
   async info(@IdParam() id: number): Promise<DictItemEntity> {
     return this.dictItemService.findOne(id)
+  }
+
+  @Get('byCode/:code')
+  @ApiOperation({ summary: '根据code查询字典项信息' })
+  @ApiResult({ type: DictItemEntity })
+  @Perm(permissions.READ)
+  async infoByCode(@Param("code") code: string): Promise<DictItemEntity> {
+    return this.dictItemService.findOneByCode(code)
   }
 
   @Post(':id')

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Unique } from 'typeorm'
 
 import { CompleteEntity } from '~/common/entity/common.entity'
 
@@ -15,7 +15,7 @@ export class DictItemEntity extends CompleteEntity {
   @ApiProperty({ description: '字典项键名' })
   label: string
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar' })
   @ApiProperty({ description: '字典项值' })
   value: string
 
