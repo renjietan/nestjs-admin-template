@@ -49,15 +49,15 @@ async function paginateRepository<T>(
           ...(!!searchOptions[key] && { [key]: searchOptions[key] }),
         }
       }
-      promises = [
-        repository.find({
-          where,
-          ...skip_take,
-          order
-        }),
-        repository.count(skip_take),
-      ]
     }
+    promises = [
+      repository.find({
+        where,
+        ...skip_take,
+        order
+      }),
+      repository.count(skip_take),
+    ]
   } else {
     promises = [
       repository.find({

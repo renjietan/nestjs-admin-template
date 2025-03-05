@@ -2,28 +2,21 @@ import { ApiProperty } from '@nestjs/swagger'
 import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator'
 
 export class BaseTableDto {
-  @IsNotEmpty({
-    message: 'type can be not empty'
-  })
+  @IsNotEmpty()
   @ApiProperty({
     description: '类型',
     example: 'VHF',
   })
   type: string
 
-  @IsNotEmpty({
-    message: 'alias can be not empty'
-  })
+  @IsNotEmpty()
   @ApiProperty({
     description: '别名',
     example: '别名',
   })
   alias: string
 
-  @ApiProperty({
-    description: '数量：生成的频率值的数量',
-    example: 232,
-  })
+  @ApiProperty()
   point_count: number
 
   @IsOptional()
