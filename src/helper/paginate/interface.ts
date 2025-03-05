@@ -3,7 +3,7 @@ import { ObjectLiteral } from 'typeorm'
 export enum PaginationTypeEnum {
   LIMIT_AND_OFFSET = 'limit',
   TAKE_AND_SKIP = 'take',
-  INCLUDE_NO_PAGE = "include_no_page"
+  ALL = "all"
 }
 
 export interface IPaginationOptions {

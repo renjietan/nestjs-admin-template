@@ -9,6 +9,8 @@ import {
 import { createPaginationObject } from './create-pagination'
 import { IPaginationOptions, PaginationTypeEnum } from './interface'
 import { Pagination } from './pagination'
+import { Order, PagerDto } from '~/common/dto/pager.dto'
+import { instanceToPlain, plainToInstance } from 'class-transformer'
 
 const DEFAULT_LIMIT = 10
 const DEFAULT_PAGE = 1
@@ -18,11 +20,7 @@ function resolveOptions(
 ): [number, number, PaginationTypeEnum] {
   const { page, pageSize, paginationType } = options
 
-  return paginationType == PaginationTypeEnum.INCLUDE_NO_PAGE ? [
-    page,
-    pageSize,
-    paginationType
-  ] : [
+  return [
     page || DEFAULT_PAGE,
     pageSize || DEFAULT_LIMIT,
     paginationType || PaginationTypeEnum.TAKE_AND_SKIP,
@@ -34,48 +32,18 @@ async function paginateRepository<T>(
   options: IPaginationOptions,
   searchOptions?: FindOptionsWhere<T> | FindManyOptions<T>,
 ): Promise<Pagination<T>> {
-  const [page, limit] = resolveOptions(options)
-
-  let promises: [Promise<T[]>, Promise<number> | undefined]
-
-  if (options.paginationType == PaginationTypeEnum.INCLUDE_NO_PAGE) {
-    let where = {}
-    let order = { "createdAt": searchOptions?.["order"] ?? "DESC" }
-    let skip_take = !!page && !!limit && { skip: (Number(page) - 1) * Number(limit), take: Number(limit) }
-    for (const key in searchOptions) {
-      if (key != "page" && key != "pageSize" && key != "order") {
-        where = {
-          ...where,
-          ...(!!searchOptions[key] && { [key]: searchOptions[key] }),
-        }
-      }
-      promises = [
-        repository.find({
-          where,
-          ...skip_take,
-          order
-        }),
-        repository.count(skip_take),
-      ]
-    }
-  } else {
-    promises = [
-      repository.find({
-        skip: limit * (page - 1),
-        take: limit,
-        ...searchOptions,
-      }),
-      repository.count(searchOptions),
-    ]
-  }
-
-  const [items, total] = await Promise.all(promises)
-
+  // const [page, limit] = resolveOptions(options)
+  const { page, pageSize } = options
+  const [items, total] = await repository.findAndCount({
+    ...(!!options.page && !!options.pageSize && { skip: pageSize * (page - 1), take: pageSize,}),
+    ...searchOptions
+  })
+  
   return createPaginationObject<T>({
     items,
     totalItems: total,
-    currentPage: page,
-    limit,
+    currentPage: items.length == total ? 1 : page,
+    limit: items.length == total ? total : pageSize,
   })
 }
 

@@ -34,10 +34,4 @@ export class DeviceDto {
 
   @ApiProperty({ description: '备注', example: 'MR9530', required: false })
   remarks: string
-
-  @IsNotEmpty({
-    message: 'createById cannot be empty',
-  })
-  @ApiProperty({ description: '创建者ID', example: 1 })
-  createById: number
 }

@@ -22,7 +22,6 @@ import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator';
 import { ErrorEnum } from '~/constants/error-code.constant';
 import { ApiResult } from '~/common/decorators/api-result.decorator';
 import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator';
-import { instanceToPlain, plainToClass, plainToInstance } from 'class-transformer';
 import { FHoppingEntity } from '~/entities/f-hopping';
 
 export const permissions = definePermission('confg:hopFreq', {
@@ -144,7 +143,7 @@ export class HopFreqController {
     summary: '更新表-别名: 名称不可重复',
   })
   @Put('update/:id/:alias')
-  @ApiResult({ type: FTableEntity })
+  @ApiResult({ type: UpdateResult })
   @Perm(permissions.UPDATE)
   async update(@Param('id') id: string, @Param('alias') alias: string) {
     return await this.f_table_seivce.update(+id, alias)

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { DeviceService } from './device.service'
 import { DeviceDto } from './dto/device.dto'
@@ -74,7 +74,7 @@ export class DeviceController {
   @ApiOperation({
     summary: '编辑',
   })
-  @Post('update/:id')
+  @Put('update/:id')
   @ApiResult({ type: UpdateResult })
   @Perm(permissions.UPDATE)
   async update(@Param('id') id: string, @Body() updateDto: DeviceDto,  @AuthUser() user: IAuthUser) {
@@ -85,7 +85,7 @@ export class DeviceController {
   @ApiOperation({
     summary: '删除',
   })
-  @Post('del')
+  @Delete('del')
   @ApiResult({ type: DeleteResult })
   @Perm(permissions.DELETE)
   async remove(@Body() idsDto: IdsDto) {

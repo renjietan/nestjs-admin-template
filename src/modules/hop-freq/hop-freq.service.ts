@@ -14,6 +14,8 @@ import { CoverFreqHopDto } from './freq_dto/cover-freq-hop.dto';
 import { UpdateFreqHopBaseDto, UpdateFreqHopDto } from './freq_dto/update-freq-hop.dto';
 import { ResetFreqHopDto } from './freq_dto/reset-freq-hop.dto';
 import { GFreqHopDto } from './freq_dto/g-freq-hop.dto';
+import { createPaginationObject } from '~/helper/paginate/create-pagination';
+import { paginate } from '~/helper/paginate';
 
 @Injectable()
 export class HopFreqService {
@@ -83,7 +85,7 @@ export class HopFreqService {
         })
         return await manager.save(points)
       } catch (error) {
-        throw new BusinessException(`500:${ error }`)
+        throw new BusinessException(`500:${error}`)
       }
     })
 
@@ -98,9 +100,12 @@ export class HopFreqService {
         GROUP BY f_table.id;
       `
     );
-    console.log('results================', results);
-    
-    return results;
+    return createPaginationObject({
+      items: results,
+      totalItems: results.length,
+      currentPage: 1,
+      limit: results.length
+    });
   }
 
   async findByTableType(type: string) {
@@ -135,7 +140,9 @@ export class HopFreqService {
       cur[pre.id].points.push(point)
       return cur
     }, {})
-    return results;
+    return {
+      items: results,
+    };
   }
 
   async batch_remove_table(data: IdsDto) {
@@ -164,12 +171,12 @@ export class HopFreqService {
 
   async remove(id: number) {
     return await this.entity_manager.transaction(async (manager) => {
-      if(id == 0) {
+      if (id == 0) {
         await manager.query('SET FOREIGN_KEY_CHECKS = 0;')
         await manager.clear(FHoppingEntity)
         await manager.clear(FTableEntity)
         await manager.query('SET FOREIGN_KEY_CHECKS = 1;');
-        return 
+        return
       }
       return await manager.delete(FTableEntity, id)
     })
@@ -228,10 +235,23 @@ export class HopFreqService {
   }
 
   async findHopByTableId(f_table_id: number) {
-    let _fh = new FTableEntity()
-    _fh.id = f_table_id
-    let res = await this.f_hopping_entity.find()
-    return res
+    let temp = new FTableEntity()
+    temp.id = f_table_id
+    let res = await paginate(this.f_table_entity, { page: undefined, pageSize: undefined }, {
+      where: {
+        id: f_table_id
+      },
+      relations: {
+        hoppings: true
+      }
+    })
+    let _res = { ...res, items: res.items?.[0]?.hoppings ?? []}
+    _res.meta.currentPage = 1
+    _res.meta.itemCount = _res.items.length
+    _res.meta.itemsPerPage = _res.items.length
+    _res.meta.totalItems = _res.items.length
+    _res.meta.totalPages = 1
+    return _res
   }
 
   async update_hop(freqhop_dto: UpdateFreqHopDto) {

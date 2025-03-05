@@ -2,6 +2,9 @@ import { customAlphabet, nanoid } from 'nanoid'
 
 import { md5 } from './crypto.util'
 import { ValidationError } from 'class-validator'
+import { FindManyOptions, FindOptionsWhere } from 'typeorm'
+import { PagerDto } from '~/common/dto/pager.dto'
+import { ClassConstructor, instanceToPlain, plainToInstance } from 'class-transformer'
 
 export function getAvatar(mail: string | undefined) {
   if (!mail)
@@ -93,4 +96,17 @@ export const deepFindValidateError = (data: ValidationError[]) => {
   }
   fun(data)
   return errors
+}
+
+export function getQueryField<T> (searchOptions: T): {} {
+  let _pagerDto = new PagerDto()
+  let pager_json = instanceToPlain(_pagerDto)
+  let query = {}
+  for (const key in searchOptions) {
+    query = {
+      ...query,
+      ...(!(key in pager_json) && { [key]: searchOptions[key]})
+    }
+  }
+  return query
 }

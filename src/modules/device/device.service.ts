@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Brackets, Not, Repository } from 'typeorm'
+import { Brackets, FindManyOptions, FindOptionsOrder, Like, Not, Repository } from 'typeorm'
 import { SearchDto } from './dto/search.dto'
 import { DeviceDto } from './dto/device.dto'
 import { DeviceEntity } from '~/entities/d_device'
@@ -10,16 +10,30 @@ import { DictItemService } from '../system/dict-item/dict-item.service'
 import { paginate } from '~/helper/paginate'
 import { createPaginationObject } from '~/helper/paginate/create-pagination'
 import { PaginationTypeEnum } from '~/helper/paginate/interface'
+import { getQueryField } from '~/utils'
+import { Order } from '~/common/dto/pager.dto'
 
 @Injectable()
 export class DeviceService {
   constructor(
     @InjectRepository(DeviceEntity) private readonly d_device_entity: Repository<DeviceEntity>,
-
   ) { }
 
   async search(data: SearchDto) {
-    return paginate(this.d_device_entity, { page: data.page, pageSize: data.pageSize }, data)
+    let _q: FindManyOptions<DeviceEntity> = {
+      where: {
+        ...(data.SN && { SN: Like(`%${data.SN}%`) }),
+        ...(data.alias && { alias: Like(`%${data.alias}%`) }),
+        ...(data.device_type && { device_type: data.device_type }),
+        ...(data.model && { model: data.model }),
+        ...(data.remarks && { remarks: Like(`%${data.remarks}%`) }),
+        ...(data.status && { SN: data.status }),
+      },
+      order: {
+        [!!data.field ? data.field : "createdAt"]: !!data.order ? data.order : Order.DESC
+      },
+    }
+    return await paginate(this.d_device_entity, { page: data.page, pageSize: data.pageSize }, _q)
   }
 
   async create(data: DeviceDto, userId: number) {
@@ -59,7 +73,6 @@ export class DeviceService {
     }
     let device_type = new DictItemEntity()
     device_type.value = data.device_type
-    let model = new DictItemEntity()
     return await this.d_device_entity.createQueryBuilder().update(DeviceEntity).set({
       SN: data.SN,
       alias: data.alias,
