@@ -25,7 +25,6 @@ export class DictTypeService {
     //   .leftJoinAndSelect("sys_dict_item", 'sys_dict_item', 'dict_type.id = sys_dict_item.type_id')
     const types = await this.dictTypeRepository.find()
     const temp = await this.dictItemRepository.query("select * from sys_dict_item")
-    console.log('temp===========', temp);
     const dicts = temp.reduce((cur, pre) => {
       !cur[pre.type_id] && (cur[pre.type_id] = [])
       cur[pre.type_id].push(pre)
