@@ -8,6 +8,7 @@ import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
 
 import { DictItemDto, DictItemQueryDto } from './dict-item.dto'
+import { PaginationTypeEnum } from '~/helper/paginate/interface'
 
 @Injectable()
 export class DictItemService {
@@ -32,7 +33,7 @@ export class DictItemService {
       ...(typeId && { type: { id: typeId } }),
     })
 
-    return paginate(queryBuilder, { page, pageSize })
+    return paginate(queryBuilder, { page, pageSize, paginationType: PaginationTypeEnum.ALL })
   }
 
   /**

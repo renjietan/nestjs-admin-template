@@ -27,6 +27,14 @@ export const permissions = definePermission('system:dict-type', {
 export class DictTypeController {
   constructor(private dictTypeService: DictTypeService) {}
 
+  @Get("full")
+  @ApiOperation({ summary: '获取所有字典（字典类型 + 字典）' })
+  // @ApiResult({ type: [DictTypeEntity], isPage: true })
+  @Perm(permissions.LIST)
+  async full(): Promise<any> {
+    return this.dictTypeService.full()
+  }
+  
   @Get()
   @ApiOperation({ summary: '获取字典类型列表' })
   @ApiResult({ type: [DictTypeEntity], isPage: true })

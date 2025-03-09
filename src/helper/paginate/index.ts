@@ -35,10 +35,10 @@ async function paginateRepository<T>(
   // const [page, limit] = resolveOptions(options)
   const { page, pageSize } = options
   const [items, total] = await repository.findAndCount({
-    ...(!!options.page && !!options.pageSize && { skip: pageSize * (page - 1), take: pageSize,}),
+    ...(!!options.page && !!options.pageSize && { skip: pageSize * (page - 1), take: pageSize, }),
     ...searchOptions
   })
-  
+
   return createPaginationObject<T>({
     items,
     totalItems: total,
@@ -51,12 +51,12 @@ async function paginateQueryBuilder<T>(
   queryBuilder: SelectQueryBuilder<T>,
   options: IPaginationOptions,
 ): Promise<Pagination<T>> {
-  const [page, limit, paginationType] = resolveOptions(options)
+  const { page, pageSize, paginationType } = options
 
   if (paginationType === PaginationTypeEnum.TAKE_AND_SKIP)
-    queryBuilder.take(limit).skip((page - 1) * limit)
+    !!page && !!pageSize && queryBuilder.take(pageSize).skip((page - 1) * pageSize)
   else
-    queryBuilder.limit(limit).offset((page - 1) * limit)
+    !!page && !!pageSize && queryBuilder.limit(pageSize).offset((page - 1) * pageSize)
 
   const [items, total] = await queryBuilder.getManyAndCount()
 
@@ -64,7 +64,7 @@ async function paginateQueryBuilder<T>(
     items,
     totalItems: total,
     currentPage: page,
-    limit,
+    limit: pageSize,
   })
 }
 

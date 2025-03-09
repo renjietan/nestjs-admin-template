@@ -7,6 +7,11 @@ export enum Order {
   DESC = 'DESC',
 }
 
+export enum Exact {
+  TRUE = 1,
+  FALSE = 0,
+}
+
 export class PagerDto<T = any> {
   @ApiProperty({ minimum: 1, default: 1 })
   @Min(1)
