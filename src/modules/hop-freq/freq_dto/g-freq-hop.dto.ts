@@ -2,18 +2,14 @@ import { ApiProperty } from '@nestjs/swagger'
 import { IsNotEmpty, IsOptional } from 'class-validator'
 
 export class GFreqHopDto {
-  @IsNotEmpty({
-    message: 'count cannot be empty',
-  })
+  @IsNotEmpty()
   @ApiProperty({
     description: '需要生成的数量: 如果为空，采用需求文档中的默认值',
     example: 232,
   })
   point_count: number
 
-  @IsNotEmpty({
-    message: 'type cannot be empty',
-  })
+  @IsNotEmpty()
   @ApiProperty({
     description: 'type',
     example: 'VHF',

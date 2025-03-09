@@ -53,7 +53,7 @@ export class HopFreqController {
     let {
       law_conf,
     } = createFreqTableDto
-    let createById = user?.uid
+    let uId = user?.uid
     const isExsit = (law_conf?.length ?? 0) > 0
     // NOTE(2025-01-08 10:28:30 谭人杰): 如果为空，则按照默认配置来执行
     law_conf = isExsit ? law_conf : default_hopping_conf
@@ -92,7 +92,7 @@ export class HopFreqController {
           law_spacing,
           law_start,
           type,
-          createById,
+          createById: uId,
           point_count
         }
         return { ...obj }
@@ -104,7 +104,7 @@ export class HopFreqController {
     if (total_len >= 80) {
       throw new BusinessException('500:The number of data must not exceed 80')
     }
-    
+
     try {
       let res = await this.f_table_entity.manager.transaction(async (manager) => {
         let index = 1
@@ -116,7 +116,7 @@ export class HopFreqController {
             law_start: item.law_start,
             law_spacing: item.law_spacing,
             law_end: item.law_end,
-          }, createById)
+          }, uId)
           index++
         }
         return "success"
@@ -163,7 +163,7 @@ export class HopFreqController {
     summary: '调频表: 只查询调频表， 不查询频点，数据量太大',
   })
   @Get('list')
-  @ApiResult({ type:  [FTableEntity]})
+  @ApiResult({ type: [FTableEntity] })
   @Perm(permissions.LIST)
   async findAll() {
     return await this.f_table_seivce.findAll()
@@ -173,7 +173,7 @@ export class HopFreqController {
     summary: '根据调频表类型 查询表以及频点',
   })
   @Get('findByType/:type')
-  @ApiResult({ type:  [FTableEntity]})
+  @ApiResult({ type: [FTableEntity] })
   @Perm(permissions.LIST)
   async findByType(@Param('type') type: string) {
     return await this.f_table_seivce.findByTableType(type)
@@ -204,8 +204,8 @@ export class HopFreqController {
   })
   @Post('create_hop')
   @Perm(permissions.CREATE)
-  createFreq(@Body() freqhop_dto: CreateFreqHopDto) {
-    return this.f_table_seivce.create_freq(freqhop_dto)
+  createFreq(@Body() freqhop_dto: CreateFreqHopDto, @AuthUser() user:IAuthUser) {
+    return this.f_table_seivce.create_freq(user?.uid, freqhop_dto)
   }
 
   @ApiOperation({
@@ -243,7 +243,7 @@ export class HopFreqController {
     summary: '生成频点随机数据，不存库',
   })
   @Post('g_random_freq')
-  @ApiResult({ type: [Object],  isPage: true})
+  @ApiResult({ type: [Object], isPage: true })
   @Perm(permissions.LIST)
   g_random_freq(@Body() data: GFreqHopDto) {
     return this.f_table_seivce.g_random_freq(data)
@@ -253,9 +253,10 @@ export class HopFreqController {
     summary: '根据跳频表  覆盖频点数据',
   })
   @Put('cover_freq')
-  @ApiResult({  type: String })
+  @ApiResult({ type: String })
   @Perm(permissions.UPDATE)
-  cover_freq(@Body() data: CoverFreqHopDto) {
-    return this.f_table_seivce.cover_freq(data)
+  cover_freq(@Body() data: CoverFreqHopDto, @AuthUser() user: IAuthUser) {
+    let uId = user?.uid
+    return this.f_table_seivce.cover_freq(uId, data)
   }
 }

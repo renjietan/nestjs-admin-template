@@ -26,10 +26,10 @@ export class HopFreqService {
     private readonly entity_manager: EntityManager
   ) { }
 
-  async create(alias: string, createById: number, data: BaseFreqTableDto) {
+  async create(alias: string, createBy: number, data: BaseFreqTableDto) {
     const temp = new FTableEntity()
     temp.alias = alias
-    temp.createBy = createById
+    temp.createBy = createBy
     temp.law_end = data.law_end
     temp.law_spaceing = data.law_spacing
     temp.law_start = data.law_start
@@ -182,9 +182,9 @@ export class HopFreqService {
     })
   }
 
-  async create_freq(freqhop_dto: CreateFreqHopDto) {
+  async create_freq(uId: number, freqhop_dto: CreateFreqHopDto) {
     const db = new FHoppingEntity()
-    db.createBy = freqhop_dto.createById
+    db.createBy = uId
     db.f_table = new FTableEntity()
     db.f_table.id = freqhop_dto.f_table_id
     db.value = freqhop_dto.value
@@ -197,8 +197,8 @@ export class HopFreqService {
     })
   }
 
-  async cover_freq(data: CoverFreqHopDto) {
-    const { createById, f_table_id } = data
+  async cover_freq(uId: number, data: CoverFreqHopDto) {
+    const { f_table_id  } = data
     const _temp = default_hopping_conf.find(item => item.type == data.type)
     if (!_temp) {
       throw new BusinessException('500:table type does not exist')
@@ -213,24 +213,20 @@ export class HopFreqService {
       law_start: data.law_start,
       law_spaceing: data.law_spacing,
       law_end: data.law_end,
-      createBy: data.createById,
+      createBy: uId,
     }).where({
       id: f_table_id,
     }).execute()
     let _values = data.values.split(',')
     for (const item of _values) {
       const db = new FHoppingEntity()
-      db.createBy = createById
+      db.createBy = uId
       let _f_table = new FTableEntity()
       _f_table.id = f_table_id
       db.f_table = _f_table
       db.value = Number(item)
       await this.f_hopping_entity.save(db)
     }
-    // const promises = data.values.split(',').map((item) => {
-    //   return 
-    // })
-    // return await Promise.all(promises)
     return 'success'
   }
 

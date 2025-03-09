@@ -2,18 +2,14 @@ import { ApiProperty } from '@nestjs/swagger'
 import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator'
 
 export class ResetFreqHopDto {
-  @IsNotEmpty({
-    message: 'ids cannot be empty',
-  })
+  @IsNotEmpty()
   @ApiProperty({
     description: '逗号分隔的id',
     example: 1,
   })
   ids: string
 
-  @IsNotEmpty({
-    message: 'type cannot be empty',
-  })
+  @IsNotEmpty()
   @ApiProperty({
     description: 'type',
     example: 'VHF',
