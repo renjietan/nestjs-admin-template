@@ -71,35 +71,35 @@ export class DeviceController {
     return await this.deviceService.create(data, user?.uid)
   }
 
-  @ApiOperation({
-    summary: '编辑',
-  })
-  @Put('update/:id')
-  @ApiResult({ type: UpdateResult })
-  @Perm(permissions.UPDATE)
-  async update(@Param('id') id: string, @Body() updateDto: DeviceDto,  @AuthUser() user: IAuthUser) {
-    console.log('update', id, updateDto)
-    return await this.deviceService.update(+id, updateDto, user?.uid)
-  }
+  // @ApiOperation({
+  //   summary: '编辑',
+  // })
+  // @Put('update/:id')
+  // @ApiResult({ type: UpdateResult })
+  // @Perm(permissions.UPDATE)
+  // async update(@Param('id') id: string, @Body() updateDto: DeviceDto,  @AuthUser() user: IAuthUser) {
+  //   console.log('update', id, updateDto)
+  //   return await this.deviceService.update(+id, updateDto, user?.uid)
+  // }
 
-  @ApiOperation({
-    summary: '删除',
-  })
-  @Delete('del')
-  @ApiResult({ type: DeleteResult })
-  @Perm(permissions.DELETE)
-  async remove(@Body() idsDto: IdsDto) {
-    console.log('remove', idsDto)
-    return await this.deviceService.remove(idsDto)
-  }
+  // @ApiOperation({
+  //   summary: '删除',
+  // })
+  // @Delete('del')
+  // @ApiResult({ type: DeleteResult })
+  // @Perm(permissions.DELETE)
+  // async remove(@Body() idsDto: IdsDto) {
+  //   console.log('remove', idsDto)
+  //   return await this.deviceService.remove(idsDto)
+  // }
 
-  @ApiOperation({
-    summary: '根据ID查询设备详情',
-  })
-  @Post('findById/:id')
-  @ApiResult({ type: DeviceEntity })
-  @Perm(permissions.READ)
-  async findById(@Param('id') id: string) {
-    return await this.deviceService.findById(+id)
-  }
+  // @ApiOperation({
+  //   summary: '根据ID查询设备详情',
+  // })
+  // @Post('findById/:id')
+  // @ApiResult({ type: DeviceEntity })
+  // @Perm(permissions.READ)
+  // async findById(@Param('id') id: string) {
+  //   return await this.deviceService.findById(+id)
+  // }
 }

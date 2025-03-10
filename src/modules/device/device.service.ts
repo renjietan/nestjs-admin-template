@@ -24,14 +24,19 @@ export class DeviceService {
       where: {
         ...(data.SN && { SN: Like(`%${data.SN}%`) }),
         ...(data.alias && { alias: Like(`%${data.alias}%`) }),
-        ...(data.device_type && { device_type: data.device_type }),
-        ...(data.model && { model: data.model }),
         ...(data.remarks && { remarks: Like(`%${data.remarks}%`) }),
-        ...(data.status && { SN: data.status }),
+        ...(data.device_type && { device_type: { value: data.device_type } }),
+        ...(data.model && { model: { value: data.model } }),
+        ...(data.status && { status: { value: data.status } }),
       },
       order: {
         [!!data.field ? data.field : "createdAt"]: !!data.order ? data.order : Order.DESC
       },
+      relations: {
+        status: true,
+        device_type: true,
+        model: true
+      }
     }
     return await paginate(this.d_device_entity, { page: data.page, pageSize: data.pageSize }, _q)
   }
@@ -50,11 +55,11 @@ export class DeviceService {
     const data_base = new DeviceEntity()
     data_base.SN = data.SN
     data_base.alias = data.alias
-    data_base.device_type = data.device_type
-    data_base.model = data.model
     data_base.remarks = data.remarks
     data_base.createBy = userId
-    data_base.status = data.status
+    data_base.device_type.value = data.device_type
+    data_base.model.value = data.model
+    data_base.status.value = data.status
     return await this.d_device_entity.save(data_base)
   }
 
@@ -71,16 +76,20 @@ export class DeviceService {
     if (exist) {
       throw new HttpException('The device is exist', 500)
     }
-    let device_type = new DictItemEntity()
-    device_type.value = data.device_type
     return await this.d_device_entity.createQueryBuilder().update(DeviceEntity).set({
       SN: data.SN,
       alias: data.alias,
-      device_type: data.device_type,
-      model: data.model,
+      device_type: {
+        value: data.device_type
+      },
+      model: {
+        value: data.model
+      },
       remarks: data.remarks,
       updateBy: userId,
-      status: data.status,
+      status: {
+        value: data.status
+      },
     }).where({
       id,
     }).execute()
@@ -98,6 +107,11 @@ export class DeviceService {
       where: {
         id,
       },
+      relations: {
+        device_type: true,
+        model: true,
+        status: true
+      }
     })
   }
 }
