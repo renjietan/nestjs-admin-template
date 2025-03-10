@@ -11,6 +11,7 @@ import { DictTypeDto, DictTypeQueryDto } from './dict-type.dto'
 import { DictItemService } from '../dict-item/dict-item.service'
 import { DictItemEntity } from '~/entities/dict-item.entity'
 import { createPaginationObject } from '~/helper/paginate/create-pagination'
+import { PagerDto } from '~/common/dto/pager.dto'
 
 @Injectable()
 export class DictTypeService {
@@ -22,7 +23,7 @@ export class DictTypeService {
     // private dictItemRepository: Repository<DictItemEntity>,
   ) { }
 
-  async full() {
+  async full(dto: PagerDto) {
     let entities = await this.dict_service.page({})
     let items = entities.items.reduce((cur, pre) => {
       let type_id = pre?.type?.id

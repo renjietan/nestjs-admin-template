@@ -9,6 +9,7 @@ import { Pagination } from '~/helper/paginate/pagination'
 
 import { DictItemDto, DictItemQueryDto } from './dict-item.dto'
 import { PaginationTypeEnum } from '~/helper/paginate/interface'
+import { Order } from '~/common/dto/pager.dto'
 
 @Injectable()
 export class DictItemService {
@@ -26,8 +27,10 @@ export class DictItemService {
     label,
     value,
     typeId,
+    field,
+    order
   }: DictItemQueryDto): Promise<Pagination<DictItemEntity>> {
-    const queryBuilder = this.dictItemRepository.createQueryBuilder('dict_item').orderBy({ orderNo: 'ASC' }).where({
+    const queryBuilder = this.dictItemRepository.createQueryBuilder('dict_item').orderBy({ [!!field ? field : 'orderNo']: !!order ? order : Order.ASC }).where({
       ...(label && { label: Like(`%${label}%`) }),
       ...(value && { value: Like(`%${value}%`) }),
       ...(typeId && { type: { id: typeId } }),
