@@ -10,32 +10,33 @@ import { Pagination } from '~/helper/paginate/pagination'
 import { DictTypeDto, DictTypeQueryDto } from './dict-type.dto'
 import { DictItemService } from '../dict-item/dict-item.service'
 import { DictItemEntity } from '~/entities/dict-item.entity'
+import { createPaginationObject } from '~/helper/paginate/create-pagination'
 
 @Injectable()
 export class DictTypeService {
   constructor(
     @InjectRepository(DictTypeEntity)
     private dictTypeRepository: Repository<DictTypeEntity>,
-    @InjectRepository(DictItemEntity)
-    private dictItemRepository: Repository<DictItemEntity>,
+    private readonly dict_service: DictItemService
+    // @InjectRepository(DictItemEntity)
+    // private dictItemRepository: Repository<DictItemEntity>,
   ) { }
 
   async full() {
-    // const queryBuilder = this.dictTypeRepository.createQueryBuilder('dict_type')
-    //   .leftJoinAndSelect("sys_dict_item", 'sys_dict_item', 'dict_type.id = sys_dict_item.type_id')
-    const types = await this.dictTypeRepository.find()
-    const temp = await this.dictItemRepository.query("select * from sys_dict_item")
-    const dicts = temp.reduce((cur, pre) => {
-      !cur[pre.type_id] && (cur[pre.type_id] = [])
-      cur[pre.type_id].push(pre)
+    let entities = await this.dict_service.page({})
+    let items = entities.items.reduce((cur, pre) => {
+      let type_id = pre?.type?.id
+      !cur[type_id] && (cur[type_id] = {...pre.type, children: []})
+      delete pre.type
+      cur[type_id].children.push(pre)
       return cur
     }, {})
-    return types.map(item => {
-      let children = dicts[item.id]
-      return {
-        ...item,
-        children
-      }
+    let _items = Object.values(items)
+    return createPaginationObject({
+      items: _items,
+      totalItems: _items.length,
+      currentPage: 1,
+      limit: _items.length
     })
   }
 

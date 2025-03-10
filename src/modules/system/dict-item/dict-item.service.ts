@@ -31,7 +31,7 @@ export class DictItemService {
       ...(label && { label: Like(`%${label}%`) }),
       ...(value && { value: Like(`%${value}%`) }),
       ...(typeId && { type: { id: typeId } }),
-    })
+    }).leftJoinAndSelect("dict_item.type", "type")
 
     return paginate(queryBuilder, { page, pageSize, paginationType: PaginationTypeEnum.ALL })
   }
