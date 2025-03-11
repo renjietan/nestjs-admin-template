@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty } from 'class-validator'
+import { IsNotEmpty, IsOptional } from 'class-validator'
 
 export class DeviceDto {
   @IsNotEmpty()
@@ -22,6 +22,7 @@ export class DeviceDto {
   @ApiProperty({ description: '设备状态', example: 'normal' })
   status: string
 
-  @ApiProperty({ description: '备注', example: 'MR9530', required: false })
-  remarks: string
+  @IsOptional()
+  @ApiProperty({ description: '备注', example: '备注' })
+  remarks?: string
 }

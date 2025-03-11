@@ -29,6 +29,9 @@ import { DatabaseModule } from './shared/database/database.module'
 import { SocketModule } from './socket/socket.module'
 import { HopFreqModule } from './modules/hop-freq/hop-freq.module'
 import { DeviceModule } from './modules/device/device.module'
+import { ETableModule } from './modules/e_table/e_table.module'
+import { ETableDetailModule } from './modules/e_table_detail/e_table_detail.module'
+import { NetworkTemplateModule } from './modules/network-template/network-template.module'
 
 @Module({
   imports: [
@@ -67,7 +70,10 @@ import { DeviceModule } from './modules/device/device.module'
     HealthModule,
     SseModule,
     HopFreqModule,
-    DeviceModule
+    DeviceModule,
+    ETableModule,
+    ETableDetailModule,
+    NetworkTemplateModule
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },

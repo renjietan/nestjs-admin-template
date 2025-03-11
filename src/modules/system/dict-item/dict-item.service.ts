@@ -10,6 +10,7 @@ import { Pagination } from '~/helper/paginate/pagination'
 import { DictItemDto, DictItemQueryDto } from './dict-item.dto'
 import { PaginationTypeEnum } from '~/helper/paginate/interface'
 import { Order } from '~/common/dto/pager.dto'
+import { BusinessException } from '~/common/exceptions/biz.exception'
 
 @Injectable()
 export class DictItemService {
@@ -91,5 +92,18 @@ export class DictItemService {
  */
   async findOneByCode(code: string): Promise<DictItemEntity> {
     return this.dictItemRepository.findOneBy({ value: code })
+  }
+
+  async validateDict<T extends Record<string, any>>(data: T): Promise<DictItemResult<T>> {
+    let res = {} as DictItemResult<T>
+    for (const key in data) {
+      let dict_model = await this.findOneByCode(data[key])
+      if(!dict_model) {
+        throw new BusinessException(`The field ${ key } does not exist in the dictionary`)
+      } else {
+        res[key] = dict_model
+      }
+    }
+    return res
   }
 }

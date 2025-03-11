@@ -14,22 +14,22 @@ export class DeviceEntity extends CompleteEntity {
   alias: string;
 
   @ApiProperty()
-  @ManyToOne(() => DictItemEntity, { cascade: true, createForeignKeyConstraints: false })
-  @JoinColumn({ name: 'device_type' })
-  device_type: DictItemEntity;
-
-  @ApiProperty()
-  @ManyToOne(() => DictItemEntity, { cascade: true, createForeignKeyConstraints: false })
-  @JoinColumn({ name: 'model' })
-  model: DictItemEntity;
-
-  @ApiProperty()
   @Column("int", { name: "orgId", comment: '组织机构', nullable: true })
   orgId: string;
 
   @ApiProperty()
   @Column("varchar", { name: "remarks", comment: '备注', nullable: true })
   remarks: string;
+
+  @ApiProperty()
+  @ManyToOne(() => DictItemEntity, { cascade: true, createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'device_type', referencedColumnName: 'value' })
+  device_type: DictItemEntity;
+
+  @ApiProperty()
+  @ManyToOne(() => DictItemEntity, { cascade: true, createForeignKeyConstraints: false, })
+  @JoinColumn({ name: 'model', referencedColumnName: 'value' })
+  model: DictItemEntity;
 
   @ApiProperty()
   @ManyToOne(() => DictItemEntity, { cascade: true, createForeignKeyConstraints: false })

@@ -110,3 +110,43 @@ export function getQueryField<T> (searchOptions: T): {} {
   }
   return query
 }
+
+
+export function generateRandomString(length = 1) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let result = ''
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length))
+  }
+  return result
+}
+
+export function toHexStringBy16Bit(str) {
+  const code = str.charCodeAt(0)
+  if (code < 16) {
+    return `0${code.toString(16).toUpperCase()}`
+  }
+  else {
+    return code.toString(16).toUpperCase()
+  }
+}
+
+export function parseArrayToTree(data) {
+  const map = new Map()
+  data.forEach((item) => {
+    map.set(item.id, { ...item, children: [] })
+  })
+  const tree = []
+  data.forEach((item) => {
+    if (item.pId === 0) {
+      tree.push(map.get(item.id))
+    }
+    else {
+      const parent = map.get(item.pId)
+      if (parent) {
+        parent.children.push(map.get(item.id))
+      }
+    }
+  })
+  return tree
+}

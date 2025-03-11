@@ -102,3 +102,8 @@ type NestedKeyOf<ObjectType extends object> = {
  type RecordNamePaths<T extends object> = {
    [K in NestedKeyOf<T>]: PropType<T, K>
  }
+
+
+ type DictItemResult<T extends Record<string, string | number>> = {
+  [K in keyof T]: DictItemEntity;
+};
