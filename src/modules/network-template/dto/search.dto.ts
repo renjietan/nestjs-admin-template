@@ -14,6 +14,6 @@ export class SearchNetWorkTemplateDto extends PartialType(NetWorkTemplateDTO) {
   name?: string
 
   @IsOptional()
-  @ApiProperty({ enum: n_network_template_type, description: '1:文件  或 2:网络模板  不传 默认是1', example: 1, default: 1 })
+  @ApiProperty({ enum: n_network_template_type, description: '1:文件  或 2:网络模板  不传 默认是1', example: 1, default: 1, })
   type?: number
 }

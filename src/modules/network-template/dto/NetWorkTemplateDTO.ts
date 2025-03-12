@@ -19,6 +19,6 @@ export class NetWorkTemplateDTO {
   type?: number
 
   @IsOptional()
-  @ApiProperty({ description: 'root节点 不传 默认是0', example: 0, default: 0 })
+  @ApiProperty({ description: 'root节点 不传 默认是0', example: 0, default: 0, required: false })
   pId?: number
 }

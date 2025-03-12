@@ -31,10 +31,12 @@ async function paginateRepository<T>(
   searchOptions?: FindOptionsWhere<T> | FindManyOptions<T>,
 ): Promise<Pagination<T>> {
   // const [page, limit] = resolveOptions(options)
+  console.log('searchOptions:"', searchOptions);
+  
   const { page, pageSize } = options
   const [items, total] = await repository.findAndCount({
     ...(!!options.page && !!options.pageSize && { skip: pageSize * (page - 1), take: pageSize, }),
-    ...searchOptions
+    ...searchOptions,
   })
 
   return createPaginationObject<T>({

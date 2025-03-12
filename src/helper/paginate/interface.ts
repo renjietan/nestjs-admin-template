@@ -1,4 +1,5 @@
 import { ObjectLiteral } from 'typeorm'
+import { Order } from '~/common/dto/pager.dto'
 
 export enum PaginationTypeEnum {
   LIMIT_AND_OFFSET = 'limit',
@@ -9,7 +10,7 @@ export enum PaginationTypeEnum {
 export interface IPaginationOptions {
   page: number
   pageSize: number
-  paginationType?: PaginationTypeEnum
+  paginationType?: PaginationTypeEnum,
 }
 
 export interface IPaginationMeta extends ObjectLiteral {

@@ -90,7 +90,6 @@ export class DeviceController {
   @ApiResult({ type: DeleteResult })
   @Perm(permissions.DELETE)
   async remove(@Body() idsDto: IdsDto) {
-    console.log('remove', idsDto)
     return await this.deviceService.remove(idsDto)
   }
 

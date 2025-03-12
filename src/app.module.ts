@@ -32,6 +32,10 @@ import { DeviceModule } from './modules/device/device.module'
 import { ETableModule } from './modules/e_table/e_table.module'
 import { ETableDetailModule } from './modules/e_table_detail/e_table_detail.module'
 import { NetworkTemplateModule } from './modules/network-template/network-template.module'
+import { PShotMessageModule } from './modules/p_shot_message/p_shot_message.module'
+import { PmMasterModule } from './modules/pm-master/pm-master.module'
+import { PmSubModule } from './modules/pm-sub/pm-sub.module'
+import { PmSubNetWorkDeviceModule } from './modules/pm-sub-network-device/pm-sub-network-device.module'
 
 @Module({
   imports: [
@@ -73,7 +77,11 @@ import { NetworkTemplateModule } from './modules/network-template/network-templa
     DeviceModule,
     ETableModule,
     ETableDetailModule,
-    NetworkTemplateModule
+    NetworkTemplateModule,
+    PShotMessageModule,
+    PmMasterModule,
+    PmSubModule,
+    PmSubNetWorkDeviceModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
