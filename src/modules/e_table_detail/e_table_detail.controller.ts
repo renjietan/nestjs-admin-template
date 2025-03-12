@@ -20,7 +20,7 @@ export const permissions = definePermission('e:tableDetail', {
   DELETE: 'delete',
 } as const)
 
-@ApiTags('密钥表-详情')
+@ApiTags('Encrypt - 密钥表 - 详情')
 @Controller('e-table-detail')
 export class ETableDetailController {
   constructor(private readonly eTableDetailService: ETableDetailService) { }

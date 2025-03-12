@@ -99,7 +99,7 @@ export class DictItemService {
     for (const key in data) {
       let dict_model = await this.findOneByCode(data[key])
       if(!dict_model) {
-        throw new BusinessException(`The field ${ key } does not exist in the dictionary`)
+        throw new BusinessException(`500:The field ${ key } does not exist in the dictionary`)
       } else {
         res[key] = dict_model
       }

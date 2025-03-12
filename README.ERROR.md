@@ -1,0 +1,1 @@
+- 出现重复 外键 key 报错时：删除了 DictItemEntity 类的 value 字段的 unique: true 属性

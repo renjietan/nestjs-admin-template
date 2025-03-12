@@ -17,14 +17,8 @@ export class ETableDetailEntity extends CompleteEntity {
   @Column("integer", { name: "days", comment: '生效天数', default: 0 })
   days: number;
 
-  @ManyToOne(() => DictItemEntity, {
-    cascade: true,
-    createForeignKeyConstraints: false,
-  })
-  @JoinColumn({
-    name: 'waveType',
-    referencedColumnName: 'value'
-  })
+  @ManyToOne(() => DictItemEntity, { cascade: true, createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'waveType', referencedColumnName: 'value'})
   waveType: DictItemEntity;
 
   @Column("integer", { name: "tableId", comment: '表格id' })

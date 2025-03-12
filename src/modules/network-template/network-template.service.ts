@@ -1,12 +1,14 @@
-import { HttpException, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { Like, Repository } from 'typeorm'
 import { NetWorkTemplateDTO } from './dto/NetWorkTemplateDTO'
 import { SearchNetWorkTemplateDto } from './dto/search.dto'
 import { UpdateNetWorkTemplateDTO } from './dto/update.dto'
 import { NNetWorkTemplateEntity } from '~/entities/n_network_template'
 import { DictItemService } from '../system/dict-item/dict-item.service'
 import { delChildren } from '~/utils/sql_str'
+import { BusinessException } from '~/common/exceptions/biz.exception'
+import { paginate } from '~/helper/paginate'
 
 @Injectable()
 export class NetworkTemplateService {
@@ -16,27 +18,29 @@ export class NetworkTemplateService {
   ) { }
 
   async create(uId: number, data: NetWorkTemplateDTO) {
-    const find_params = new SearchNetWorkTemplateDto()
-    find_params.name = data.name
-    find_params.type = data?.type ?? 1
-    const isExist = await this.findBy(find_params, false)
-    if (isExist.length > 0) {
-      throw new HttpException('The name is Exist', 500)
+    const entities = await this.findBy({
+      name: data.name,
+      type: data?.type ?? 1
+    }, false)
+    if (entities.meta.itemCount > 0) {
+      throw new BusinessException('500:The name is Exist')
     }
     const entity = new NNetWorkTemplateEntity()
     entity.createBy = uId
     entity.name = data.name
     entity.pId = data.pId
     entity.type = data.type
+    entity.createBy = uId
     return await this.network_template_entity.save(entity)
   }
 
-  async update(id: number, data: UpdateNetWorkTemplateDTO) {
-    const find_params = new SearchNetWorkTemplateDto()
-    find_params.name = data.name
-    const isExist = await this.findBy(find_params, false)
-    if (isExist.length > 0 && isExist[0]?.id != id) {
-      throw new HttpException('The name is Exist', 500)
+  async update(id: number, data: UpdateNetWorkTemplateDTO, uId: number) {
+    const entities = await this.findBy({
+      name: data.name,
+      type: data?.type ?? 1
+    }, false)
+    if (entities.meta.itemCount > 0 && entities?.items?.[0]?.id != id) {
+      throw new BusinessException('500:The name is Exist')
     }
     let dict_entites = await this.dict_item_service.validateDict({
       waveForm: data.waveForm,
@@ -47,16 +51,20 @@ export class NetworkTemplateService {
       ...data,
       waveForm: dict_entites.waveForm,
       device_type: dict_entites.device_type,
-      access_method: dict_entites.access_method
+      access_method: dict_entites.access_method,
+      updateBy: uId
     }).where({
       id,
     }).execute()
   }
 
   async findBy(data: SearchNetWorkTemplateDto, isLike = true) {
-    return await this.network_template_entity.find({
+    return paginate(this.network_template_entity, {
+      page: undefined,
+      pageSize: undefined
+    }, {
       where: {
-        ...(data.name && { name: data.name }),
+        ...(data.name && { name: isLike ? Like(data.name) : data.name }),
         ...(data.type && { type: data.type }),
       },
       relations: {

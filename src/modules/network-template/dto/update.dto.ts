@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types'
 import { ApiProperty } from '@nestjs/swagger'
 import { NetWorkTemplateDTO } from './NetWorkTemplateDTO'
-import { IsOptional } from 'class-validator'
+import { IsNotEmpty, IsOptional } from 'class-validator'
 
 enum n_network_template_type {
   Folder = 1,
@@ -9,12 +9,13 @@ enum n_network_template_type {
 }
 
 export class UpdateNetWorkTemplateDTO extends PartialType(NetWorkTemplateDTO) {
+  @IsNotEmpty()
   @ApiProperty({ description: '文件名称  或 模板名称', example: '文件名称  或 网络模板名称' })
   name?: string
 
-  @IsOptional()
-  @ApiProperty({ enum: n_network_template_type, description: '1:文件  或 2:网络模板  不传 默认是1', example: 1, default: 1, required: false })
-  type?: number
+  @IsNotEmpty()
+  @ApiProperty({ enum: n_network_template_type, description: '1:文件  或 2:网络模板  不传 默认是1', example: 1, default: 1 })
+  type: number
 
   @IsOptional()
   @ApiProperty({ description: '更新波形-传入字典Code', example: 'userRole', required: false })

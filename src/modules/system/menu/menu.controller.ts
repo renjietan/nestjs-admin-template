@@ -30,7 +30,7 @@ export const permissions = definePermission('system:menu', {
   DELETE: 'delete',
 } as const)
 
-@ApiExcludeController()
+// @ApiExcludeController()
 @ApiTags('System - 菜单权限模块')
 @ApiSecurityAuth()
 @Controller('menus')

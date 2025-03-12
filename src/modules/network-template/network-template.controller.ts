@@ -9,8 +9,21 @@ import { DictItemModule } from '../system/dict-item/dict-item.module'
 import { IdParam } from '~/common/decorators/path-param.decorator'
 import { parseArrayToTree } from '~/utils'
 import { AuthUser } from '~/common/decorators/auth/auth-user.decorator'
+import { ApiResult } from '~/common/decorators/api-result.decorator'
+import { NNetWorkTemplateEntity } from '~/entities/n_network_template'
+import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
+import { UpdateResult } from 'typeorm'
 
-@ApiTags('网络模板')
+
+export const permissions = definePermission('network:template', {
+  LIST: 'list',
+  CREATE: 'create',
+  READ: 'read',
+  UPDATE: 'update',
+  DELETE: 'delete',
+} as const)
+
+@ApiTags('Network - 网络模板')
 @Controller('network-template')
 export class NetworkTemplateController {
   constructor(
@@ -21,6 +34,8 @@ export class NetworkTemplateController {
     summary: '新增 文件 或 模板',
   })
   @Post()
+  @ApiResult({ type: NNetWorkTemplateEntity })
+  @Perm(permissions.CREATE)
   async create(@Query() data: NetWorkTemplateDTO, @AuthUser() user:IAuthUser) {
     return await this.networkTemplateService.create(user?.uid, data)
   }
@@ -29,17 +44,22 @@ export class NetworkTemplateController {
     summary: '更新: 参数说明 查看下方 UpdateNetWorkTemplateDTO, 不需要更新的字段，不传',
   })
   @Put('update/:id')
-  async update(@IdParam() id: string, @Body() data: UpdateNetWorkTemplateDTO) {
-    return await this.networkTemplateService.update(+id, data)
+  @ApiResult({ type: UpdateResult })
+  @Perm(permissions.UPDATE)
+  async update(@IdParam() id: string, @Body() data: UpdateNetWorkTemplateDTO, @AuthUser() user:IAuthUser) {
+    return await this.networkTemplateService.update(+id, data, user?.uid)
   }
 
   @ApiOperation({
     summary: '列表: 根据名称搜索, 不传查所有',
   })
   @Get()
+  @ApiResult({ type: [NNetWorkTemplateEntity] })
+  @Perm(permissions.LIST)
   async findBy(@Query() data: SearchNetWorkTemplateDto) {
     const res = await this.networkTemplateService.findBy(data)
-    let res_arr = instanceToPlain(res)
+    const items = res?.items ?? []
+    let res_arr = instanceToPlain(items)
     res_arr = res_arr.map((item) => {
       const h_table_ids = (item?.h_table_ids ?? '').split(',')
       return {
@@ -55,6 +75,8 @@ export class NetworkTemplateController {
     summary: '根据id 删除',
   })
   @Delete('delete/:id')
+  @ApiResult({ type: Object })
+  @Perm(permissions.DELETE)
   async delete(@IdParam() id: number) {
     return await this.networkTemplateService.delete(+id)
   }

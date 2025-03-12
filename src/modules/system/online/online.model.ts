@@ -6,9 +6,6 @@ export class OnlineUserInfo extends OmitType(LoginLogInfo, ['id'] as const) {
   @ApiProperty({ description: 'tokenId' })
   tokenId: string
 
-  @ApiProperty({ description: '部门名称' })
-  deptName: string
-
   @ApiProperty({ description: '用户ID' })
   uid: number
 

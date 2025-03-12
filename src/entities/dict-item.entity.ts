@@ -15,8 +15,8 @@ export class DictItemEntity extends CompleteEntity {
   @Column({ type: 'varchar', length: 50 })
   @ApiProperty({ description: '字典项键名' })
   label: string
-
-  @Column({ type: 'varchar', unique: true })
+  // unique: true
+  @Column({ type: 'varchar' })
   @ApiProperty({ description: '字典项值' })
   value: string
 

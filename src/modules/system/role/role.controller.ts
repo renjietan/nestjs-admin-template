@@ -34,7 +34,7 @@ export const permissions = definePermission('system:role', {
   DELETE: 'delete',
 } as const)
 
-@ApiExcludeController()
+// @ApiExcludeController()
 @ApiTags('System - 角色模块')
 @ApiSecurityAuth()
 @Controller('roles')

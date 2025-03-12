@@ -27,7 +27,5 @@ export class UpdateTable2001717007831711 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE \`sys_role\` DROP COLUMN \`create_by\``)
     await queryRunner.query(`ALTER TABLE \`sys_menu\` DROP COLUMN \`update_by\``)
     await queryRunner.query(`ALTER TABLE \`sys_menu\` DROP COLUMN \`create_by\``)
-    await queryRunner.query(`ALTER TABLE \`sys_dept\` DROP COLUMN \`update_by\``)
-    await queryRunner.query(`ALTER TABLE \`sys_dept\` DROP COLUMN \`create_by\``)
   }
 }

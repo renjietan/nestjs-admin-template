@@ -67,7 +67,7 @@ export class DeviceController {
       status: null
     })
     if(Object.values(dict_entity).every(item => !!item)) {
-      throw new BusinessException('The dictionary does not exist ')
+      throw new BusinessException('500:The dictionary does not exist ')
     }
     return await this.deviceService.create(data, user?.uid)
   }

@@ -40,11 +40,6 @@ export class OnlineService {
   async addOnlineUser(value: string, ip: string, ua: string) {
     const token = await AccessTokenEntity.findOne({
       where: { value },
-      relations: {
-        user: {
-          dept: true,
-        },
-      },
       cache: true,
     })
 
@@ -62,7 +57,6 @@ export class OnlineService {
       address,
       tokenId: token.id,
       uid: token.user.id,
-      deptName: token.user.dept?.name ?? '',
       os: `${`${uaResult.os.name ?? ''} `}${uaResult.os.version}`,
       browser: `${`${uaResult.browser.name ?? ''} `}${uaResult.browser.version}`,
       username: token.user.username,

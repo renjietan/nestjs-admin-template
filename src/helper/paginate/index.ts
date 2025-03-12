@@ -9,8 +9,6 @@ import {
 import { createPaginationObject } from './create-pagination'
 import { IPaginationOptions, PaginationTypeEnum } from './interface'
 import { Pagination } from './pagination'
-import { Order, PagerDto } from '~/common/dto/pager.dto'
-import { instanceToPlain, plainToInstance } from 'class-transformer'
 
 const DEFAULT_LIMIT = 10
 const DEFAULT_PAGE = 1
