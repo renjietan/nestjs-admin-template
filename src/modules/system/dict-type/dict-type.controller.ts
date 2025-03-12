@@ -12,6 +12,7 @@ import { Pagination } from '~/helper/paginate/pagination'
 
 import { DictTypeDto, DictTypeQueryDto } from './dict-type.dto'
 import { DictTypeService } from './dict-type.service'
+import { OrderDto, PagerDto } from '~/common/dto/pager.dto'
 
 export const permissions = definePermission('system:dict-type', {
   LIST: 'list',
@@ -27,6 +28,14 @@ export const permissions = definePermission('system:dict-type', {
 export class DictTypeController {
   constructor(private dictTypeService: DictTypeService) {}
 
+  @Get("full")
+  @ApiOperation({ summary: '获取所有字典（字典类型 + 字典）' })
+  // @ApiResult({ type: [DictTypeEntity], isPage: true })
+  @Perm(permissions.LIST)
+  async full(@Query() dto: OrderDto): Promise<any> {
+    return this.dictTypeService.full(dto)
+  }
+  
   @Get()
   @ApiOperation({ summary: '获取字典类型列表' })
   @ApiResult({ type: [DictTypeEntity], isPage: true })

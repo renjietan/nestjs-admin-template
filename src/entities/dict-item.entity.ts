@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Unique } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, Unique } from 'typeorm'
 
 import { CompleteEntity } from '~/common/entity/common.entity'
 
 import { DictTypeEntity } from './dict-type.entity'
+import { DeviceEntity } from './d_device'
 
 @Entity({ name: 'sys_dict_item' })
 export class DictItemEntity extends CompleteEntity {
@@ -14,7 +15,7 @@ export class DictItemEntity extends CompleteEntity {
   @Column({ type: 'varchar', length: 50 })
   @ApiProperty({ description: '字典项键名' })
   label: string
-
+  // unique: true
   @Column({ type: 'varchar' })
   @ApiProperty({ description: '字典项值' })
   value: string

@@ -73,8 +73,8 @@ export class IdempotenceInterceptor implements NestInterceptor {
       return next.handle()
 
     const {
-      errorMessage = '相同请求成功后在 60 秒内只能发送一次',
-      pendingMessage = '相同请求正在处理中...',
+      errorMessage = 'The same request can only be sent once within 60 seconds after success',
+      pendingMessage = 'Same request being processed...',
       handler: errorHandler,
       expired = 60,
       disableGenerateKey = false,

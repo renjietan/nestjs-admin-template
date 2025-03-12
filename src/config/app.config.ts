@@ -13,7 +13,6 @@ export const AppConfig = registerAs(appRegToken, () => ({
   locale: env('APP_LOCALE', 'zh-CN'),
   /** 是否允许多端登录 */
   multiDeviceLogin: envBoolean('MULTI_DEVICE_LOGIN', true),
-
   logger: {
     level: env('LOGGER_LEVEL'),
     maxFiles: envNumber('LOGGER_MAX_FILES'),

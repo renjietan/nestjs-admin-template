@@ -21,20 +21,12 @@ export class BaseTableDto {
 
   @IsOptional()
   @IsNumber()
-  @ApiProperty({
-    description: '最小值：如果为空，采用 需求文档 中的 最小值',
-    example: 30,
-    required: false,
-  })
+  @ApiProperty()
   law_start?: number
 
   @IsOptional()
   @IsNumber()
-  @ApiProperty({
-    description: '间隔：如果为空, 将会计算出 一个间隔值',
-    example: 0,
-    required: false,
-  })
+  @ApiProperty()
   law_spacing?: number
 
   @IsOptional()

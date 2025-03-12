@@ -35,10 +35,10 @@ export class DictTypeQueryDto extends PagerDto {
   @ApiProperty({ description: '字典类型名称' })
   @IsString()
   @IsOptional()
-  name: string
+  name?: string
 
   @ApiProperty({ description: '字典类型code' })
   @IsString()
   @IsOptional()
-  code: string
+  code?: string
 }

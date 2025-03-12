@@ -24,7 +24,8 @@ export class EntityExistConstraint implements ValidatorConstraintInterface {
 
   async validate(value: string, args: ValidationArguments) {
     let repo: Repository<any>
-
+    console.log('========================');
+    
     if (!value)
       return true
     // 默认对比字段是id

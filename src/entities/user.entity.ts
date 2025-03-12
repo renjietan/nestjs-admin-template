@@ -52,7 +52,6 @@ export class UserEntity extends CommonEntity {
   @JoinColumn({ name: 'dept_id' })
   dept: Relation<DeptEntity>
 
-  @ApiHideProperty()
   @OneToMany(() => AccessTokenEntity, accessToken => accessToken.user, {
     cascade: true,
   })

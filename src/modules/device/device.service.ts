@@ -1,28 +1,46 @@
 import { HttpException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Brackets, Not, Repository } from 'typeorm'
+import { FindManyOptions, Like, Not, Repository } from 'typeorm'
 import { SearchDto } from './dto/search.dto'
 import { DeviceDto } from './dto/device.dto'
 import { DeviceEntity } from '~/entities/d_device'
 import { IdsDto } from '~/common/dto/ids.dto'
+import { paginate } from '~/helper/paginate'
+import { Order } from '~/common/dto/pager.dto'
+import { BusinessException } from '~/common/exceptions/biz.exception'
 import { DictItemEntity } from '~/entities/dict-item.entity'
 import { DictItemService } from '../system/dict-item/dict-item.service'
-import { paginate } from '~/helper/paginate'
-import { createPaginationObject } from '~/helper/paginate/create-pagination'
-import { PaginationTypeEnum } from '~/helper/paginate/interface'
 
 @Injectable()
 export class DeviceService {
   constructor(
     @InjectRepository(DeviceEntity) private readonly d_device_entity: Repository<DeviceEntity>,
-
+    private readonly dict_item_service: DictItemService
   ) { }
 
   async search(data: SearchDto) {
-    return paginate(this.d_device_entity, { page: data.page, pageSize: data.pageSize }, data)
+    let _q: FindManyOptions<DeviceEntity> = {
+      where: {
+        ...(data.SN && { SN: Like(`%${data.SN}%`) }),
+        ...(data.alias && { alias: Like(`%${data.alias}%`) }),
+        ...(data.remarks && { remarks: Like(`%${data.remarks}%`) }),
+        ...(data.device_type && { device_type: { value: data.device_type } }),
+        ...(data.model && { model: { value: data.model } }),
+        ...(data.status && { status: { value: data.status } }),
+      },
+      order: {
+        [!!data.field ? data.field : "createdAt"]: !!data.order ? data.order : Order.DESC
+      },
+      relations: {
+        status: true,
+        device_type: true,
+        model: true
+      }
+    }
+    return await paginate(this.d_device_entity, { page: data.page, pageSize: data.pageSize }, _q)
   }
 
-  async create(data: DeviceDto, userId: number) {
+  async create(data: DeviceDto, uId: number) {
     const exist = await this.d_device_entity.findOne({
       where: [{
         SN: data.SN,
@@ -31,16 +49,21 @@ export class DeviceService {
       }],
     })
     if (exist) {
-      throw new HttpException('The device is exist', 500)
+      throw new BusinessException('The device is exist')
     }
+    let dict_entites =  await this.dict_item_service.validateDict({
+      device_type: data.device_type,
+      model: data.model,
+      status: data.status
+    })
     const data_base = new DeviceEntity()
     data_base.SN = data.SN
     data_base.alias = data.alias
-    data_base.device_type = data.device_type
-    data_base.model = data.model
     data_base.remarks = data.remarks
-    data_base.createBy = userId
-    data_base.status = data.status
+    data_base.createBy = uId
+    data_base.device_type = dict_entites.device_type
+    data_base.model = dict_entites.model
+    data_base.status = dict_entites.status
     return await this.d_device_entity.save(data_base)
   }
 
@@ -55,19 +78,27 @@ export class DeviceService {
       }],
     })
     if (exist) {
-      throw new HttpException('The device is exist', 500)
+      throw new BusinessException('The device is exist')
     }
-    let device_type = new DictItemEntity()
-    device_type.value = data.device_type
-    let model = new DictItemEntity()
+    await this.dict_item_service.validateDict({
+      device_type: data.device_type,
+      model: data.model,
+      status: data.status
+    })
     return await this.d_device_entity.createQueryBuilder().update(DeviceEntity).set({
       SN: data.SN,
       alias: data.alias,
-      device_type: data.device_type,
-      model: data.model,
+      device_type: {
+        value: data.device_type
+      },
+      model: {
+        value: data.model
+      },
       remarks: data.remarks,
       updateBy: userId,
-      status: data.status,
+      status: {
+        value: data.status
+      },
     }).where({
       id,
     }).execute()
@@ -85,6 +116,13 @@ export class DeviceService {
       where: {
         id,
       },
+      relations: {
+        device_type: true,
+        model: true,
+        status: true
+      }
     })
   }
+
+
 }

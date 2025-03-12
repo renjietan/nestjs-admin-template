@@ -16,14 +16,4 @@ export class CreateFreqTableDto {
     required: false,
   })
   law_conf: BaseFreqTableDto[]
-
-
-  // @IsNotEmpty({
-  //   message: 'createById cannot be empty',
-  // })
-  // @ApiProperty({
-  //   description: '创建人ID',
-  //   example: 1,
-  // })
-  // createById: number
 }

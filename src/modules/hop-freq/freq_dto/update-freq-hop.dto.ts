@@ -3,34 +3,24 @@ import { Type } from 'class-transformer'
 import { IsNotEmpty, ValidateNested } from 'class-validator'
 
 export class UpdateFreqHopDto {
-  @IsNotEmpty({
-    message: 'data cannot be empty',
-  })
+  @IsNotEmpty()
   @ValidateNested({
     each: true,
   })
-  @ApiProperty({
-    description: '',
-    type: () => [UpdateFreqHopBaseDto],
-    required: false,
-  })
+  @ApiProperty()
   @Type(() => UpdateFreqHopBaseDto)
   data: UpdateFreqHopBaseDto[]
 }
 
 export class UpdateFreqHopBaseDto {
-  @IsNotEmpty({
-    message: 'id cannot be empty',
-  })
+  @IsNotEmpty()
   @ApiProperty({
     description: 'id',
     example: 1,
   })
   id: number
 
-  @IsNotEmpty({
-    message: 'value cannot be empty',
-  })
+  @IsNotEmpty()
   @ApiProperty({
     description: '值',
     example: 1,

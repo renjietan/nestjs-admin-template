@@ -8,6 +8,9 @@ import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
 
 import { DictItemDto, DictItemQueryDto } from './dict-item.dto'
+import { PaginationTypeEnum } from '~/helper/paginate/interface'
+import { Order } from '~/common/dto/pager.dto'
+import { BusinessException } from '~/common/exceptions/biz.exception'
 
 @Injectable()
 export class DictItemService {
@@ -25,14 +28,16 @@ export class DictItemService {
     label,
     value,
     typeId,
+    field,
+    order
   }: DictItemQueryDto): Promise<Pagination<DictItemEntity>> {
-    const queryBuilder = this.dictItemRepository.createQueryBuilder('dict_item').orderBy({ orderNo: 'ASC' }).where({
+    const queryBuilder = this.dictItemRepository.createQueryBuilder('dict_item').orderBy({ [!!field ? field : 'orderNo']: !!order ? order : Order.ASC }).where({
       ...(label && { label: Like(`%${label}%`) }),
       ...(value && { value: Like(`%${value}%`) }),
       ...(typeId && { type: { id: typeId } }),
-    })
+    }).leftJoinAndSelect("dict_item.type", "type")
 
-    return paginate(queryBuilder, { page, pageSize })
+    return paginate(queryBuilder, { page, pageSize, paginationType: PaginationTypeEnum.ALL })
   }
 
   /**
@@ -87,5 +92,18 @@ export class DictItemService {
  */
   async findOneByCode(code: string): Promise<DictItemEntity> {
     return this.dictItemRepository.findOneBy({ value: code })
+  }
+
+  async validateDict<T extends Record<string, any>>(data: T): Promise<DictItemResult<T>> {
+    let res = {} as DictItemResult<T>
+    for (const key in data) {
+      let dict_model = await this.findOneByCode(data[key])
+      if(!dict_model) {
+        throw new BusinessException(`The field ${ key } does not exist in the dictionary`)
+      } else {
+        res[key] = dict_model
+      }
+    }
+    return res
   }
 }
