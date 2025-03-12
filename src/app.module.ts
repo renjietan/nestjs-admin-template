@@ -36,6 +36,7 @@ import { PShotMessageModule } from './modules/p_shot_message/p_shot_message.modu
 import { PmMasterModule } from './modules/pm-master/pm-master.module'
 import { PmSubModule } from './modules/pm-sub/pm-sub.module'
 import { PmSubNetWorkDeviceModule } from './modules/pm-sub-network-device/pm-sub-network-device.module'
+import { WaveDeviceConfigModule } from './modules/wave_device_config/wave_device_config.module'
 
 @Module({
   imports: [
@@ -82,6 +83,7 @@ import { PmSubNetWorkDeviceModule } from './modules/pm-sub-network-device/pm-sub
     PmMasterModule,
     PmSubModule,
     PmSubNetWorkDeviceModule,
+    WaveDeviceConfigModule
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },

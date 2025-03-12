@@ -8,6 +8,7 @@ import { BatchPmSubDto } from './dto/batch-pm-sub.dto'
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { PMSubEntity } from '~/entities/pm_sub'
 import { IdsDto } from '~/common/dto/ids.dto'
+import { paginate } from '~/helper/paginate'
 
 @Injectable()
 export class PmSubService {
@@ -81,8 +82,11 @@ export class PmSubService {
   }
 
   async search() {
-    return await this.pm_sub_entity.find({
-      relations: ['networkDevices'],
+    return paginate(this.pm_sub_entity, {
+      page: undefined,
+      pageSize: undefined
+    }, {
+      relations: ['networkDevices']
     })
   }
 
