@@ -22,31 +22,20 @@ export class UserDto {
 
   @ApiProperty({ description: '登录账号', example: 'admin' })
   @IsString()
-  @Matches(/^[\s\S]+$/)
   @MinLength(4)
   @MaxLength(20)
   username: string
 
   @ApiProperty({ description: '登录密码', example: 'a123456' })
   @IsOptional()
-  @Matches(/^\S*(?=\S{6})(?=\S*\d)(?=\S*[A-Z])\S*$/i, {
-    message: '密码必须包含数字、字母，长度为6-16',
-  })
   password: string
 
-  // @ApiHideProperty()
-  // @ApiProperty({ description: '归属角色', type: [Number], required: false })
-  // @ArrayNotEmpty()
-  // @ArrayMinSize(1)
-  // @ArrayMaxSize(3)
-  // roleIds: number[]
-
-  // @ApiHideProperty()
-  // @ApiProperty({ description: '归属大区', type: Number, required: false })
-  // @Type(() => Number)
-  // @IsInt()
-  // @IsOptional()
-  // deptId?: number
+  @ApiHideProperty()
+  @ApiProperty({ description: '归属角色', type: [Number], required: false })
+  @ArrayNotEmpty()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(3)
+  roleIds: number[]
 
   @ApiProperty({ description: '呢称', example: 'admin' })
   @IsOptional()
@@ -66,12 +55,6 @@ export class UserDto {
 export class UserUpdateDto extends PartialType(UserDto) {}
 
 export class UserQueryDto extends IntersectionType(PagerDto<UserDto>, PartialType(UserDto)) {
-  @ApiHideProperty()
-  @ApiProperty({ description: '归属大区', example: 1, required: false, })
-  @IsInt()
-  @IsOptional()
-  deptId?: number
-
   @ApiProperty({ description: '状态', example: 0, required: false })
   @IsInt()
   @IsOptional()

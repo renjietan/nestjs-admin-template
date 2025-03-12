@@ -21,7 +21,7 @@ export const permissions = definePermission('e:table', {
 } as const)
 
 
-@ApiTags('密钥表')
+@ApiTags('Encrypt - 密钥表')
 @ApiSecurityAuth()
 @Controller('e-table')
 export class ETableController {

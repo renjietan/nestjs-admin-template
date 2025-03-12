@@ -20,7 +20,6 @@ import { QQService } from '~/shared/helper/qq.service'
 import { md5, randomValue } from '~/utils'
 
 import { AccessTokenEntity } from '../../entities/access-token.entity'
-import { DeptEntity } from '../../entities/dept.entity'
 import { RoleEntity } from '../../entities/role.entity'
 import { UserEntity } from '../../entities/user.entity'
 
@@ -71,9 +70,7 @@ export class UserService {
   async getAccountInfo(uid: number): Promise<AccountInfo> {
     const user: UserEntity = await this.userRepository
       .createQueryBuilder('user')
-      // ! ----------------- 暂时删除 --------------------
-      // .leftJoinAndSelect('user.roles', 'role')
-      // ! ----------------- 暂时删除 --------------------
+      .leftJoinAndSelect('user.roles', 'role')
       .where(`user.id = :uid`, { uid })
       .getOne()
 
@@ -136,10 +133,7 @@ export class UserService {
   async create({
     username,
     password,
-    //! ----------------- 暂时删除 --------------------
-    // roleIds,
-    // deptId,
-    //! ----------------- 暂时删除 --------------------
+    roleIds,
     ...data
   }: UserDto): Promise<void> {
     const exists = await this.userRepository.findOneBy({
@@ -165,10 +159,6 @@ export class UserService {
         password,
         ...data,
         psalt: salt,
-        //! ----------------- 暂时删除 --------------------
-        // roles: await this.roleRepository.findBy({ id: In(roleIds) }),
-        // dept: await DeptEntity.findOneBy({ id: deptId }),
-        //! ----------------- 暂时删除 --------------------
       })
 
       const result = await manager.save(u)
@@ -183,10 +173,7 @@ export class UserService {
     id: number,
     { 
       password, 
-      //! ----------------- 暂时删除 --------------------
-      // deptId, 
-      // roleIds, 
-      //! ----------------- 暂时删除 --------------------
+      roleIds, 
       status, 
       ...data 
     }: UserUpdateDto,
@@ -202,28 +189,16 @@ export class UserService {
 
       const user = await this.userRepository
         .createQueryBuilder('user')
-        //! ----------------- 暂时删除 --------------------
-        // .leftJoinAndSelect('user.roles', 'roles')
-        // .leftJoinAndSelect('user.dept', 'dept')
-        //! ----------------- 暂时删除 --------------------
+        .leftJoinAndSelect('user.roles', 'roles')
         .where('user.id = :id', { id })
         .getOne()
-      //! ----------------- 暂时删除 --------------------
-      // if (roleIds) {
-      //   await manager
-      //     .createQueryBuilder()
-      //     .relation(UserEntity, 'roles')
-      //     .of(id)
-      //     .addAndRemove(roleIds, user.roles)
-      // }
-      // if (deptId) {
-      //   await manager
-      //     .createQueryBuilder()
-      //     .relation(UserEntity, 'dept')
-      //     .of(id)
-      //     .set(deptId)
-      // }
-      //! ----------------- 暂时删除 --------------------
+      if (roleIds) {
+        await manager
+          .createQueryBuilder()
+          .relation(UserEntity, 'roles')
+          .of(id)
+          .addAndRemove(roleIds, user.roles)
+      }
       if (status === 0) {
         // 禁用状态
         await this.forbidden(id)
@@ -238,10 +213,7 @@ export class UserService {
   async info(id: number): Promise<UserEntity> {
     const user = await this.userRepository
       .createQueryBuilder('user')
-      //! ----------------- 暂时删除 --------------------
-      // .leftJoinAndSelect('user.roles', 'roles')
-      // .leftJoinAndSelect('user.dept', 'dept')
-      //! ----------------- 暂时删除 --------------------
+      .leftJoinAndSelect('user.roles', 'roles')
       .where('user.id = :id', { id })
       .getOne()
     
@@ -280,25 +252,16 @@ export class UserService {
     pageSize,
     username,
     nickname,
-    deptId,
     status,
   }: UserQueryDto): Promise<Pagination<UserEntity>> {
     const queryBuilder = this.userRepository
       .createQueryBuilder('user')
-      //! ----------------- 暂时删除 --------------------
-      // .leftJoinAndSelect('user.dept', 'dept')
-      // .leftJoinAndSelect('user.roles', 'role')
-      //! ----------------- 暂时删除 --------------------
-      // .where('user.id NOT IN (:...ids)', { ids: [rootUserId, uid] })
+      .leftJoinAndSelect('user.roles', 'role')
       .where({
         ...(username ? { username: Like(`%${username}%`) } : null),
         ...(nickname ? { nickname: Like(`%${nickname}%`) } : null),
         ...(!isNil(status) ? { status } : null),
       })
-    //! ----------------- 暂时删除 --------------------
-    // if (deptId)
-    //   queryBuilder.andWhere('dept.id = :deptId', { deptId })
-    //! ----------------- 暂时删除 --------------------
 
     return paginate<UserEntity>(queryBuilder, {
       page,

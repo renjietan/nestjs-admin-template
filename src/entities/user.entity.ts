@@ -12,7 +12,6 @@ import {
 
 import { CommonEntity } from '~/common/entity/common.entity'
 
-import { DeptEntity } from '~/entities/dept.entity'
 import { RoleEntity } from '~/entities/role.entity'
 import { AccessTokenEntity } from './access-token.entity'
 import { ApiHideProperty } from '@nestjs/swagger'
@@ -46,11 +45,6 @@ export class UserEntity extends CommonEntity {
     inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
   })
   roles: Relation<RoleEntity[]>
-
-  @ApiHideProperty()
-  @ManyToOne(() => DeptEntity, dept => dept.users)
-  @JoinColumn({ name: 'dept_id' })
-  dept: Relation<DeptEntity>
 
   @OneToMany(() => AccessTokenEntity, accessToken => accessToken.user, {
     cascade: true,

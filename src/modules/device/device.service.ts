@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common'
+import { BadRequestException, ConflictException, HttpException, Injectable, InternalServerErrorException, NotAcceptableException, RequestTimeoutException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { FindManyOptions, Like, Not, Repository } from 'typeorm'
 import { SearchDto } from './dto/search.dto'
@@ -49,7 +49,7 @@ export class DeviceService {
       }],
     })
     if (exist) {
-      throw new BusinessException('The device is exist')
+      throw new BusinessException('500:The device is exist')
     }
     let dict_entites =  await this.dict_item_service.validateDict({
       device_type: data.device_type,
@@ -78,7 +78,7 @@ export class DeviceService {
       }],
     })
     if (exist) {
-      throw new BusinessException('The device is exist')
+      throw new BusinessException('500:The device is exist')
     }
     await this.dict_item_service.validateDict({
       device_type: data.device_type,

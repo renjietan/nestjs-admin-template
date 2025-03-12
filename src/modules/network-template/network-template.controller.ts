@@ -10,7 +10,7 @@ import { IdParam } from '~/common/decorators/path-param.decorator'
 import { parseArrayToTree } from '~/utils'
 import { AuthUser } from '~/common/decorators/auth/auth-user.decorator'
 
-@ApiTags('网络模板')
+@ApiTags('Network - 网络模板')
 @Controller('network-template')
 export class NetworkTemplateController {
   constructor(

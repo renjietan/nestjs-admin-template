@@ -34,7 +34,7 @@ export class ETableService {
         name: data.name,
       },
     });
-    if (!!table) throw new BusinessException("The table name already exists.");
+    if (!!table) throw new BusinessException("500:The table name already exists.");
     let dict_entites = await this.dict_item_service.validateDict({
       waveType: data.waveType
     })
@@ -96,7 +96,7 @@ export class ETableService {
         return 'Deletion success'
       })
     } catch (error) {
-      throw new BusinessException('Deletion failure')
+      throw new BusinessException('500:Deletion failure')
     }
   }
 }

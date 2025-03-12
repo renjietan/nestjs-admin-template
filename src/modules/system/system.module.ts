@@ -13,13 +13,11 @@ import { ParamConfigModule } from './param-config/param-config.module'
 import { RoleModule } from './role/role.module'
 import { ServeModule } from './serve/serve.module'
 import { TaskModule } from './task/task.module'
-import { DeptModule } from './dept/dept.module'
 
 const modules = [
   UserModule,
   RoleModule,
   MenuModule,
-  DeptModule,
   DictTypeModule,
   DictItemModule,
   ParamConfigModule,
