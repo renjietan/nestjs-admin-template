@@ -51,6 +51,13 @@ export class DictItemService {
    * 新增
    */
   async create(dto: DictItemDto): Promise<void> {
+    let entites = await this.findOneByCode(dto.value)
+    if(!!entites) {
+      throw new BusinessException("500:The code is exist")
+    }
+    if(entites.label == dto.label) {
+      throw new BusinessException("500:The label is exist")
+    }
     const { typeId, ...rest } = dto
     await this.dictItemRepository.insert({
       ...rest,
@@ -94,6 +101,14 @@ export class DictItemService {
     return this.dictItemRepository.findOneBy({ value: code })
   }
 
+  /**
+   * @path: src\modules\system\dict-item\dict-item.service.ts 
+   * @functionName  查询多个字典，若找不到直接返回异常
+   * @param { Object } 
+   * @description { "键名随意": 键值 是字典表的code }
+   * @author 谭人杰
+   * @date 2025-03-14 11:47:43
+  */
   async validateDict<T extends Record<string, any>>(data: T): Promise<DictItemResult<T>> {
     let res = {} as DictItemResult<T>
     for (const key in data) {
