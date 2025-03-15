@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, HttpException, Injectable, InternalServerErrorException, NotAcceptableException, RequestTimeoutException, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { FindManyOptions, Like, Not, Repository } from 'typeorm'
 import { SearchDto } from './dto/search.dto'

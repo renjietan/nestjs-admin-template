@@ -1,11 +1,10 @@
-import { HttpException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Brackets, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { SearchEncryptDto } from "./dto/search.e.table.detail.dto";
 import { CreateEncryptDto } from "./dto/create.e.table.detail.dto";
 import { BatchCreateEncryptDto } from "./dto/batchCreate.e.table.detail.dto";
 import { UpdateEncryptDto } from "./dto/update.e.table.detail.dto";
-import { UpdateETableDto } from "../e_table/dto/update.e.table.dto";
 import { ETableDetailEntity } from "~/entities/e_table_detail";
 import { generateRandomString, toHexStringBy16Bit } from "~/utils";
 import { BusinessException } from "~/common/exceptions/biz.exception";
