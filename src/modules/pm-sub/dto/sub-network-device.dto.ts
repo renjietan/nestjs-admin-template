@@ -1,15 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { IsEnum, IsNotEmpty, IsNumber } from "class-validator";
+import { IpAddressField } from "~/common/decorators/field.decorator";
+import { Exact } from "~/common/dto/pager.dto";
 
 export class SubNetWorkDeviceDto {
-  @IsNotEmpty()
+  @IpAddressField({ required: true })
   @ApiProperty({
     description: "任务规划-主任务-ip地址",
     example: "192.168.1.1",
   })
   ip_addr: string;
 
-  @IsNotEmpty()
+  @IpAddressField({ required: true })
   @ApiProperty({
     description: "任务规划-主任务-网关地址",
     example: "255.255.255.0",
@@ -22,7 +24,8 @@ export class SubNetWorkDeviceDto {
 
   @IsNumber()
   @IsNotEmpty()
-  @ApiProperty({ description: "任务规划-子任务-是否为master", example: 1 })
+  @IsEnum(Exact)
+  @ApiProperty({ description: "任务规划-子任务-是否为master", enum: Exact })
   isMaster: number;
 
   @IsNumber()

@@ -9,7 +9,7 @@ export class BatchCreateEncryptDto {
     message: '请传入数字'
   })
   @ApiProperty({ description: "表ID", example: 1})
-  tableId: number;
+  table_id: number;
 
   @IsInt({
     message: '请传入数字'

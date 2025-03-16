@@ -30,7 +30,7 @@ export class DeviceService {
         status: true,
         device_type: true,
         model: true
-      }
+      },
     }
     return await paginate(this.d_device_entity, { page: data.page, pageSize: data.pageSize }, _q)
   }

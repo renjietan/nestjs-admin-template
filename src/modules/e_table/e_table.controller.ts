@@ -1,16 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
-import { ETableService } from './e_table.service';
+import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { ApiResult } from '~/common/decorators/api-result.decorator';
+import { AuthUser } from '~/common/decorators/auth/auth-user.decorator';
+import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator';
+import { IdParam } from '~/common/decorators/path-param.decorator';
+import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator';
+import { ETableEntity } from '~/entities/e_table';
 import { CreateETableDto } from './dto/create.e.table.dto';
 import { UpdateETableDto } from './dto/update.e.table.dto';
-import { ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
-import { AuthUser } from '~/common/decorators/auth/auth-user.decorator';
-import { IdParam } from '~/common/decorators/path-param.decorator';
-import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator';
-import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator';
-import { ApiResult } from '~/common/decorators/api-result.decorator';
-import { ETableEntity } from '~/entities/e_table';
-import { UpdateEncryptDto } from '../e_table_detail/dto/update.e.table.detail.dto';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { ETableService } from './e_table.service';
 
 export const permissions = definePermission('e:table', {
   LIST: 'list',
@@ -54,8 +53,8 @@ export class ETableController {
   @Put('update/:id')
   @ApiResult({ type: UpdateResult })
   @Perm(permissions.UPDATE)
-  update(@IdParam() id: number, @Body() updateETableDto: UpdateETableDto) {
-    return this.eTableService.update(+id, updateETableDto);
+  update(@IdParam() id: number, @Body() updateETableDto: UpdateETableDto, @AuthUser() user:IAuthUser) {
+    return this.eTableService.update(+id, updateETableDto, user?.uid);
   }
 
   @ApiOperation({
