@@ -1,18 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { instanceToPlain } from 'class-transformer'
-import { UpdateNetWorkTemplateDTO } from './dto/update.dto'
-import { SearchNetWorkTemplateDto } from './dto/search.dto'
-import { NetWorkTemplateDTO } from './dto/NetWorkTemplateDTO'
-import { NetworkTemplateService } from './network-template.service'
-import { DictItemModule } from '../system/dict-item/dict-item.module'
-import { IdParam } from '~/common/decorators/path-param.decorator'
-import { parseArrayToTree } from '~/utils'
-import { AuthUser } from '~/common/decorators/auth/auth-user.decorator'
-import { ApiResult } from '~/common/decorators/api-result.decorator'
-import { NNetWorkTemplateEntity } from '~/entities/n_network_template'
-import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
 import { UpdateResult } from 'typeorm'
+import { ApiResult } from '~/common/decorators/api-result.decorator'
+import { AuthUser } from '~/common/decorators/auth/auth-user.decorator'
+import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
+import { IdParam } from '~/common/decorators/path-param.decorator'
+import { NNetWorkTemplateEntity } from '~/entities/n_network_template'
+import { createPaginationObject } from '~/helper/paginate/create-pagination'
+import { parseArrayToTree } from '~/utils'
+import { NetWorkTemplateDTO } from './dto/NetWorkTemplateDTO'
+import { SearchNetWorkTemplateDto } from './dto/search.dto'
+import { UpdateNetWorkTemplateDTO } from './dto/update.dto'
+import { NetworkTemplateService } from './network-template.service'
 
 
 export const permissions = definePermission('network:template', {
@@ -31,27 +31,7 @@ export class NetworkTemplateController {
   ) { }
 
   @ApiOperation({
-    summary: '新增 文件 或 模板',
-  })
-  @Post()
-  @ApiResult({ type: NNetWorkTemplateEntity })
-  @Perm(permissions.CREATE)
-  async create(@Query() data: NetWorkTemplateDTO, @AuthUser() user:IAuthUser) {
-    return await this.networkTemplateService.create(user?.uid, data)
-  }
-
-  @ApiOperation({
-    summary: '更新: 参数说明 查看下方 UpdateNetWorkTemplateDTO, 不需要更新的字段，不传',
-  })
-  @Put('update/:id')
-  @ApiResult({ type: UpdateResult })
-  @Perm(permissions.UPDATE)
-  async update(@IdParam() id: string, @Body() data: UpdateNetWorkTemplateDTO, @AuthUser() user:IAuthUser) {
-    return await this.networkTemplateService.update(+id, data, user?.uid)
-  }
-
-  @ApiOperation({
-    summary: '列表: 根据名称搜索, 不传查所有',
+    summary: '列表'
   })
   @Get()
   @ApiResult({ type: [NNetWorkTemplateEntity] })
@@ -68,11 +48,37 @@ export class NetworkTemplateController {
       }
     })
     const _res = parseArrayToTree(res_arr)
-    return _res
+    return createPaginationObject({
+      items: _res,
+      totalItems: _res.length,
+      currentPage: 1,
+      limit: _res.length
+    })
   }
 
   @ApiOperation({
-    summary: '根据id 删除',
+    summary: '新增',
+  })
+  @Post()
+  @ApiResult({ type: NNetWorkTemplateEntity })
+  @Perm(permissions.CREATE)
+  async create(@Query() data: NetWorkTemplateDTO, @AuthUser() user:IAuthUser) {
+    return await this.networkTemplateService.create(user?.uid, data)
+  }
+
+  @ApiOperation({
+    summary: '更新',
+    description: '参数说明 查看下方 UpdateNetWorkTemplateDTO, 不需要更新的字段，不传'
+  })
+  @Put('update/:id')
+  @ApiResult({ type: UpdateResult })
+  @Perm(permissions.UPDATE)
+  async update(@IdParam() id: string, @Body() data: UpdateNetWorkTemplateDTO, @AuthUser() user:IAuthUser) {
+    return await this.networkTemplateService.update(+id, data, user?.uid)
+  }
+
+  @ApiOperation({
+    summary: '删除',
   })
   @Delete('delete/:id')
   @ApiResult({ type: Object })

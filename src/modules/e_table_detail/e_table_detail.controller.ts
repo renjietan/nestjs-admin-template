@@ -1,16 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from '@nestjs/common';
-import { ETableDetailService } from './e_table_detail.service';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CreateEncryptDto } from './dto/create.e.table.detail.dto';
-import { BatchCreateEncryptDto } from './dto/batchCreate.e.table.detail.dto';
-import { UpdateEncryptDto } from './dto/update.e.table.detail.dto';
-import { SearchEncryptDto } from './dto/search.e.table.detail.dto';
-import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator';
-import { ApiResult } from '~/common/decorators/api-result.decorator';
-import { ETableDetailEntity } from '~/entities/e_table_detail';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { IdParam } from '~/common/decorators/path-param.decorator';
+import { ApiResult } from '~/common/decorators/api-result.decorator';
 import { AuthUser } from '~/common/decorators/auth/auth-user.decorator';
+import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator';
+import { IdParam } from '~/common/decorators/path-param.decorator';
+import { ETableDetailEntity } from '~/entities/e_table_detail';
+import { BatchCreateEncryptDto } from './dto/batchCreate.e.table.detail.dto';
+import { CreateEncryptDto } from './dto/create.e.table.detail.dto';
+import { SearchEncryptDto } from './dto/search.e.table.detail.dto';
+import { UpdateEncryptDto } from './dto/update.e.table.detail.dto';
+import { ETableDetailService } from './e_table_detail.service';
 
 export const permissions = definePermission('e:tableDetail', {
   LIST: 'list',
@@ -20,13 +20,13 @@ export const permissions = definePermission('e:tableDetail', {
   DELETE: 'delete',
 } as const)
 
-@ApiTags('Encrypt - 密钥表 - 详情')
+@ApiTags('Encrypt - 密钥表(详情)')
 @Controller('e-table-detail')
 export class ETableDetailController {
   constructor(private readonly eTableDetailService: ETableDetailService) { }
 
   @ApiOperation({
-    summary: '密钥表详情-列表'
+    summary: '列表'
   })
   @Get()
   @ApiResult({ type: [ETableDetailEntity] })
@@ -36,7 +36,7 @@ export class ETableDetailController {
   }
 
   @ApiOperation({
-    summary: '密钥表详情-新增'
+    summary: '新增'
   })
   @Post('craete')
   @ApiResult({ type: ETableDetailEntity })
@@ -46,7 +46,8 @@ export class ETableDetailController {
   }
 
   @ApiOperation({
-    summary: '密钥表详情-批量新增'
+    summary: '批量',
+    description: "先删除,再批量新增"
   })
   @Patch('batchCreate')
   @ApiResult({ type: [ETableDetailEntity] })
@@ -56,7 +57,7 @@ export class ETableDetailController {
   }
 
   @ApiOperation({
-    summary: '密钥表详情-根据ID  物理删除'
+    summary: '删除'
   })
   @Delete("delete/:id")
   @ApiResult({ type: DeleteResult })
@@ -66,7 +67,7 @@ export class ETableDetailController {
   }
 
   @ApiOperation({
-    summary: '密钥表详情-根据tableId 物理删除'
+    summary: '根据tableId删除'
   })
   @Delete("deleteByTableId/:tableId")
   @ApiResult({ type: DeleteResult })
@@ -76,7 +77,8 @@ export class ETableDetailController {
   }
 
   @ApiOperation({
-    summary: '密钥表详情-根据id更新  如果需要软删除，传入isDelete = 1'
+    summary: '更新',
+    description: '根据id更新,如果需要软删除,传入isDelete = 1'
   })
   @Put("update/:id")
   @ApiResult({ type: UpdateResult })
