@@ -1,7 +1,6 @@
-import type { ConfigKeyPaths } from './config'
 import cluster from 'node:cluster'
+import type { ConfigKeyPaths } from './config'
 
-import path from 'node:path'
 import {
   HttpStatus,
   Logger,
@@ -10,6 +9,7 @@ import {
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
+import path from 'node:path'
 
 import { NestFastifyApplication } from '@nestjs/platform-fastify'
 
@@ -64,7 +64,6 @@ async function bootstrap() {
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
       stopAtFirstError: true,
       exceptionFactory: errors => {
-        console.log('ValidationPipe errors==============', errors);
         let _errors = deepFindValidateError(errors)
         let error = _errors?.[0]
         return new UnprocessableEntityException(error)

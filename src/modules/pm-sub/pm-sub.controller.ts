@@ -1,78 +1,153 @@
-import { Body, Controller, Delete, Get, Patch, Post, Put } from '@nestjs/common'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
-import { PmSubService } from './pm-sub.service'
-import { PMSubDto } from './dto/pm-sub.dto'
-import { BasePMSubDto } from './dto/base-pm-sub.dto'
-import { BatchPmSubDto } from './dto/batch-pm-sub.dto'
-import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
-import { IdsDto } from '~/common/dto/ids.dto'
-import { AuthUser } from '~/common/decorators/auth/auth-user.decorator'
-import { ApiResult } from '~/common/decorators/api-result.decorator'
-import { DeleteResult } from 'typeorm'
-import { PMSubEntity } from '~/entities/pm_sub'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from "@nestjs/common";
+import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { DeleteResult, UpdateResult } from "typeorm";
+import { ApiResult } from "~/common/decorators/api-result.decorator";
+import { AuthUser } from "~/common/decorators/auth/auth-user.decorator";
+import {
+  definePermission,
+  Perm,
+} from "~/common/decorators/auth/permission.decorator";
+import { IdParam } from "~/common/decorators/path-param.decorator";
+import { PMSubEntity } from "~/entities/pm_sub";
+import { PMSubNetWorkDeviceEntity } from "~/entities/pm_sub_network_device";
+import { CompleteDto } from "./dto/complete.dto";
+import { SubNetWorkDeviceDto } from "./dto/sub-network-device.dto";
+import { SubDto } from "./dto/sub.dto";
+import { PmSubService } from "./pm-sub.service";
 
-export const permissions = definePermission('pm:sub', {
-  LIST: 'list',
-  CREATE: 'create',
-  READ: 'read',
-  UPDATE: 'update',
-  DELETE: 'delete',
-} as const)
+export const permissions_sub = definePermission("pm:sub", {
+  LIST: "list",
+  CREATE: "create",
+  READ: "read",
+  UPDATE: "update",
+  DELETE: "delete",
+} as const);
 
-@ApiTags('Task - 子任务')
-@Controller('pm-sub')
+export const permissions_net = definePermission("pm:sub", {
+  LIST: "list",
+  CREATE: "create",
+  READ: "read",
+  UPDATE: "update",
+  DELETE: "delete",
+} as const);
+
+@ApiTags("Task - 子任务")
+@Controller("pm-sub")
 export class PmSubController {
-  constructor(
-    private readonly pmSubService: PmSubService,
-  ) {}
+  constructor(private readonly pmSubService: PmSubService) {}
 
   @ApiOperation({
-    summary: '列表',
+    summary: "列表",
+    description: '子任务-基础信息'
   })
   @Get()
-  @Perm(permissions.LIST)
-  @ApiResult({ type: [PMSubEntity] })
+  @Perm(permissions_sub.LIST)
+  @ApiResult({ type: SubDto })
   async search() {
-    return await this.pmSubService.search()
+    return await this.pmSubService.search();
   }
 
+  @Patch("complete/:mId")
   @ApiOperation({
-    summary: '批量新增: 传pm_sub_id则视为更新,不传则视为新增',
+    summary: "批量",
+    description: '子任务 + 设备;传ID为更新;不传则为新增'
   })
-  @Post()
-  @Perm(permissions.CREATE)
+  @Perm(permissions_sub.CREATE)
   @ApiResult({ type: PMSubEntity })
-  async create(@Body() data: PMSubDto, @AuthUser() user: IAuthUser) {
-    return await this.pmSubService.create(data, user?.uid)
+  @ApiParam({ name: 'mId' })
+  async complete(@Param("mId") mId: number, @Body() dto: CompleteDto, @AuthUser() user: IAuthUser) {
+    return await this.pmSubService.complete(mId, dto, user?.uid)
   }
 
+  @Post("sub/:mId")
   @ApiOperation({
-    summary: '批量新增:传pm_sub_id则视为更新,不传则视为新增',
+    summary: "新增",
+    description: '子任务-基础信息'
   })
-  @Patch('batchCreate')
-  @Perm(permissions.CREATE)
+  @Perm(permissions_sub.CREATE)
   @ApiResult({ type: PMSubEntity })
-  async batchCreate(@Body() data: BatchPmSubDto, @AuthUser() user: IAuthUser) {
-    return await this.pmSubService.batchCreate(data, user?.uid)
+  @ApiParam({
+    name: 'mId',
+    type: String,
+    description: "任务规划id"
+  })
+  async create_sub(@Param("mId") mId, @Body() data: SubDto, @AuthUser() user: IAuthUser) {
+    return await this.pmSubService.create_sub(mId, data, user?.uid);
   }
 
+  @Put(":id")
   @ApiOperation({
-    summary: '子任务基础信息: 传pm_sub_id则视为更新,不传则视为新增',
+    summary: "更新",
+    description: '子任务-基础信息'
   })
-  @Put('createOrUpdate/baseInfo')
-  @Perm(permissions.UPDATE)
-  @ApiResult({ type: PMSubEntity })
-  async createOrUpdate(@Body() data: BasePMSubDto, @AuthUser() user: IAuthUser) {
-    return data.pm_sub_id ? await this.pmSubService.createBase(data, user?.uid) : await this.pmSubService.updateBase(data, user?.uid)
+  @Perm(permissions_sub.UPDATE)
+  @ApiResult({ type: UpdateResult })
+  @ApiParam({
+    name: "id",
+    type: String,
+    description: "子任务ID"
+  })
+  async update_sub(
+    @IdParam() id,
+    @Body() data: SubDto,
+    @AuthUser() user: IAuthUser
+  ) {
+    return await this.pmSubService.update_sub(id, data, user?.uid);
   }
 
+  @Delete(":id")
   @ApiOperation({
-    summary: '删除',
+    summary: "删除",
+    description: '包含设备的删除'
   })
-  @Delete('delete')
-  @Perm(permissions.DELETE)
+  @Perm(permissions_sub.DELETE)
   @ApiResult({ type: DeleteResult })
-  async delete(@Body() data: IdsDto) {
-    return await this.pmSubService.delete(data)
+  @ApiParam({
+    name: "id",
+    type: String,
+    description: '子任务ID'
+  })
+  async delete(@IdParam() id) {
+    return await this.pmSubService.delete_sub(id);
+  }
+
+  @Post("network-device/:sId")
+  @ApiOperation({
+    summary: "新增",
+    description: '子任务-设备'
+  })
+  @Perm(permissions_net.CREATE)
+  @ApiResult({ type: PMSubNetWorkDeviceEntity })
+  @ApiParam({
+    name: "sId",
+    type: String,
+    description: "子任务ID"
+  })
+  async create_network_devices(@Param("sId") sId,@Body() data: SubNetWorkDeviceDto,@AuthUser() user: IAuthUser) {
+    return await this.pmSubService.create_network_device(sId, data, user?.uid);
+  }
+
+  @Put("network-device/:id")
+  @ApiOperation({
+    summary: "更新",
+    description: '子任务-设备'
+  })
+  @Perm(permissions_net.UPDATE)
+  @ApiResult({ type: PMSubNetWorkDeviceEntity })
+  @ApiParam({ name: "id", type: String, description: 'network device id' })
+  async update_network_devices(@IdParam() id,@Body() data: SubNetWorkDeviceDto,@AuthUser() user: IAuthUser) {
+    return await this.pmSubService.update_network_device(id, data, user?.uid);
+  }
+  
+  @Delete("network-device/:id")
+  @ApiOperation({
+    summary: "更新",
+    description: '子任务-设备'
+  })
+  @Perm(permissions_net.UPDATE)
+  @ApiResult({ type: PMSubNetWorkDeviceEntity })
+  @ApiParam({ name: "id", type: String, description: 'network device id' })
+  async delete_network_devices(@IdParam() id) {
+    return await this.pmSubService.delete_network_device(id);
   }
 }
