@@ -26,7 +26,8 @@ export class ETableDetailController {
   constructor(private readonly eTableDetailService: ETableDetailService) { }
 
   @ApiOperation({
-    summary: '列表'
+    summary: '列表',
+    description: "field默认: channelNo, order默认: ASC"
   })
   @Get()
   @ApiResult({ type: [ETableDetailEntity] })

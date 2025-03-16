@@ -33,13 +33,7 @@ async function paginateRepository<T>(
 ): Promise<Pagination<T>> {
   const { page, pageSize } = options;
   
-  let _field: string = searchOptions?.["field"] || "createdAt";
-  let _order = searchOptions?.["order"] || Order.DESC;
-  // console.log("==================options", options);
-  // console.log("==================searchOptions", searchOptions);
-  // console.log("==================_field", _field);
-  // console.log("==================_order", _order);
-
+  !searchOptions["order"] && (searchOptions["order"] = { "createdAt": Order.DESC })
   const [items, total] = await repository.findAndCount({
     ...(!!options.page &&
       !!options.pageSize && { skip: pageSize * (page - 1), take: pageSize }),

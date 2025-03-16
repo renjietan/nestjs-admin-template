@@ -1,15 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { FindManyOptions, Like, Not, Repository } from 'typeorm'
-import { SearchDto } from './dto/search.dto'
-import { DeviceDto } from './dto/device.dto'
-import { DeviceEntity } from '~/entities/d_device'
 import { IdsDto } from '~/common/dto/ids.dto'
-import { paginate } from '~/helper/paginate'
-import { Order } from '~/common/dto/pager.dto'
 import { BusinessException } from '~/common/exceptions/biz.exception'
-import { DictItemEntity } from '~/entities/dict-item.entity'
+import { DeviceEntity } from '~/entities/d_device'
+import { paginate } from '~/helper/paginate'
 import { DictItemService } from '../system/dict-item/dict-item.service'
+import { DeviceDto } from './dto/device.dto'
+import { SearchDto } from './dto/search.dto'
 
 @Injectable()
 export class DeviceService {
@@ -27,9 +25,6 @@ export class DeviceService {
         ...(data.device_type && { device_type: { value: data.device_type } }),
         ...(data.model && { model: { value: data.model } }),
         ...(data.status && { status: { value: data.status } }),
-      },
-      order: {
-        [!!data.field ? data.field : "createdAt"]: !!data.order ? data.order : Order.DESC
       },
       relations: {
         status: true,
