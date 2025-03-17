@@ -1,20 +1,15 @@
-import { ApiExcludeController, ApiExcludeEndpoint, ApiHideProperty, ApiProperty, IntersectionType, PartialType } from '@nestjs/swagger'
-import { Type } from 'class-transformer'
+import { ApiProperty, IntersectionType, PartialType } from '@nestjs/swagger'
 import {
   ArrayMaxSize,
   ArrayMinSize,
   ArrayNotEmpty,
-  IsEmail,
   IsIn,
   IsInt,
   IsOptional,
   IsString,
-  Matches,
   MaxLength,
-  MinLength,
-  ValidateIf,
+  MinLength
 } from 'class-validator'
-import { isEmpty } from 'lodash'
 
 import { PagerDto } from '~/common/dto/pager.dto'
 
@@ -30,7 +25,6 @@ export class UserDto {
   @IsOptional()
   password: string
 
-  @ApiHideProperty()
   @ApiProperty({ description: '归属角色', type: [Number], required: false })
   @ArrayNotEmpty()
   @ArrayMinSize(1)

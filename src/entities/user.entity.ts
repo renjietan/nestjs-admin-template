@@ -2,19 +2,16 @@ import { Exclude } from 'class-transformer'
 import {
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
-  ManyToOne,
   OneToMany,
-  Relation,
+  Relation
 } from 'typeorm'
 
 import { CommonEntity } from '~/common/entity/common.entity'
 
 import { RoleEntity } from '~/entities/role.entity'
 import { AccessTokenEntity } from './access-token.entity'
-import { ApiHideProperty } from '@nestjs/swagger'
 
 @Entity({ name: 'sys_user' })
 export class UserEntity extends CommonEntity {
@@ -37,7 +34,6 @@ export class UserEntity extends CommonEntity {
   @Column({ type: 'tinyint', nullable: true, default: 1 })
   status: number
 
-  @ApiHideProperty()
   @ManyToMany(() => RoleEntity, role => role.users)
   @JoinTable({
     name: 'sys_user_roles',

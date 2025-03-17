@@ -28,10 +28,12 @@ export class RoleEntity extends CompleteEntity {
   @ApiProperty({ description: '是否默认用户' })
   default: boolean
 
+  //? 必须
   @ApiHideProperty()
   @ManyToMany(() => UserEntity, user => user.roles)
   users: Relation<UserEntity[]>
 
+  //? 必须
   @ApiHideProperty()
   @ManyToMany(() => MenuEntity, menu => menu.roles, {})
   @JoinTable({
