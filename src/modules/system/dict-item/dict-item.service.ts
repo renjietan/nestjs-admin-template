@@ -51,13 +51,7 @@ export class DictItemService {
    * 新增
    */
   async create(dto: DictItemDto): Promise<void> {
-    let entites = await this.findOneByCode(dto.value)
-    if(!!entites) {
-      throw new BusinessException("500:The code is exist")
-    }
-    if(entites.label == dto.label) {
-      throw new BusinessException("500:The label is exist")
-    }
+    await this.checkRepeatData({ value: dto.value, label: dto.label, id: dto.id })
     const { typeId, ...rest } = dto
     await this.dictItemRepository.insert({
       ...rest,
@@ -71,6 +65,7 @@ export class DictItemService {
    * 更新
    */
   async update(id: number, dto: Partial<DictItemDto>): Promise<void> {
+    await this.checkRepeatData({ value: dto.value, label: dto.label, id: dto.id })
     const { typeId, ...rest } = dto
     await this.dictItemRepository.update(id, {
       ...rest,
@@ -101,11 +96,17 @@ export class DictItemService {
     return this.dictItemRepository.findOneBy({ value: code })
   }
 
+  async checkRepeatData({ value, label, id} = { value: "", label: "", id: 0 }) {
+    let entites = await this.findOneByCode(value)
+    if(entites && (entites?.label == label || entites?.value == value) && entites.id != id)
+      throw new BusinessException('500:The field code or label is exist')
+  }
+
   /**
    * @path: src\modules\system\dict-item\dict-item.service.ts 
    * @functionName  查询多个字典，若找不到直接返回异常
    * @param { Object } 
-   * @description { "键名随意": 键值 是字典表的code }
+   * @description { "键名随意": 键值是字典表的code }
    * @author 谭人杰
    * @date 2025-03-14 11:47:43
   */
