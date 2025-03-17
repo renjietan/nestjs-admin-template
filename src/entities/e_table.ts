@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { ETableDetailEntity } from "./e_table_detail";
+import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { CompleteEntity } from "~/common/entity/common.entity";
-import { ApiOperation, ApiProperty } from "@nestjs/swagger";
 import { DictItemEntity } from "./dict-item.entity";
+import { ETableDetailEntity } from "./e_table_detail";
 
 @Entity("e_table")
 export class ETableEntity extends CompleteEntity {
@@ -24,7 +25,8 @@ export class ETableEntity extends CompleteEntity {
   @JoinColumn({ name: 'waveType', referencedColumnName: 'value' })
   waveType: DictItemEntity;
 
-  @ApiProperty()
-  @OneToMany(() => ETableDetailEntity, (e_table_encrypt) => e_table_encrypt.tableId)
+  @ApiProperty({ type: [ETableDetailEntity]})
+  @Type(() => ETableDetailEntity)
+  @OneToMany(() => ETableDetailEntity, (e_table_encrypt) => e_table_encrypt.table)
   details: ETableDetailEntity[];
 }

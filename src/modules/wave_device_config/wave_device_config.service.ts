@@ -1,16 +1,13 @@
-import { HttpException, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Brackets, Equal, EqualOperator, In, Repository } from 'typeorm'
+import { Equal, In, Repository } from 'typeorm'
+import { BusinessException } from '~/common/exceptions/biz.exception'
+import { WaveDeviceConfigEntity } from '~/entities/wave_device_config'
+import { paginate } from '~/helper/paginate'
+import { DictItemService } from '../system/dict-item/dict-item.service'
 import { BatchCreateWaveDeviceConfigDto } from './dto/batchCreate.dto'
 import { CreateWaveDeviceConfigDto } from './dto/createOne.dto'
 import { SearcheWaveDeviceConfigDto } from './dto/search.dto'
-import { UpdateWaveDeviceConfigDto } from './dto/updateOne.dto'
-import { BatchUpdateWaveDeviceConfigDto } from './dto/batchUpdate'
-import { cursorTo } from 'readline'
-import { paginate } from '~/helper/paginate'
-import { WaveDeviceConfigEntity } from '~/entities/wave_device_config'
-import { DictItemService } from '../system/dict-item/dict-item.service'
-import { BusinessException } from '~/common/exceptions/biz.exception'
 
 
 @Injectable()
@@ -24,39 +21,15 @@ export class WaveDeviceConfigService {
     const pageNum = data?.page
     const pageSize = data?.pageSize
     let where_query = {
-      skip: null,
-      take: null,
       where: {
-        deviceModel: null,
-        waveType: null
+        ...(!!data?.waveTypes && { waveTypes: In(data.waveTypes.split(',')) }),
+        ...(!!data?.deviceModel && { deviceModel: Equal(data.deviceModel) })
       }
     }
-    if (!!pageNum && !!pageSize) {
-      where_query.skip = (pageNum - 1) * pageSize
-      where_query.take = pageSize
-    } else {
-      delete where_query.skip
-      delete where_query.take
-    }
-    if (!!data?.waveTypes) {
-      where_query.where.waveType = In(data.waveTypes.split(','))
-    } else {
-      delete where_query.where.waveType
-    }
-    if (!!data?.deviceModel) {
-      where_query.where.deviceModel = Equal(data.deviceModel)
-    } else {
-      delete where_query.where.deviceModel
-    }
     return paginate(this.waveDeviceConfigEntity, {
-      page: undefined,
-      pageSize: undefined
-    }, {
-      ...where_query,
-      order: {
-        createdAt: "DESC",
-      },
-    })
+      page: pageNum,
+      pageSize: pageSize
+    }, where_query)
   }
 
   async create(params: CreateWaveDeviceConfigDto, uId: number) {

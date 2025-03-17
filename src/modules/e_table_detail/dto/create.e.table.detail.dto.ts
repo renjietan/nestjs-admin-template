@@ -36,20 +36,8 @@ export class CreateEncryptDto {
   waveType: string
 
   @IsNotEmpty({
-    message: 'tableId cannot be empty',
+    message: 'table_id cannot be empty',
   })
   @ApiProperty({ description: '表ID', example: 20 })
-  tableId: number
-
-  @IsNotEmpty({
-    message: 'createById cannot be empty',
-  })
-  @ApiProperty({ description: '创建者ID', example: 1 })
-  createById: number
-
-  @IsNotEmpty({
-    message: 'createById cannot be empty',
-  })
-  @ApiProperty({ description: '不用传', example: '2024-12-02' })
-  updateTime: string
+  table_id: number
 }

@@ -12,9 +12,9 @@ export { app as fastifyApp }
 
 app.register(FastifyMultipart, {
   limits: {
-    fields: 10, // Max number of non-file fields
-    fileSize: 1024 * 1024 * 6, // limit size 6M
-    files: 5, // Max number of file fields
+    fields: 10, // 非文件字段的最大数目
+    fileSize: 1024 * 1024 * 6, // 最大6M
+    files: 5, // 最大文件字段数
   },
 })
 
@@ -25,21 +25,15 @@ app.register(FastifyCookie, {
 app.getInstance().addHook('onRequest', (request, reply, done) => {
   // set undefined origin
   const { origin } = request.headers
+  debugger
   if (!origin)
     request.headers.origin = request.headers.host
-
-  // forbidden php
-
   const { url } = request
-
   if (url.endsWith('.php')) {
     reply.raw.statusMessage
       = 'Eh. PHP is not support on this machine. Yep, I also think PHP is bestest programming language. But for me it is beyond my reach.'
-
     return reply.code(418).send()
   }
-
-  // skip favicon request
   if (url.match(/favicon.ico$/) || url.match(/manifest.json$/))
     return reply.code(204).send()
 

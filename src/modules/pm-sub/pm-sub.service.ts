@@ -1,106 +1,162 @@
-import { HttpException, Injectable } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Not, Repository } from 'typeorm'
-import { PmSubNetWorkDeviceService } from '../pm-sub-network-device/pm-sub-network-device.service'
-import { PMSubDto } from './dto/pm-sub.dto'
-import { BasePMSubDto } from './dto/base-pm-sub.dto'
-import { BatchPmSubDto } from './dto/batch-pm-sub.dto'
-import { BusinessException } from '~/common/exceptions/biz.exception'
-import { PMSubEntity } from '~/entities/pm_sub'
-import { IdsDto } from '~/common/dto/ids.dto'
-import { paginate } from '~/helper/paginate'
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { BusinessException } from "~/common/exceptions/biz.exception";
+import { PMSubEntity } from "~/entities/pm_sub";
+import { PMSubNetWorkDeviceEntity } from "~/entities/pm_sub_network_device";
+import { paginate } from "~/helper/paginate";
+import { CompleteDto } from "./dto/complete.dto";
+import { SubNetWorkDeviceDto } from "./dto/sub-network-device.dto";
+import { SubDto } from "./dto/sub.dto";
 
 @Injectable()
 export class PmSubService {
   constructor(
-    @InjectRepository(PMSubEntity) private readonly pm_sub_entity: Repository<PMSubEntity>,
-    private readonly pmSubNetWorkDeviceService: PmSubNetWorkDeviceService,
-  ) { }
+    @InjectRepository(PMSubEntity)
+    private readonly pm_sub_entity: Repository<PMSubEntity>,
+    @InjectRepository(PMSubNetWorkDeviceEntity)
+    private readonly pm_sub_network_entity: Repository<PMSubNetWorkDeviceEntity>
+  ) {}
 
-  async create(data: PMSubDto, uId: number) {
-    const exist = await this.pm_sub_entity.exist({
-      where: [data.pm_sub_id
-        ? {
-          pm_sub_name: data.pm_sub_name,
-          id: Not(data.pm_sub_id),
-        }
-        : {
-          pm_sub_name: data.pm_sub_name,
-        }],
-    })
-    if (exist) {
-      throw new BusinessException('500:The SubTask name does exist')
-    }
-    return await this.pm_sub_entity.manager.transaction(async (manager) => {
-      let _id = 0
-      if (data.pm_sub_id) {
-        await this.updateBase(data, uId)
-        _id = data.pm_sub_id
-      }
-      else {
-        const res = await this.createBase(data, uId)
-        _id = res.id
-      }
-      return await this.pmSubNetWorkDeviceService.batchCreate(_id, {
-        data: data.devices,
-      }, uId)
-    })
-  }
-
-  async batchCreate(data: BatchPmSubDto, uId: number) {
-    try {
-      return await this.pm_sub_entity.manager.transaction(async manager => {
-        for (const element of (data?.list ?? [])) {
-          await this.create(element, uId)
-        }
-      })
-    } catch (error) {
-      new HttpException(`${ error }`, 500)
-    }
-  }
-
-  async createBase(data: BasePMSubDto, uId: number) {
-    const pm_sub_entity = new PMSubEntity()
-    pm_sub_entity.createBy = uId
-    pm_sub_entity.pm_sub_Desc = data.pm_sub_desc
-    pm_sub_entity.pm_sub_endTime = data.pm_sub_endTime
-    pm_sub_entity.pm_sub_name = data.pm_sub_name
-    pm_sub_entity.pm_sub_startTime = data.pm_sub_startTime
-    return await this.pm_sub_entity.save(pm_sub_entity)
-  }
-
-  async updateBase(data: BasePMSubDto, uId: number) {
-    return await this.pm_sub_entity.createQueryBuilder('pm_sub').update(PMSubEntity).set({
-      pm_sub_name: data.pm_sub_name,
-      pm_sub_Desc: data.pm_sub_desc,
-      pm_sub_startTime: data.pm_sub_startTime,
-      pm_sub_endTime: data.pm_sub_endTime,
-      updateBy: uId
-    }).where({
-      id: data.pm_sub_id,
-    }).execute()
-  }
-
+  // TAG(2025-03-17 00:09:46 谭人杰): 子任务接口
   async search() {
-    return paginate(this.pm_sub_entity, {
-      page: undefined,
-      pageSize: undefined
-    }, {
-      relations: ['networkDevices']
-    })
+    return await paginate(
+      this.pm_sub_entity,
+      { page: undefined, pageSize: undefined },
+      {
+        relations: {
+          networks: true,
+        },
+      }
+    );
   }
 
-  async findByName(pm_sub_name: string) {
-    return await this.pm_sub_entity.findOne({
-      where: {
-        pm_sub_name,
+  async complete(mId: number, dto: CompleteDto, uId: number) {
+    let entites = await this.findByName_sub(dto.sub.pm_sub_name)
+    if(entites.length > 0 && dto.id != entites?.[0]?.id) throw new BusinessException("500:The name already exists")
+    return await this.pm_sub_entity.manager.transaction(async (manager) => {
+      let sub_entity = await manager.upsert(
+        PMSubEntity,
+        {
+          id: dto.id,
+          ...dto.sub,
+          ...(dto.id ? { updateBy: 1 } : { createBy: 1 }),
+          pm_master: {
+            id: mId,
+          },
+        },
+        ["id"]
+      );
+      let sub_id = sub_entity.identifiers?.[0]?.id;
+      await manager
+        .createQueryBuilder()
+        .delete()
+        .from(PMSubNetWorkDeviceEntity)
+        .where("pm_sub_id = :pm_sub_id", {
+          pm_sub_id: sub_id,
+        })
+        .execute();
+
+      let networks = dto.networks.map((item) => ({
+        ...item,
+        pm_sub: {
+          id: sub_id,
+        },
+        createBy: 1,
+        updateBy: 1,
+      }));
+      await manager.save(PMSubNetWorkDeviceEntity, networks);
+      return {
+        id: sub_id,
+        ...dto.sub,
+        ...(dto.id ? { updateBy: dto.id } : { createBy: dto.id }),
+        pm_master: {
+          id: mId,
+        },
+        networks,
+      };
+    });
+  }
+
+  async create_sub(mId: number, dto: SubDto, uId: number) {
+    return await this.pm_sub_entity.insert({
+      pm_sub_name: dto.pm_sub_name,
+      pm_sub_startTime: dto.pm_sub_startTime,
+      pm_sub_endTime: dto.pm_sub_endTime,
+      pm_sub_desc: dto.pm_sub_desc,
+      createBy: uId,
+      pm_master: {
+        id: mId,
       },
-    })
+    });
   }
 
-  async delete(data: IdsDto) {
-    return await this.pm_sub_entity.manager.transaction((manager) => {
-      return manager.delete(PMSubEntity, data?.ids ?? [])
-    })
+  async update_sub(sub_id: number, dto: SubDto, uId: number) {
+    return await this.pm_sub_entity
+      .createQueryBuilder("pm_sub")
+      .update(PMSubEntity)
+      .set({
+        pm_sub_name: dto.pm_sub_name,
+        pm_sub_desc: dto.pm_sub_desc,
+        pm_sub_startTime: dto.pm_sub_startTime,
+        pm_sub_endTime: dto.pm_sub_endTime,
+        updateBy: uId,
+      })
+      .where({
+        id: sub_id,
+      })
+      .execute();
+  }
+
+  async delete_sub(id: number) {
+    return await this.pm_sub_entity.delete(id);
+  }
+
+  async findByName_sub(name: string) {
+    return await this.pm_sub_entity.findBy({
+      pm_sub_name: name
+    });
+  }
+
+  // TAG(2025-03-17 00:10:11 谭人杰):子任务-设备接口
+  async create_network_device(
+    sId: number,
+    dto: SubNetWorkDeviceDto,
+    uId: number
+  ) {
+    return await this.pm_sub_network_entity.insert({
+      ip_addr: dto.ip_addr,
+      network_addr: dto.network_addr,
+      private_conf: dto.private_conf,
+      isMaster: dto.isMaster,
+      device: {
+        id: dto.device_id,
+      },
+      pm_sub: {
+        id: sId,
+      },
+      createBy: uId,
+    });
+  }
+
+  async update_network_device(
+    id: number,
+    dto: SubNetWorkDeviceDto,
+    uId: number
+  ) {
+    return await this.pm_sub_network_entity.update(id, {
+      ip_addr: dto.ip_addr,
+      network_addr: dto.network_addr,
+      private_conf: dto.private_conf,
+      isMaster: dto.isMaster,
+      device: {
+        id: dto.device_id,
+      },
+      updateBy: uId,
+    });
+  }
+
+  async delete_network_device(id: number) {
+    return await this.pm_sub_network_entity.delete(id);
   }
 }

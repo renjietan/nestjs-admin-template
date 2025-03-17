@@ -1,7 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { ETableEntity } from "./e_table";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { CompleteEntity } from "~/common/entity/common.entity";
 import { DictItemEntity } from "./dict-item.entity";
+import { ETableEntity } from "./e_table";
 
 @Entity("e_table_detail")
 export class ETableDetailEntity extends CompleteEntity {
@@ -21,8 +21,11 @@ export class ETableDetailEntity extends CompleteEntity {
   @JoinColumn({ name: 'waveType', referencedColumnName: 'value'})
   waveType: DictItemEntity;
 
-  @Column("integer", { name: "tableId", comment: '表格id' })
-  tableId: number;
+  @ManyToOne(() => ETableEntity, { cascade: true, onDelete: "CASCADE" })
+  @JoinColumn({
+    name: 'table_id'
+  })
+  table: ETableEntity;
 
   @Column("integer", { name: "isDelete", comment: '软删除-标识' })
   isDelete: number;

@@ -1,7 +1,7 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { ApiProperty } from '@nestjs/swagger'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 import { CompleteEntity } from '~/common/entity/common.entity'
 import { DictItemEntity } from './dict-item.entity'
-import { ApiProperty } from '@nestjs/swagger'
 
 @Entity('n_network_template')
 export class NNetWorkTemplateEntity extends CompleteEntity {

@@ -13,12 +13,12 @@ export enum Exact {
 }
 
 export class OrderDto {
-  @ApiProperty()
+  @ApiProperty({ description: '按照XX字段进行排序' })
   @IsString()
   @IsOptional()
   field?: string // | keyof T
 
-  @ApiProperty({ enum: Order })
+  @ApiProperty({ enum: Order, description: '排序方式' })
   @IsEnum(Order)
   @IsOptional()
   @Transform(({ value }) => (value === 'asc' ? Order.ASC : Order.DESC))

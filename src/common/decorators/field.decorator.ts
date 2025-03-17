@@ -3,6 +3,7 @@ import {
   IsBoolean,
   IsDate,
   IsInt,
+  IsIP,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -135,3 +136,15 @@ export function DateField(options: IOptionalOptions = {}): PropertyDecorator {
 
   return applyDecorators(...decorators)
 }
+
+export function IpAddressField(options: IOptionalOptions = {}): PropertyDecorator {
+  const decorators = [IsIP()]
+
+  const { required = true } = options
+
+  if (!required)
+    decorators.push(IsOptional())
+
+  return applyDecorators(...decorators)
+}
+

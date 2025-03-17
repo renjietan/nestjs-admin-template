@@ -25,18 +25,17 @@ import { TasksModule } from './modules/tasks/tasks.module'
 import { TestModule } from './modules/test/test.module'
 import { ToolsModule } from './modules/tools/tools.module'
 
-import { DatabaseModule } from './shared/database/database.module'
-import { SocketModule } from './socket/socket.module'
-import { HopFreqModule } from './modules/hop-freq/hop-freq.module'
 import { DeviceModule } from './modules/device/device.module'
 import { ETableModule } from './modules/e_table/e_table.module'
 import { ETableDetailModule } from './modules/e_table_detail/e_table_detail.module'
+import { HopFreqModule } from './modules/hop-freq/hop-freq.module'
 import { NetworkTemplateModule } from './modules/network-template/network-template.module'
 import { PShotMessageModule } from './modules/p_shot_message/p_shot_message.module'
 import { PmMasterModule } from './modules/pm-master/pm-master.module'
 import { PmSubModule } from './modules/pm-sub/pm-sub.module'
-import { PmSubNetWorkDeviceModule } from './modules/pm-sub-network-device/pm-sub-network-device.module'
 import { WaveDeviceConfigModule } from './modules/wave_device_config/wave_device_config.module'
+import { DatabaseModule } from './shared/database/database.module'
+import { SocketModule } from './socket/socket.module'
 
 @Module({
   imports: [
@@ -82,8 +81,7 @@ import { WaveDeviceConfigModule } from './modules/wave_device_config/wave_device
     PShotMessageModule,
     PmMasterModule,
     PmSubModule,
-    PmSubNetWorkDeviceModule,
-    WaveDeviceConfigModule
+    WaveDeviceConfigModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
