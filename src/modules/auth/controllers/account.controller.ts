@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Put, Req, UseGuards } from '@nestjs/common'
-import { ApiExcludeController, ApiExcludeEndpoint, ApiExpectationFailedResponse, ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiExcludeEndpoint, ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { FastifyRequest } from 'fastify'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
@@ -31,7 +31,7 @@ export class AccountController {
   @ApiResult({ type: AccountInfo })
   @AllowAnon()
   async profile(@AuthUser() user: IAuthUser): Promise<AccountInfo> {
-    return this.userService.getAccountInfo(user.uid)
+    return this.userService.getAccountInfo(user?.uid)
   }
 
   @Get('logout')
@@ -47,7 +47,7 @@ export class AccountController {
   @ApiResult({ type: [AccountMenus] })
   @AllowAnon()
   async menu(@AuthUser() user: IAuthUser) {
-    return this.authService.getMenus(user.uid)
+    return this.authService.getMenus(user?.uid)
   }
 
   @ApiExcludeEndpoint()
@@ -56,7 +56,7 @@ export class AccountController {
   @ApiResult({ type: [String] })
   @AllowAnon()
   async permissions(@AuthUser() user: IAuthUser): Promise<string[]> {
-    return this.authService.getPermissions(user.uid)
+    return this.authService.getPermissions(user?.uid)
   }
 
   @Put('update')
@@ -66,7 +66,7 @@ export class AccountController {
     @AuthUser() user: IAuthUser, @Body()
 dto: AccountUpdateDto,
   ): Promise<void> {
-    await this.userService.updateAccountInfo(user.uid, dto)
+    await this.userService.updateAccountInfo(user?.uid, dto)
   }
 
   @Post('password')
@@ -76,6 +76,6 @@ dto: AccountUpdateDto,
     @AuthUser() user: IAuthUser, @Body()
 dto: PasswordUpdateDto,
   ): Promise<void> {
-    await this.userService.updatePassword(user.uid, dto)
+    await this.userService.updatePassword(user?.uid, dto)
   }
 }

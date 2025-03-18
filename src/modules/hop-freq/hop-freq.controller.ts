@@ -1,28 +1,26 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
-import { HopFreqService } from './hop-freq.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CoverFreqHopDto } from './freq_dto/cover-freq-hop.dto';
-import { GFreqHopDto } from './freq_dto/g-freq-hop.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FTableEntity } from '~/entities/f-table';
-import { Repository, UpdateResult } from 'typeorm';
-import { CreateFreqTableDto } from './dto/create-freq-table.dto';
-import { default_hopping_conf } from '~/utils/init.mock.data';
-import { BaseFreqTableDto } from './dto/base-freq-table.dto';
-import { b_diff } from '~/utils/tool.util';
-import { BaseTableDto } from './dto/base_table';
-import { IdsDto } from '~/common/dto/ids.dto';
-import { CreateFreqHopDto } from './freq_dto/create-freq-hop.dto';
-import { UpdateFreqHopDto } from './freq_dto/update-freq-hop.dto';
-import { ResetFreqHopDto } from './freq_dto/reset-freq-hop.dto';
-import { BusinessException } from '~/common/exceptions/biz.exception';
-import { AuthUser } from '~/common/decorators/auth/auth-user.decorator';
-import { Public } from '~/common/decorators/auth/public.decorator';
-import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator';
-import { ErrorEnum } from '~/constants/error-code.constant';
-import { ApiResult } from '~/common/decorators/api-result.decorator';
-import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator';
-import { FHoppingEntity } from '~/entities/f-hopping';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository, UpdateResult } from 'typeorm'
+import { ApiResult } from '~/common/decorators/api-result.decorator'
+import { AuthUser } from '~/common/decorators/auth/auth-user.decorator'
+import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
+import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+import { IdsDto } from '~/common/dto/ids.dto'
+import { BusinessException } from '~/common/exceptions/biz.exception'
+import { FHoppingEntity } from '~/entities/f-hopping'
+import { FTableEntity } from '~/entities/f-table'
+import { default_hopping_conf } from '~/utils/init.mock.data'
+import { b_diff } from '~/utils/tool.util'
+import { BaseFreqTableDto } from './dto/base-freq-table.dto'
+import { BaseTableDto } from './dto/base_table'
+import { CreateFreqTableDto } from './dto/create-freq-table.dto'
+import { CoverFreqHopDto } from './freq_dto/cover-freq-hop.dto'
+import { CreateFreqHopDto } from './freq_dto/create-freq-hop.dto'
+import { GFreqHopDto } from './freq_dto/g-freq-hop.dto'
+import { ResetFreqHopDto } from './freq_dto/reset-freq-hop.dto'
+import { UpdateFreqHopDto } from './freq_dto/update-freq-hop.dto'
+import { HopFreqService } from './hop-freq.service'
 
 export const permissions = definePermission('confg:hopFreq', {
   LIST: 'list',
@@ -41,7 +39,6 @@ export class HopFreqController {
     @InjectRepository(FTableEntity) private readonly f_table_entity: Repository<FTableEntity>,
   ) { }
 
-
   @Patch()
   @ApiOperation({
     summary: '批量新增: 初始化 80张表时, law_conf可传空',
@@ -49,11 +46,11 @@ export class HopFreqController {
   })
   @ApiResult({ type: String })
   @Perm(permissions.CREATE)
-  async init(@Body() createFreqTableDto: CreateFreqTableDto, @AuthUser() user: IAuthUser,) {
+  async init(@Body() createFreqTableDto: CreateFreqTableDto, @AuthUser() user: IAuthUser) {
     let {
       law_conf,
     } = createFreqTableDto
-    let uId = user?.uid
+    const uId = user?.uid
     const isExsit = (law_conf?.length ?? 0) > 0
     // NOTE(2025-01-08 10:28:30 谭人杰): 如果为空，则按照默认配置来执行
     law_conf = isExsit ? law_conf : default_hopping_conf
@@ -93,20 +90,20 @@ export class HopFreqController {
           law_start,
           type,
           createById: uId,
-          point_count
+          point_count,
         }
         return { ...obj }
       })
       return arr
     }).flat()
-    let all_data = await this.f_table_entity.find()
-    let total_len = data.length + all_data.length
-    if (total_len >= 80) {
+    const all_data = await this.f_table_entity.find()
+    const total_len = data.length + all_data.length
+    if (total_len > 80) {
       throw new BusinessException('500:The number of data must not exceed 80')
     }
 
     try {
-      let res = await this.f_table_entity.manager.transaction(async (manager) => {
+      const res = await this.f_table_entity.manager.transaction(async (manager) => {
         let index = 1
         for (const item of data) {
           await this.f_table_seivce.create_table({
@@ -119,7 +116,6 @@ export class HopFreqController {
           }, uId)
           index++
         }
-        return "success"
       })
       return res
     }
@@ -204,7 +200,7 @@ export class HopFreqController {
   })
   @Post('create_hop')
   @Perm(permissions.CREATE)
-  createFreq(@Body() freqhop_dto: CreateFreqHopDto, @AuthUser() user:IAuthUser) {
+  createFreq(@Body() freqhop_dto: CreateFreqHopDto, @AuthUser() user: IAuthUser) {
     return this.f_table_seivce.create_freq(user?.uid, freqhop_dto)
   }
 
@@ -217,7 +213,6 @@ export class HopFreqController {
   batchRemoveFreq(@Body() ids: IdsDto) {
     return this.f_table_seivce.batch_remove_freq(ids)
   }
-
 
   @ApiOperation({
     summary: '根据ID 批量更新频点',
@@ -256,7 +251,7 @@ export class HopFreqController {
   @ApiResult({ type: String })
   @Perm(permissions.UPDATE)
   cover_freq(@Body() data: CoverFreqHopDto, @AuthUser() user: IAuthUser) {
-    let uId = user?.uid
+    const uId = user?.uid
     return this.f_table_seivce.cover_freq(uId, data)
   }
 }

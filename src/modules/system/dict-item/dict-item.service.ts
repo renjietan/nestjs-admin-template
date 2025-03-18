@@ -3,14 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import { Like, Repository } from 'typeorm'
 
-import { DictItemEntity } from '~/entities/dict-item.entity'
-import { paginate } from '~/helper/paginate'
-import { Pagination } from '~/helper/paginate/pagination'
-
-import { DictItemDto, DictItemQueryDto } from './dict-item.dto'
-import { PaginationTypeEnum } from '~/helper/paginate/interface'
 import { Order } from '~/common/dto/pager.dto'
 import { BusinessException } from '~/common/exceptions/biz.exception'
+import { DictItemEntity } from '~/entities/dict-item.entity'
+
+import { paginate } from '~/helper/paginate'
+import { Pagination } from '~/helper/paginate/pagination'
+import { DictItemDto, DictItemQueryDto } from './dict-item.dto'
 
 @Injectable()
 export class DictItemService {
@@ -29,15 +28,15 @@ export class DictItemService {
     value,
     typeId,
     field,
-    order
+    order,
   }: DictItemQueryDto): Promise<Pagination<DictItemEntity>> {
-    const queryBuilder = this.dictItemRepository.createQueryBuilder('dict_item').orderBy({ [!!field ? field : 'orderNo']: !!order ? order : Order.ASC }).where({
+    const queryBuilder = this.dictItemRepository.createQueryBuilder('dict_item').orderBy({ [field || 'orderNo']: order || Order.ASC }).where({
       ...(label && { label: Like(`%${label}%`) }),
       ...(value && { value: Like(`%${value}%`) }),
       ...(typeId && { type: { id: typeId } }),
-    }).leftJoinAndSelect("dict_item.type", "type")
+    }).leftJoinAndSelect('dict_item.type', 'type')
 
-    return paginate(queryBuilder, { page, pageSize, paginationType: PaginationTypeEnum.ALL })
+    return paginate(queryBuilder, { page, pageSize })
   }
 
   /**
@@ -51,7 +50,6 @@ export class DictItemService {
    * 新增
    */
   async create(dto: DictItemDto): Promise<void> {
-    await this.checkRepeatData({ value: dto.value, label: dto.label, id: dto.id })
     const { typeId, ...rest } = dto
     await this.dictItemRepository.insert({
       ...rest,
@@ -65,7 +63,6 @@ export class DictItemService {
    * 更新
    */
   async update(id: number, dto: Partial<DictItemDto>): Promise<void> {
-    await this.checkRepeatData({ value: dto.value, label: dto.label, id: dto.id })
     const { typeId, ...rest } = dto
     await this.dictItemRepository.update(id, {
       ...rest,
@@ -90,33 +87,28 @@ export class DictItemService {
   }
 
   /**
- * 根据 value 值 查询单个
- */
+   * 根据 value 值 查询单个
+   */
   async findOneByCode(code: string): Promise<DictItemEntity> {
     return this.dictItemRepository.findOneBy({ value: code })
   }
 
-  async checkRepeatData({ value, label, id} = { value: "", label: "", id: 0 }) {
-    let entites = await this.findOneByCode(value)
-    if(entites && (entites?.label == label || entites?.value == value) && entites.id != id)
-      throw new BusinessException('500:The field code or label is exist')
-  }
-
   /**
-   * @path: src\modules\system\dict-item\dict-item.service.ts 
+   * @path: src\modules\system\dict-item\dict-item.service.ts
    * @functionName  查询多个字典，若找不到直接返回异常
-   * @param { Object } 
+   * @param {object}
    * @description { "键名随意": 键值是字典表的code }
    * @author 谭人杰
    * @date 2025-03-14 11:47:43
-  */
+   */
   async validateDict<T extends Record<string, any>>(data: T): Promise<DictItemResult<T>> {
-    let res = {} as DictItemResult<T>
+    const res = {} as DictItemResult<T>
     for (const key in data) {
-      let dict_model = await this.findOneByCode(data[key])
-      if(!dict_model) {
-        throw new BusinessException(`500:The field ${ key } does not exist in the dictionary`)
-      } else {
+      const dict_model = await this.findOneByCode(data[key])
+      if (!dict_model) {
+        throw new BusinessException(`500:The field ${key} does not exist in the dictionary`)
+      }
+      else {
         res[key] = dict_model
       }
     }

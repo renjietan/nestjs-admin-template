@@ -3,6 +3,7 @@ import { IsInt, IsOptional, IsString, MinLength } from 'class-validator'
 
 import { PagerDto } from '~/common/dto/pager.dto'
 
+import { IsUnique } from '~/shared/database/constraints/unique.constraint'
 import { DictItemEntity } from '../../../entities/dict-item.entity'
 
 export class DictItemDto extends PartialType(DictItemEntity) {
@@ -10,11 +11,19 @@ export class DictItemDto extends PartialType(DictItemEntity) {
   @IsInt()
   typeId: number
 
+  @IsUnique({ entity: DictItemEntity, message: '已存在相同额字典项名称' })
   @ApiProperty({ description: '字典项键名' })
   @IsString()
   @MinLength(1)
   label: string
 
+  @IsUnique({ entity: DictItemEntity, message: '已存在相同额字典项英文名称' })
+  @ApiProperty({ description: '字典项英文名称' })
+  @IsString()
+  @MinLength(1)
+  en_label: string
+
+  @IsUnique({ entity: DictItemEntity, message: '已存在相同额字典项编码' })
   @ApiProperty({ description: '字典项值' })
   @IsString()
   @MinLength(1)

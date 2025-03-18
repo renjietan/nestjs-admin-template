@@ -1,18 +1,18 @@
-import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Patch, Post, Put, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
 import { IdParam } from '~/common/decorators/path-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+import { OrderDto } from '~/common/dto/pager.dto'
 import { CreatorPipe } from '~/common/pipes/creator.pipe'
 import { UpdaterPipe } from '~/common/pipes/updater.pipe'
 import { DictTypeEntity } from '~/entities/dict-type.entity'
-import { Pagination } from '~/helper/paginate/pagination'
 
-import { DictTypeDto, DictTypeQueryDto } from './dict-type.dto'
+import { Pagination } from '~/helper/paginate/pagination'
+import { DictTypeDto, DictTypeQueryDto, PatchDto } from './dict-type.dto'
 import { DictTypeService } from './dict-type.service'
-import { OrderDto, PagerDto } from '~/common/dto/pager.dto'
 
 export const permissions = definePermission('system:dict-type', {
   LIST: 'list',
@@ -28,14 +28,22 @@ export const permissions = definePermission('system:dict-type', {
 export class DictTypeController {
   constructor(private dictTypeService: DictTypeService) {}
 
-  @Get("full")
+  @Patch('patch')
+  @ApiOperation({ summary: '批量新增字典' })
+  // @ApiResult({ type: [DictTypeEntity], isPage: true })
+  @Perm(permissions.LIST)
+  async patch(@Body() dto: PatchDto): Promise<any> {
+    return this.dictTypeService.patch(dto)
+  }
+
+  @Get('full')
   @ApiOperation({ summary: '获取所有字典（字典类型 + 字典）' })
   // @ApiResult({ type: [DictTypeEntity], isPage: true })
   @Perm(permissions.LIST)
   async full(@Query() dto: OrderDto): Promise<any> {
     return this.dictTypeService.full(dto)
   }
-  
+
   @Get()
   @ApiOperation({ summary: '获取字典类型列表' })
   @ApiResult({ type: [DictTypeEntity], isPage: true })
@@ -67,7 +75,7 @@ export class DictTypeController {
     return this.dictTypeService.findOne(id)
   }
 
-  @Post(':id')
+  @Put(':id')
   @ApiOperation({ summary: '更新字典类型' })
   @Perm(permissions.UPDATE)
   async update(@IdParam() id: number, @Body(UpdaterPipe) dto: DictTypeDto): Promise<void> {

@@ -14,7 +14,7 @@ export class UpdaterPipe implements PipeTransform {
   transform(value: OperatorDto, metadata: ArgumentMetadata) {
     const user = this.request.user as IAuthUser
 
-    value.updateBy = user.uid
+    value.updateBy = user?.uid
 
     return value
   }

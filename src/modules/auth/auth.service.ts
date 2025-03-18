@@ -123,7 +123,7 @@ export class AuthService {
     if (this.appConfig.multiDeviceLogin)
       await this.tokenService.removeAccessToken(accessToken)
     else
-      await this.userService.forbidden(user.uid, accessToken)
+      await this.userService.forbidden(user?.uid, accessToken)
   }
 
   /**

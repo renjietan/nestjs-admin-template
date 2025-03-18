@@ -1,21 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { DataSource, EntityManager, Not, Repository } from 'typeorm';
-import { FHoppingEntity } from '~/entities/f-hopping';
-import { FTableEntity } from '~/entities/f-table';
-import { BaseTableDto } from './dto/base_table';
-import { BaseFreqTableDto } from './dto/base-freq-table.dto';
-import { BusinessException } from '~/common/exceptions/biz.exception';
-import { default_hopping_conf } from '~/utils/init.mock.data';
-import { b_diff } from '~/utils';
-import { IdsDto } from '~/common/dto/ids.dto';
-import { CreateFreqHopDto } from './freq_dto/create-freq-hop.dto';
-import { CoverFreqHopDto } from './freq_dto/cover-freq-hop.dto';
-import { UpdateFreqHopBaseDto, UpdateFreqHopDto } from './freq_dto/update-freq-hop.dto';
-import { ResetFreqHopDto } from './freq_dto/reset-freq-hop.dto';
-import { GFreqHopDto } from './freq_dto/g-freq-hop.dto';
-import { createPaginationObject } from '~/helper/paginate/create-pagination';
-import { paginate } from '~/helper/paginate';
+import { Injectable } from '@nestjs/common'
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm'
+import { DataSource, EntityManager, Not, Repository } from 'typeorm'
+import { IdsDto } from '~/common/dto/ids.dto'
+import { BusinessException } from '~/common/exceptions/biz.exception'
+import { FHoppingEntity } from '~/entities/f-hopping'
+import { FTableEntity } from '~/entities/f-table'
+import { paginate } from '~/helper/paginate'
+import { b_diff } from '~/utils'
+import { default_hopping_conf } from '~/utils/init.mock.data'
+import { BaseFreqTableDto } from './dto/base-freq-table.dto'
+import { BaseTableDto } from './dto/base_table'
+import { CoverFreqHopDto } from './freq_dto/cover-freq-hop.dto'
+import { CreateFreqHopDto } from './freq_dto/create-freq-hop.dto'
+import { GFreqHopDto } from './freq_dto/g-freq-hop.dto'
+import { ResetFreqHopDto } from './freq_dto/reset-freq-hop.dto'
+import { UpdateFreqHopBaseDto, UpdateFreqHopDto } from './freq_dto/update-freq-hop.dto'
 
 @Injectable()
 export class HopFreqService {
@@ -23,7 +22,7 @@ export class HopFreqService {
     @InjectRepository(FTableEntity) private readonly f_table_entity: Repository<FTableEntity>,
     @InjectRepository(FHoppingEntity) private readonly f_hopping_entity: Repository<FHoppingEntity>,
     @InjectDataSource() private dataSource: DataSource,
-    private readonly entity_manager: EntityManager
+    private readonly entity_manager: EntityManager,
   ) { }
 
   async create(alias: string, createBy: number, data: BaseFreqTableDto) {
@@ -38,7 +37,8 @@ export class HopFreqService {
   }
 
   async create_table(data: BaseTableDto, uId: number) {
-    let exist_data = await this.f_table_entity.find()
+    const exist_data = await this.f_table_entity.find()
+    console.log('exist_data', exist_data.length)
     if (exist_data.length >= 80) {
       throw new BusinessException('500:The number of data must not exceed 80')
     }
@@ -59,10 +59,10 @@ export class HopFreqService {
     data.law_end = data.law_end ? data.law_end : _temp.law_end
     data.law_start = data.law_start ? data.law_start : _temp.law_start
     if (!data.law_spacing) {
-      let _law_spacing = b_diff(data.law_start, data.law_end, data.point_count, _temp.law_spacing)
+      const _law_spacing = b_diff(data.law_start, data.law_end, data.point_count, _temp.law_spacing)
       data.law_spacing = _law_spacing < _temp.law_spacing ? _temp.law_spacing : _law_spacing
     }
-    return await this.entity_manager.transaction(async manager => {
+    return await this.entity_manager.transaction(async (manager) => {
       try {
         const db = new FTableEntity()
         db.alias = data.alias
@@ -77,79 +77,46 @@ export class HopFreqService {
         }).map((item, index) => {
           const value = data.law_start + index * data.law_spacing
           value > data.law_end ? data.law_end : value
-          let hop_entity = new FHoppingEntity()
+          const hop_entity = new FHoppingEntity()
           hop_entity.createBy = uId
           hop_entity.f_table = table
           hop_entity.value = value
           return hop_entity
         })
         return await manager.save(points)
-      } catch (error) {
+      }
+      catch (error) {
         throw new BusinessException(`500:${error}`)
       }
     })
-
   }
 
   async findAll() {
-    const results = await this.dataSource.query(
-      `
-        SELECT f_table.*, COUNT(f_hopping.id) AS point_count
-        FROM f_table
-        LEFT JOIN f_hopping ON f_table.id = f_hopping.f_table_id
-        GROUP BY f_table.id;
-      `
-    );
-    return createPaginationObject({
-      items: results,
-      totalItems: results.length,
-      currentPage: 1,
-      limit: results.length
-    });
+    const res = await paginate(this.f_table_entity, { page: undefined, pageSize: undefined }, {
+      order: {
+        alias: 'ASC',
+      },
+    })
+    return res
   }
 
   async findByTableType(type: string) {
-    let results = await this.dataSource.query(
-      `
-               SELECT f_table.*, f_hopping.id as h_id, f_hopping.value as h_value  FROM f_hopping
-                LEFT JOIN f_table ON f_table.id = f_hopping.f_table_id 
-                WHERE f_table.type = '${type}'
-            `
-    );
-
-    results = results.reduce((cur, pre) => {
-      let point = {
-        id: pre.h_id,
-        value: pre.h_value
-      }
-      if (!cur[pre.id]) {
-        cur[pre.id] = {
-          id: pre.id,
-          alias: pre.alias,
-          type: pre.type,
-          law_start: pre.law_start,
-          law_spaceing: pre.law_spaceing,
-          law_end: pre.law_end,
-          createById: pre.createById,
-          createTime: pre.createTime,
-          updateTime: pre.updateTime,
-          points: []
-        }
-      }
-
-      cur[pre.id].points.push(point)
-      return cur
-    }, {})
-    return {
-      items: results,
-    };
+    const results = await paginate(this.f_table_entity, { page: undefined, pageSize: undefined }, {
+      where: {
+        type,
+      },
+      relations: {
+        hoppings: true,
+      },
+    })
+    return results
   }
 
   async batch_remove_table(data: IdsDto) {
     for (const id of data.ids) {
       await this.remove(id)
     }
-    return "success"
+    return 'success'
   }
 
   async update(id: number, alias: string) {
@@ -175,7 +142,7 @@ export class HopFreqService {
         await manager.query('SET FOREIGN_KEY_CHECKS = 0;')
         await manager.clear(FHoppingEntity)
         await manager.clear(FTableEntity)
-        await manager.query('SET FOREIGN_KEY_CHECKS = 1;');
+        await manager.query('SET FOREIGN_KEY_CHECKS = 1;')
         return
       }
       return await manager.delete(FTableEntity, id)
@@ -192,18 +159,18 @@ export class HopFreqService {
   }
 
   async batch_remove_freq(params: IdsDto) {
-    return await this.f_hopping_entity.manager.transaction(async manager => {
+    return await this.f_hopping_entity.manager.transaction(async (manager) => {
       return await manager.delete(FHoppingEntity, params.ids)
     })
   }
 
   async cover_freq(uId: number, data: CoverFreqHopDto) {
-    const { f_table_id  } = data
+    const { f_table_id } = data
     const _temp = default_hopping_conf.find(item => item.type == data.type)
     if (!_temp) {
       throw new BusinessException('500:table type does not exist')
     }
-    let cur_table_entity = new FTableEntity()
+    const cur_table_entity = new FTableEntity()
     cur_table_entity.id = f_table_id
     // await this.f_hopping_entity.delete({
     //   f_table: cur_table_entity,
@@ -217,11 +184,11 @@ export class HopFreqService {
     }).where({
       id: f_table_id,
     }).execute()
-    let _values = data.values.split(',')
+    const _values = data.values.split(',')
     for (const item of _values) {
       const db = new FHoppingEntity()
       db.createBy = uId
-      let _f_table = new FTableEntity()
+      const _f_table = new FTableEntity()
       _f_table.id = f_table_id
       db.f_table = _f_table
       db.value = Number(item)
@@ -231,17 +198,14 @@ export class HopFreqService {
   }
 
   async findHopByTableId(f_table_id: number) {
-    let temp = new FTableEntity()
+    const temp = new FTableEntity()
     temp.id = f_table_id
-    let res = await paginate(this.f_table_entity, { page: undefined, pageSize: undefined }, {
+    const res = await paginate(this.f_table_entity, { page: undefined, pageSize: undefined }, {
       where: {
-        id: f_table_id
+        id: f_table_id,
       },
-      relations: {
-        hoppings: true
-      }
     })
-    let _res = { ...res, items: res.items?.[0]?.hoppings ?? []}
+    const _res = { ...res, items: res.items?.[0]?.hoppings ?? [] }
     _res.meta.currentPage = 1
     _res.meta.itemCount = _res.items.length
     _res.meta.itemsPerPage = _res.items.length
@@ -273,7 +237,7 @@ export class HopFreqService {
     data.law_end = data.law_end ? data.law_end : _temp.law_end
     data.law_start = data.law_start ? data.law_start : _temp.law_start
     if (!data.law_spacing) {
-      let _law_spacing = b_diff(data.law_start, data.law_end, point_count, _temp.law_spacing)
+      const _law_spacing = b_diff(data.law_start, data.law_end, point_count, _temp.law_spacing)
       data.law_spacing = _law_spacing < _temp.law_spacing ? _temp.law_spacing : _law_spacing
     }
     const points = _ids.map((item, index) => {
@@ -295,7 +259,7 @@ export class HopFreqService {
     data.law_end = data.law_end ? data.law_end : _temp.law_end
     data.law_start = data.law_start ? data.law_start : _temp.law_start
     if (!data.law_spacing) {
-      let _law_spacing = b_diff(data.law_start, data.law_end, data.point_count, _temp.law_spacing)
+      const _law_spacing = b_diff(data.law_start, data.law_end, data.point_count, _temp.law_spacing)
       data.law_spacing = _law_spacing < _temp.law_spacing ? _temp.law_spacing : _law_spacing
     }
     return Array.from({ length: data.point_count }).map((item, index) => {

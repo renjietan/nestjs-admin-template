@@ -1,43 +1,93 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
-import { EntitySchema, Like, Repository } from 'typeorm'
+import { Repository } from 'typeorm'
 
-import { DictTypeEntity } from '~/entities/dict-type.entity'
-import { paginate } from '~/helper/paginate'
-import { Pagination } from '~/helper/paginate/pagination'
-
-import { DictTypeDto, DictTypeQueryDto } from './dict-type.dto'
-import { DictItemService } from '../dict-item/dict-item.service'
+import { Exact, PagerDto } from '~/common/dto/pager.dto'
 import { DictItemEntity } from '~/entities/dict-item.entity'
+import { DictTypeEntity } from '~/entities/dict-type.entity'
+
+import { paginate } from '~/helper/paginate'
 import { createPaginationObject } from '~/helper/paginate/create-pagination'
-import { PagerDto } from '~/common/dto/pager.dto'
+import { Pagination } from '~/helper/paginate/pagination'
+import { DictItemService } from '../dict-item/dict-item.service'
+import { DictTypeDto, DictTypeQueryDto, PatchDto } from './dict-type.dto'
 
 @Injectable()
 export class DictTypeService {
   constructor(
     @InjectRepository(DictTypeEntity)
     private dictTypeRepository: Repository<DictTypeEntity>,
-    private readonly dict_service: DictItemService
-    // @InjectRepository(DictItemEntity)
-    // private dictItemRepository: Repository<DictItemEntity>,
+    private readonly dict_service: DictItemService,
   ) { }
 
+  async patch(dto: PatchDto) {
+    const { allow_clean, dicts } = dto
+    return await this.dictTypeRepository.manager.transaction(async (manager) => {
+      if (allow_clean == Exact.TRUE)
+        await manager.clear(DictTypeEntity)
+      const count_type = allow_clean ? 0 : ((await manager.findOne(DictTypeEntity, { order: { createdAt: 'DESC' } }))?.id ?? 0)
+      const count_item = allow_clean ? 0 : ((await manager.findOne(DictTypeEntity, { order: { createdAt: 'DESC' } }))?.id ?? 0)
+      let type_init_id = count_type + 1
+      let item_init_id = count_item + 1
+      const res = []
+      for (const e of dicts) {
+        const insert_type_obj = {
+          id: type_init_id,
+          name: e.name,
+          code: e.code,
+          en_name: e.en_name,
+          status: e?.status ?? 1,
+          remark: e?.remark ?? '',
+          createBy: e?.createBy ?? 1,
+        }
+        await manager.insert(DictTypeEntity, insert_type_obj)
+        const items = e?.items ?? []
+        let index = 1
+        for (const item of items) {
+          const insert_item_obj = {
+            id: item_init_id,
+            label: item.label,
+            value: item.value,
+            en_label: item.en_label,
+            status: e?.status ?? 1,
+            remark: e?.remark ?? '',
+            createBy: e?.createBy ?? 1,
+            type: {
+              id: type_init_id,
+            },
+            orderNo: index,
+          }
+          await manager.insert(DictItemEntity, insert_item_obj)
+          item_init_id++
+          index++
+          insert_type_obj["children"] = [
+            ...(insert_type_obj["children"] && []),
+            insert_type_obj,
+          ]
+        }
+        type_init_id++
+        res.push(insert_type_obj)
+      }
+      return res
+    })
+  }
+
   async full(dto: PagerDto) {
-    let entities = await this.dict_service.page({})
-    let items = entities.items.reduce((cur, pre) => {
-      let type_id = pre?.type?.id
-      !cur[type_id] && (cur[type_id] = {...pre.type, children: []})
+    const entities = await this.dict_service.page({})
+    const items = entities.items.reduce((cur, pre) => {
+      const type_id = pre?.type?.id
+      !cur[type_id] && (cur[type_id] = { ...pre.type, children: [] })
       delete pre.type
       cur[type_id].children.push(pre)
       return cur
     }, {})
-    let _items = Object.values(items)
+    const _items = Object.values(items)
     return createPaginationObject({
       items: _items,
       totalItems: _items.length,
       currentPage: 1,
-      limit: _items.length
+      limit: _items.length,
     })
   }
 

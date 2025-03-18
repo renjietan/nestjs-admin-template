@@ -8,10 +8,10 @@ import { FastifyRequest } from 'fastify'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
-import { AuthService } from '~/modules/auth/auth.service'
-
-import { ALLOW_ANON_KEY, PERMISSION_KEY, PUBLIC_KEY, Roles } from '../auth.constant'
 import { env } from '~/global/env'
+
+import { AuthService } from '~/modules/auth/auth.service'
+import { ALLOW_ANON_KEY, PERMISSION_KEY, PUBLIC_KEY, Roles } from '../auth.constant'
 
 @Injectable()
 export class RbacGuard implements CanActivate {
@@ -25,7 +25,7 @@ export class RbacGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ])
-    let env_public = env('IS_PUBLIC')
+    const env_public = env('IS_PUBLIC')
     if (isPublic || env_public)
       return true
 
@@ -33,7 +33,7 @@ export class RbacGuard implements CanActivate {
 
     const { user } = request
     if (!user) {
-      console.log('RbacGuard user==========', user);
+      console.log('RbacGuard user==========', user)
       throw new BusinessException(ErrorEnum.INVALID_LOGIN)
     }
 
@@ -57,7 +57,7 @@ export class RbacGuard implements CanActivate {
     if (user.roles.includes(Roles.ADMIN))
       return true
 
-    const allPermissions = await this.authService.getPermissionsCache(user.uid) ?? await this.authService.getPermissions(user.uid)
+    const allPermissions = await this.authService.getPermissionsCache(user?.uid) ?? await this.authService.getPermissions(user?.uid)
     // console.log(allPermissions)
     let canNext = false
 
@@ -72,7 +72,7 @@ export class RbacGuard implements CanActivate {
 
     if (!canNext) {
       throw new BusinessException(ErrorEnum.NO_PERMISSION)
-      console.log('RbacGuard canNext==========', canNext);
+      console.log('RbacGuard canNext==========', canNext)
     }
 
     return true

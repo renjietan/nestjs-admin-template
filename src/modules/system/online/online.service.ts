@@ -116,7 +116,7 @@ export class OnlineService {
       return
     const rootUserId = await this.userService.findRootUserId()
     const targetUid = token.user.id
-    if (targetUid === rootUserId || targetUid === user.uid)
+    if (targetUid === rootUserId || targetUid === user?.uid)
       throw new BusinessException(ErrorEnum.NOT_ALLOWED_TO_LOGOUT_USER)
 
     const targetUser = await this.tokenService.verifyAccessToken(token.value)

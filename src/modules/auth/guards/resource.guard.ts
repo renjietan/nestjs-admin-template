@@ -71,7 +71,7 @@ export class ResourceGuard implements CanActivate {
       const recordQuery = {
         where: {
           id: In(items),
-          user: { id: user.uid },
+          user: { id: user?.uid },
         },
         relations: ['user'],
       }

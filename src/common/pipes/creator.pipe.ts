@@ -14,8 +14,8 @@ export class CreatorPipe implements PipeTransform {
   transform(value: OperatorDto, metadata: ArgumentMetadata) {
     const user = this.request.user as IAuthUser
 
-    value.createBy = user.uid
-
+    value.createBy = user?.uid
+    debugger
     return value
   }
 }

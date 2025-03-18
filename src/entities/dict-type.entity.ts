@@ -9,6 +9,10 @@ export class DictTypeEntity extends CompleteEntity {
   @ApiProperty({ description: '字典名称' })
   name: string
 
+  @Column({ type: 'varchar', length: 50 })
+  @ApiProperty({ description: '字典项键英文名' })
+  en_name: string
+
   @Column({ type: 'varchar', length: 50, unique: true })
   @ApiProperty({ description: '字典编码' })
   code: string
