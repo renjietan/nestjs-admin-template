@@ -18,7 +18,6 @@ class DictTypeByPatchDto extends PartialType(DictTypeEntity) {
 
     @ApiProperty({ description: '字典类型code' })
     @IsString()
-    @MinLength(3)
     code: string
 
     @ApiProperty({ description: '状态' })
