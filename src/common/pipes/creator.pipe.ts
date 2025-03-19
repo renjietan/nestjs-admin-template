@@ -13,9 +13,7 @@ export class CreatorPipe implements PipeTransform {
   constructor(@Inject(REQUEST) private readonly request: any) {}
   transform(value: OperatorDto, metadata: ArgumentMetadata) {
     const user = this.request.user as IAuthUser
-
     value.createBy = user?.uid
-    debugger
     return value
   }
 }

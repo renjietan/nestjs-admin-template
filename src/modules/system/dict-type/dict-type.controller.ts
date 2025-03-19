@@ -1,17 +1,17 @@
-import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Patch, Post, Put, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
 import { IdParam } from '~/common/decorators/path-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
-import { OrderDto } from '~/common/dto/pager.dto'
 import { CreatorPipe } from '~/common/pipes/creator.pipe'
 import { UpdaterPipe } from '~/common/pipes/updater.pipe'
 import { DictTypeEntity } from '~/entities/dict-type.entity'
 
 import { Pagination } from '~/helper/paginate/pagination'
-import { DictTypeDto, DictTypeQueryDto, PatchDto } from './dict-type.dto'
+import { PatchDto } from './dict-patch.dto'
+import { DictTypeDto, DictTypeQueryDto } from './dict-type.dto'
 import { DictTypeService } from './dict-type.service'
 
 export const permissions = definePermission('system:dict-type', {
@@ -28,20 +28,20 @@ export const permissions = definePermission('system:dict-type', {
 export class DictTypeController {
   constructor(private dictTypeService: DictTypeService) {}
 
-  @Post('patch')
-  @ApiOperation({ summary: '批量新增字典' })
-  // @ApiResult({ type: [DictTypeEntity], isPage: true })
+  @Patch()
+  @ApiOperation({ summary: '批量 新增 | 初始化' })
+  @ApiResult({ type: [DictTypeEntity], isPage: true })
   @Perm(permissions.CREATE)
   async patch(@Body() dto: PatchDto): Promise<any> {
-    // return this.dictTypeService.patch(dto)
+    return this.dictTypeService.patch(dto)
   }
 
   @Get('full')
   @ApiOperation({ summary: '获取所有字典（字典类型 + 字典）' })
-  // @ApiResult({ type: [DictTypeEntity], isPage: true })
+  @ApiResult({ type: [DictTypeEntity], isPage: true })
   @Perm(permissions.LIST)
-  async full(@Query() dto: OrderDto): Promise<any> {
-    return this.dictTypeService.full(dto)
+  async full(): Promise<any> {
+    return this.dictTypeService.full()
   }
 
   @Get()

@@ -1,13 +1,11 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger'
-import { IsInt, IsNotEmpty, IsOptional, IsString, MinLength, ValidateNested } from 'class-validator'
+import { IsInt, IsOptional, IsString, MinLength } from 'class-validator'
 
-import { Exact, PagerDto } from '~/common/dto/pager.dto'
+import { PagerDto } from '~/common/dto/pager.dto'
 
 import { IsUnique } from '~/shared/database/constraints/unique.constraint'
 
-import { Type } from 'class-transformer'
 import { DictTypeEntity } from '../../../entities/dict-type.entity'
-import { DictItemDto } from '../dict-item/dict-item.dto'
 
 export class DictTypeDto extends PartialType(DictTypeEntity) {
   @ApiProperty({ description: '字典类型名称' })
@@ -51,25 +49,3 @@ export class DictTypeQueryDto extends PagerDto {
   code?: string
 }
 
-export class DictFullDto extends DictTypeDto{
-  @ApiProperty({ description: '字典项集合不可为空', example: [DictTypeDto] })
-  @MinLength(1)
-  @IsNotEmpty()
-  @Type(() => DictItemDto)
-  @ValidateNested({ each: true })
-  items: DictItemDto[]
-}
-
-
-export class PatchDto {
-  @ApiProperty({ description: '是否允许清空表', enum: Exact })
-  @IsNotEmpty()
-  allow_clean: number
-
-  @ApiProperty({ description: '字典集合不可为空', example: [DictFullDto] })
-  @MinLength(1)
-  @IsNotEmpty()
-  @Type(() => DictFullDto)
-  @ValidateNested({ each: true })
-  dicts: DictFullDto[]
-}
