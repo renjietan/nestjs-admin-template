@@ -7,6 +7,7 @@ import { Repository } from "typeorm";
 import { Exact } from "~/common/dto/pager.dto";
 import { DictTypeEntity } from "~/entities/dict-type.entity";
 
+import { BusinessException } from "~/common/exceptions/biz.exception";
 import { paginate } from "~/helper/paginate";
 import { createPaginationObject } from "~/helper/paginate/create-pagination";
 import { Pagination } from "~/helper/paginate/pagination";
@@ -32,13 +33,13 @@ export class DictTypeService {
           await manager.clear(DictItemEntity);
         } else {
           let query = dicts.reduce(
-            (cur, pre) => {
+            (cur, pre, index) => {
               const types = [
                 { code: pre.code },
                 { name: pre.name },
                 { en_name: pre.en_name },
               ];
-              const items = pre.items.reduce((_cur, _pre) => {
+              const items = pre.items.reduce((_cur, _pre, _index) => {
                 let temp = [
                   { value: _pre.value },
                   { label: _pre.label },
@@ -61,11 +62,12 @@ export class DictTypeService {
           let entity_item = await manager.findOne(DictItemEntity, {
             where: query.items,
           });
-          console.log(entity_type);
-          console.log(entity_item);
+          if(entity_type || entity_item) throw new BusinessException("500: 字典键、值必须唯一，请勿重复添加")
         }
         const res = [];
+        let index = 0
         for (const e of dicts) {
+          index++
           const insert_type_obj = {
             name: e.name,
             code: e.code,
@@ -81,20 +83,6 @@ export class DictTypeService {
           );
           console.log("insert_entity", insert_entity);
           let items = e?.items ?? [];
-          // for (const element of items) {
-          //   items = items.map((item, index) => ({
-          //     label: item.label,
-          //     value: item.value,
-          //     en_label: item.en_label,
-          //     status: e?.status || 1,
-          //     remark: e?.remark || "",
-          //     createBy: e?.createBy || 1,
-          //     type: insert_entity,
-          //     orderNo: index + 1,
-          //   }));
-          //   let insert_item_entity = await manager.save(DictItemEntity, items);
-          //   insert_type_obj.items.push(insert_item_entity);
-          // }
           items = items.map((item, index) => ({
             label: item.label,
             value: item.value,
@@ -105,13 +93,16 @@ export class DictTypeService {
             type: insert_entity,
             orderNo: index + 1,
           }));
-          let insert_item_entity = await manager.insert(DictItemEntity, items);
-          insert_type_obj.items.push(insert_item_entity);
+          await manager.insert(DictItemEntity, items);
+          let db_item_entites = await manager.find(DictItemEntity, { where: { type: { id:  insert_entity.id } } })
+          insert_type_obj.items = db_item_entites;
           res.push(insert_type_obj);
         }
         return res;
       } catch (error) {
+        console.log('==================== manager end error =======================');
         console.log("error==============", error);
+        throw new BusinessException(`500:操作失败`)
       }
     });
   }

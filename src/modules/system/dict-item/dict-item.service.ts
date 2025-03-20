@@ -106,7 +106,7 @@ export class DictItemService {
     for (const key in data) {
       const dict_model = await this.findOneByCode(data[key])
       if (!dict_model) {
-        throw new BusinessException(`500:The field ${key} does not exist in the dictionary`)
+        throw new BusinessException(`500:该字段的值不在当前字典范围内，请选择有效的字典项或更新字典`)
       }
       else {
         res[key] = dict_model

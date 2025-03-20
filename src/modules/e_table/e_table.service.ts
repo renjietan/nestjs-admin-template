@@ -41,7 +41,7 @@ export class ETableService {
         },
       });
       if (!!table)
-        throw new BusinessException("500:The table name already exists.");
+        throw new BusinessException("500: 已存在相同名称的表名");
       let dict_entites = await this.dict_item_service.validateDict({
         waveType: data.waveType,
       });
@@ -110,7 +110,7 @@ export class ETableService {
         return "Deletion success";
       });
     } catch (error) {
-      throw new BusinessException("500:Deletion failure");
+      throw new BusinessException("500:操作失败");
     }
   }
 }

@@ -33,7 +33,7 @@ export class PmSubService {
 
   async complete(mId: number, dto: CompleteDto, uId: number) {
     let entites = await this.findByName_sub(dto.sub.pm_sub_name)
-    if(entites.length > 0 && dto.id != entites?.[0]?.id) throw new BusinessException("500:The name already exists")
+    if(entites.length > 0 && dto.id != entites?.[0]?.id) throw new BusinessException("500:已存在名称相同的子任务")
     return await this.pm_sub_entity.manager.transaction(async (manager) => {
       let sub_entity = await manager.upsert(
         PMSubEntity,

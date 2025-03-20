@@ -1,19 +1,19 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { DeleteResult, InsertResult, UpdateResult } from 'typeorm'
+import { ApiResult } from '~/common/decorators/api-result.decorator'
+import { AuthUser } from '~/common/decorators/auth/auth-user.decorator'
+import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
+import { IdParam } from '~/common/decorators/path-param.decorator'
+import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+import { IdsDto } from '~/common/dto/ids.dto'
+import { BusinessException } from '~/common/exceptions/biz.exception'
+import { DeviceEntity } from '~/entities/d_device'
+import { DictItemEntity } from '~/entities/dict-item.entity'
+import { DictItemService } from '../system/dict-item/dict-item.service'
 import { DeviceService } from './device.service'
 import { DeviceDto } from './dto/device.dto'
 import { SearchDto } from './dto/search.dto'
-import { ApiResult } from '~/common/decorators/api-result.decorator'
-import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
-import { DeviceEntity } from '~/entities/d_device'
-import { IdsDto } from '~/common/dto/ids.dto'
-import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
-import { DeleteResult, InsertResult, UpdateResult } from 'typeorm'
-import { AuthUser } from '~/common/decorators/auth/auth-user.decorator'
-import { DictItemService } from '../system/dict-item/dict-item.service'
-import { DictItemEntity } from '~/entities/dict-item.entity'
-import { BusinessException } from '~/common/exceptions/biz.exception'
-import { IdParam } from '~/common/decorators/path-param.decorator'
 
 export const permissions = definePermission('device:manager', {
   LIST: 'list',
@@ -67,7 +67,7 @@ export class DeviceController {
       status: null
     })
     if(Object.values(dict_entity).every(item => !!item)) {
-      throw new BusinessException('500:The dictionary does not exist ')
+      throw new BusinessException('500: device_type、model、status在字典中不存在')
     }
     return await this.deviceService.create(data, user?.uid)
   }

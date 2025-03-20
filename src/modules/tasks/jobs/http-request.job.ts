@@ -26,7 +26,7 @@ export class HttpRequestJob {
       this.logger.log(result, HttpRequestJob.name)
     }
     else {
-      throw new BadRequestException('Http request job param is empty')
+      throw new BadRequestException('HTTP 请求任务参数为空，请检查并补充必要参数')
     }
   }
 }

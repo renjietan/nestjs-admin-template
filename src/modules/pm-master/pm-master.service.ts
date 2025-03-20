@@ -27,7 +27,7 @@ export class PmMasterService {
             pm_name: dto.pm_name
         }, false)
         if (isExist.items.length > 0) {
-            throw new BusinessException('500:The name is exist')
+            throw new BusinessException('500:已存在相同名称的任务规划模板')
         }
         let _entity = new PMMasterEntity()
         _entity.createBy = uId
@@ -42,7 +42,7 @@ export class PmMasterService {
     async update(id: number, dto: PMMasterDto, uId: number) {
         let isExist = await this.search(dto)
         if (isExist.items.length > 0) {
-            throw new BusinessException('500:The name is exist')
+            throw new BusinessException('500:已存在相同名称的任务规划模板')
         }
         return await this.pm_master_entity.createQueryBuilder().update(PMMasterEntity).set({
             ...dto,

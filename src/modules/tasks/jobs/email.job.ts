@@ -23,7 +23,7 @@ export class EmailJob {
       this.logger.log(result, EmailJob.name)
     }
     else {
-      throw new BadRequestException('Email send job param is empty')
+      throw new BadRequestException('邮件发送任务参数为空，请检查并补充必要信息')
     }
   }
 }

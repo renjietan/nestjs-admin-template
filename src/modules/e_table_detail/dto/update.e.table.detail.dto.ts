@@ -11,15 +11,11 @@ export class UpdateEncryptDto {
   @IsInt({
     message: 'channelNo must be number',
   })
-  @IsNotEmpty({
-    message: '信道号不可为空',
-  })
+  @IsNotEmpty()
   @ApiProperty({ description: '信道(采用第几个信道表,非信道ID)', example: 1 })
   channelNo: number
 
-  @IsNotEmpty({
-    message: '软删除标识  1 => 删除  0 => 未删除',
-  })
+  @IsNotEmpty()
   @ApiProperty({ description: '信道(采用第几个信道表,非信道ID)', example: 1 })
   isDelete: number
 }

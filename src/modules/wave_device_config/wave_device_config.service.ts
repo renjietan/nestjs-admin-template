@@ -59,7 +59,7 @@ export class WaveDeviceConfigService {
     const { list } = params
     const validate_error = await this.validate_wave_list(list)
     if (validate_error.length > 0) {
-      throw new BusinessException(`500:${ validate_error?.[0] ?? 'Unknown error' }`)
+      throw new BusinessException(`500:操作失败，原因可能是字典不存在或传入参数有误，请检查后重试 }`)
     }
     return await this.waveDeviceConfigEntity.manager.transaction(async (manager) => {
       await manager.clear(WaveDeviceConfigEntity)
@@ -100,16 +100,16 @@ export class WaveDeviceConfigService {
     const isRepeat_name = Object.keys(list.reduce((cur, pre, index) => {
       cur[`${pre.deviceModel}-${pre.waveType}-${pre.name}`] = pre
       if(!dicts.some(e => e.value == pre.deviceModel)) {
-        res.push(`The "deviceModel" field of the ${ index }th element in the array is not in the dictionary.`)
+        res.push(`数组中第 ${ index } 个元素的 'deviceModel' 字段未在字典中找到`)
       }
       if(!dicts.some(e => e.value == pre.deviceType)) {
-        res.push(`The "deviceType" field of the ${ index }th element in the array is not in the dictionary.`)
+        res.push(`数组中第 ${ index } 个元素的 'deviceType' 字段未在字典中找到`)
       }
       if(!dicts.some(e => e.value == pre.valueType)) {
-        res.push(`The "valueType" field of the ${ index }th element in the array is not in the dictionary.`)
+        res.push(`数组中第 ${ index } 个元素的 'valueType' 字段未在字典中找到`)
       }
       if(!dicts.some(e => e.value == pre.waveType)) {
-        res.push(`The "waveType" field of the ${ index }th element in the array is not in the dictionary.`)
+        res.push(`数组中第 ${ index } 个元素的 'waveType' 字段未在字典中找到`)
       }
       return cur
     }, {})).length != list.length

@@ -40,7 +40,7 @@ export class HopFreqService {
     const exist_data = await this.f_table_entity.find()
     console.log('exist_data', exist_data.length)
     if (exist_data.length >= 80) {
-      throw new BusinessException('500:The number of data must not exceed 80')
+      throw new BusinessException('500:当前数据总量(新增数据 + 现有数据)已超过80条,已达到系统上限。请减少新增数据或清理现有数据后再试')
     }
     const _temp = default_hopping_conf.find(item => item.type == data.type)
     const isExist = await this.f_table_entity.findOne({
@@ -49,10 +49,10 @@ export class HopFreqService {
       },
     })
     if (isExist) {
-      throw new BusinessException('500:alias is exist')
+      throw new BusinessException('500:别名必须唯一,请重新输入一个未被使用的名称')
     }
     if (!_temp) {
-      throw new BusinessException('500:table type does not exist')
+      throw new BusinessException('500:所选类型已不存在，请刷新页面或重新选择有效类型')
     }
 
     data.point_count = data.point_count ? data.point_count : _temp.point_count
@@ -127,7 +127,7 @@ export class HopFreqService {
       },
     })
     if (isExist) {
-      throw new BusinessException('500:alias is exist')
+      throw new BusinessException('500:别名必须唯一,请重新输入一个未被使用的名称')
     }
     return await this.f_table_entity.createQueryBuilder().update(FTableEntity).set({
       alias,
@@ -168,7 +168,7 @@ export class HopFreqService {
     const { f_table_id } = data
     const _temp = default_hopping_conf.find(item => item.type == data.type)
     if (!_temp) {
-      throw new BusinessException('500:table type does not exist')
+      throw new BusinessException('500:所选类型已不存在，请刷新页面或重新选择有效类型')
     }
     const cur_table_entity = new FTableEntity()
     cur_table_entity.id = f_table_id
@@ -231,7 +231,7 @@ export class HopFreqService {
 
     const _temp = default_hopping_conf.find(item => item.type == data.type)
     if (!_temp) {
-      throw new BusinessException('500:table type does not exist')
+      throw new BusinessException('500:所选类型已不存在，请刷新页面或重新选择有效类型')
     }
     const point_count = _ids.length
     data.law_end = data.law_end ? data.law_end : _temp.law_end
@@ -253,7 +253,7 @@ export class HopFreqService {
   g_random_freq(data: GFreqHopDto) {
     const _temp = default_hopping_conf.find(item => item.type == data.type)
     if (!_temp) {
-      throw new BusinessException('500:table type does not exist')
+      throw new BusinessException('500:所选类型已不存在，请刷新页面或重新选择有效类型')
     }
     data.point_count = data.point_count ? data.point_count : _temp.point_count
     data.law_end = data.law_end ? data.law_end : _temp.law_end

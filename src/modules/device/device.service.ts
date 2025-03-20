@@ -44,7 +44,7 @@ export class DeviceService {
       }],
     })
     if (exist) {
-      throw new BusinessException('500:The device is exist')
+      throw new BusinessException('500:不可添加相同【别名】或【SN】的设备')
     }
     let dict_entites =  await this.dict_item_service.validateDict({
       device_type: data.device_type,
@@ -73,7 +73,7 @@ export class DeviceService {
       }],
     })
     if (exist) {
-      throw new BusinessException('500:The device is exist')
+      throw new BusinessException('500:不可添加【别名】或【SN】相同的设备')
     }
     await this.dict_item_service.validateDict({
       device_type: data.device_type,

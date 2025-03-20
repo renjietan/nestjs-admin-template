@@ -68,7 +68,7 @@ export class ETableDetailService {
     }).andWhere('encrypt.channelNo = :channelNo', {
       channelNo: data.channelNo,
     }).getOne();
-    if (!!encrypt) throw new BusinessException("500:信道号已被分配");
+    if (!!encrypt) throw new BusinessException("500:已存在相同的信道号");
     let dict_entites = await this.dict_item_service.validateDict({
       waveType: data.waveType
     })
@@ -86,6 +86,12 @@ export class ETableDetailService {
   }
 
   async update(id: number, data: UpdateEncryptDto) {
+    let res = await this.encrypt_entity.findOne({
+      where: {
+        channelNo: data.channelNo,
+      }
+    })
+    if(res?.id != id) throw new BusinessException("500:已存在相同的信道号")
     return await this.encrypt_entity
       .createQueryBuilder()
       .update(ETableDetailEntity)

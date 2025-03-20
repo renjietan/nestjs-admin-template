@@ -11,19 +11,19 @@ export class DictItemDto extends PartialType(DictItemEntity) {
   @IsInt()
   typeId: number
 
-  @IsUnique({ entity: DictItemEntity, message: '已存在相同额字典项名称' })
+  @IsUnique({ entity: DictItemEntity, message: '已存在相同名称的字典项' })
   @ApiProperty({ description: '字典项键名' })
   @IsString()
   @MinLength(1)
   label: string
 
-  @IsUnique({ entity: DictItemEntity, message: '已存在相同额字典项英文名称' })
+  @IsUnique({ entity: DictItemEntity, message: '已存在相同英文名称的字典项' })
   @ApiProperty({ description: '字典项英文名称' })
   @IsString()
   @MinLength(1)
   en_label: string
 
-  @IsUnique({ entity: DictItemEntity, message: '已存在相同额字典项编码' })
+  @IsUnique({ entity: DictItemEntity, message: '已存在相同编码的字典项' })
   @ApiProperty({ description: '字典项值' })
   @IsString()
   @MinLength(1)

@@ -29,7 +29,7 @@ export class IsCronExpression implements ValidatorConstraintInterface {
   validate(value: string, _args: ValidationArguments) {
     try {
       if (isEmpty(value))
-        throw new BadRequestException('cron expression is empty')
+        throw new BadRequestException('Cron表达式不能为空，请输入有效的表达式')
 
       parser.parseExpression(value)
       return true
@@ -46,7 +46,7 @@ export class IsCronExpression implements ValidatorConstraintInterface {
 
 export class TaskDto {
   @ApiProperty({ description: '任务名称' })
-  @IsUnique({ entity: TaskEntity, message: '任务名称已存在' })
+  @IsUnique({ entity: TaskEntity, message: '已存在相同名称的任务' })
   @IsString()
   @MinLength(2)
   @MaxLength(50)
