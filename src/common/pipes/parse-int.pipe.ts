@@ -3,8 +3,8 @@ import {
   BadRequestException,
   Injectable,
   PipeTransform,
-} from '@nestjs/common';
-import { ErrorEnum } from '~/constants/error-code.constant';
+} from '@nestjs/common'
+import { ErrorEnum } from '~/constants/error-code.constant'
 
 @Injectable()
 export class ParseIntPipe implements PipeTransform<string, number> {

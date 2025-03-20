@@ -3,17 +3,17 @@ import {
   NotAcceptableException,
   Param,
   ParseIntPipe,
-} from "@nestjs/common";
-import { ErrorEnum } from "~/constants/error-code.constant";
+} from '@nestjs/common'
+import { ErrorEnum } from '~/constants/error-code.constant'
 
 export function IdParam() {
   return Param(
-    "id",
+    'id',
     new ParseIntPipe({
       errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE,
       exceptionFactory: (_error) => {
-        throw new NotAcceptableException(ErrorEnum.InvalidIdFormat);
+        throw new NotAcceptableException(ErrorEnum.InvalidIdFormat)
       },
-    })
-  );
+    }),
+  )
 }
