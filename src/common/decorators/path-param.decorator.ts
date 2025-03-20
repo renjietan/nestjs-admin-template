@@ -4,6 +4,7 @@ import {
   Param,
   ParseIntPipe,
 } from "@nestjs/common";
+import { ErrorEnum } from "~/constants/error-code.constant";
 
 export function IdParam() {
   return Param(
@@ -11,7 +12,7 @@ export function IdParam() {
     new ParseIntPipe({
       errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE,
       exceptionFactory: (_error) => {
-        throw new NotAcceptableException("id format is incorrect");
+        throw new NotAcceptableException(ErrorEnum.InvalidIdFormat);
       },
     })
   );

@@ -8,6 +8,7 @@ import { IdParam } from '~/common/decorators/path-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { IdsDto } from '~/common/dto/ids.dto'
 import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { DeviceEntity } from '~/entities/d_device'
 import { DictItemEntity } from '~/entities/dict-item.entity'
 import { DictItemService } from '../system/dict-item/dict-item.service'
@@ -67,7 +68,7 @@ export class DeviceController {
       status: null
     })
     if(Object.values(dict_entity).every(item => !!item)) {
-      throw new BusinessException('500: device_type、model、status在字典中不存在')
+      throw new BusinessException(ErrorEnum.OperationFailedDictionaryOrParameterError)
     }
     return await this.deviceService.create(data, user?.uid)
   }

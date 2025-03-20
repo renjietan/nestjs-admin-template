@@ -127,7 +127,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
 
       if (Number(uid) !== request.user?.uid) {
         console.log('JwtAuthGuard 5 ===========', '路径参数 uid 与当前 token 登录的用户 uid 不一致')
-        throw new UnauthorizedException('The parameter uId does not match the uId of the currently logged-in user.')
+        throw new UnauthorizedException(ErrorEnum.INVALID_LOGIN)
       }
     }
 

@@ -107,6 +107,7 @@ export enum ErrorEnum {
   UniqueDictionaryKeyValueRequired = "500:字典键、值必须唯一，请勿重复添加",
   // src\modules\wave_device_config\wave_device_config.service.ts
   OperationFailedDictionaryOrParameterError = "500:操作失败，原因可能是字典不存在或传入参数有误，请检查后重试",
+  InvalidIdFormat = "id验证失败",
 
   // ! 中间价
   // src\utils\ip.util.ts
