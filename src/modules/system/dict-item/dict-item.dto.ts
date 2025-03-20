@@ -11,7 +11,7 @@ export class DictItemDto extends PartialType(DictItemEntity) {
   @IsInt()
   typeId: number
 
-  @IsUnique({ entity: DictItemEntity, message: '已存在相同名称的字典项' })
+  @IsUnique({ entity: DictItemEntity, message: '已存在相同名称的字典类型项' })
   @ApiProperty({ description: '字典项键名' })
   @IsString()
   @MinLength(1)

@@ -4,7 +4,7 @@ export enum ErrorEnum {
   OperationFailed = "操作失败",
   SERVER_ERROR = '500:服务繁忙，请稍后再试',
 
-  // !核心业务逻辑
+  // !常规业务-Catch
   SYSTEM_USER_EXISTS = '1001:系统用户已存在',
   INVALID_VERIFICATION_CODE = '1002:验证码填写有误',
   INVALID_USERNAME_PASSWORD = '1003:用户名密码有误',
@@ -27,7 +27,6 @@ export enum ErrorEnum {
   PARAMETER_CONFIG_KEY_EXISTS = '1022:参数配置键值对已存在',
   DEFAULT_ROLE_NOT_FOUND = '1023:所分配的默认角色不存在',
 
-  // !身份验证与授权
   INVALID_LOGIN = '1101:登录无效，请重新登录',
   NO_PERMISSION = '1102:无权限访问',
   ONLY_ADMIN_CAN_LOGIN = '1103:不是管理员，无法登录',
@@ -37,18 +36,16 @@ export enum ErrorEnum {
   REQUESTED_RESOURCE_NOT_FOUND = '1107:所请求的资源不存在',
   NO_LOGIN = '1108:请重新登录',
 
-  // !限流
   TOO_MANY_REQUESTS = '1201:请求频率过快，请一分钟后再试',
   MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY = '1202:一天最多发送5条验证码',
   VERIFICATION_CODE_SEND_FAILED = '1203:验证码发送失败',
 
-  // !系统定时任务
   INSECURE_MISSION = '1301:不安全的任务，确保执行的加入@Mission注解',
   EXECUTED_MISSION_NOT_FOUND = '1302:所执行的任务不存在',
   MISSION_EXECUTION_FAILED = '1303:任务执行失败',
   MISSION_NOT_FOUND = '1304:任务不存在',
 
-  // !特定的业务逻辑
+  // !!项目业务-Catch
   // src\socket\shared\auth.gateway.ts
   AuthenticationFailed = "认证失败",
   // src\shared\database\constraints\unique.constraint.ts
@@ -112,7 +109,7 @@ export enum ErrorEnum {
   // src\modules\wave_device_config\wave_device_config.service.ts
   OperationFailedDictionaryOrParameterError = "操作失败，原因可能是字典不存在或传入参数有误，请检查后重试",
 
-  // ! 中间价
+  // ! 中间价错误 例如定时任务 等等
   // src\utils\ip.util.ts
   InternalIP = "内网IP",
   ThirdPartyApiRequestFailed = "第三方接口请求失败",
