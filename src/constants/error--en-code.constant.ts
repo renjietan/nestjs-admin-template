@@ -1,161 +1,118 @@
 export enum ErrorEnum {
-  // !公用
-  DEFAULT = '0:未知错误',
-  OperationFailed = "操作失败",
-  SERVER_ERROR = '500:服务繁忙，请稍后再试',
+  // ! Common
+  DEFAULT = '0:Unknown error',
+  OperationFailed = "Operation failed",
+  SERVER_ERROR = '500:Service unavailable, please try again later',
 
-  // !常规业务-Catch
-  SYSTEM_USER_EXISTS = '1001:系统用户已存在',
-  INVALID_VERIFICATION_CODE = '1002:验证码填写有误',
-  INVALID_USERNAME_PASSWORD = '1003:用户名密码有误',
-  NODE_ROUTE_EXISTS = '1004:节点路由已存在',
-  PERMISSION_REQUIRES_PARENT = '1005:权限必须包含父节点',
-  ILLEGAL_OPERATION_DIRECTORY_PARENT = '1006:非法操作：该节点仅支持目录类型父节点',
-  ILLEGAL_OPERATION_CANNOT_CONVERT_NODE_TYPE = '1007:非法操作：节点类型无法直接转换',
-  ROLE_HAS_ASSOCIATED_USERS = '1008:该角色存在关联用户，请先删除关联用户',
-  DEPARTMENT_HAS_ASSOCIATED_USERS = '1009:该部门存在关联用户，请先删除关联用户',
-  DEPARTMENT_HAS_ASSOCIATED_ROLES = '1010:该部门存在关联角色，请先删除关联角色',
-  PASSWORD_MISMATCH = '1011:旧密码与原密码不一致',
-  LOGOUT_OWN_SESSION = '1012:如想下线自身可右上角退出',
-  NOT_ALLOWED_TO_LOGOUT_USER = '1013:不允许下线该用户',
-  PARENT_MENU_NOT_FOUND = '1014:父级菜单不存在',
-  DEPARTMENT_HAS_CHILD_DEPARTMENTS = '1015:该部门存在子部门，请先删除子部门',
-  SYSTEM_BUILTIN_FUNCTION_NOT_ALLOWED = '1016:系统内置功能不允许操作',
-  USER_NOT_FOUND = '1017:用户不存在',
-  UNABLE_TO_FIND_DEPARTMENT_FOR_USER = '1018:无法查找当前用户所属部门',
-  DEPARTMENT_NOT_FOUND = '1019:部门不存在',
-  PARAMETER_CONFIG_KEY_EXISTS = '1022:参数配置键值对已存在',
-  DEFAULT_ROLE_NOT_FOUND = '1023:所分配的默认角色不存在',
+  // ! Core Business Logic
+  SYSTEM_USER_EXISTS = '1001:System user already exists',
+  INVALID_VERIFICATION_CODE = '1002:Invalid verification code',
+  INVALID_USERNAME_PASSWORD = '1003:Invalid username or password',
+  NODE_ROUTE_EXISTS = '1004:Node route already exists',
+  PERMISSION_REQUIRES_PARENT = '1005:Permission requires parent node',
+  ILLEGAL_OPERATION_DIRECTORY_PARENT = '1006:Invalid operation: only directory-type parent nodes allowed',
+  ILLEGAL_OPERATION_CANNOT_CONVERT_NODE_TYPE = '1007:Illegal operation: node type conversion not supported',
+  ROLE_HAS_ASSOCIATED_USERS = '1008:Role contains associated users, remove associations first',
+  DEPARTMENT_HAS_ASSOCIATED_USERS = '1009:Department contains users, remove users first',
+  DEPARTMENT_HAS_ASSOCIATED_ROLES = '1010:Department contains roles, remove roles first',
+  PASSWORD_MISMATCH = '1011:Old password does not match records',
+  LOGOUT_OWN_SESSION = '1012:To terminate current session, please logout via top-right menu',
+  NOT_ALLOWED_TO_LOGOUT_USER = '1013:Unauthorized to terminate this user session',
+  PARENT_MENU_NOT_FOUND = '1014:Parent menu not found',
+  DEPARTMENT_HAS_CHILD_DEPARTMENTS = '1015:Department contains sub-departments, remove them first',
+  SYSTEM_BUILTIN_FUNCTION_NOT_ALLOWED = '1016:System built-in features are read-only',
+  USER_NOT_FOUND = '1017:User not found',
+  UNABLE_TO_FIND_DEPARTMENT_FOR_USER = '1018:Cannot locate user department',
+  DEPARTMENT_NOT_FOUND = '1019:Department not found',
+  PARAMETER_CONFIG_KEY_EXISTS = '1022:Configuration key already exists',
+  DEFAULT_ROLE_NOT_FOUND = '1023:Default assigned role not found',
 
-  INVALID_LOGIN = '1101:登录无效，请重新登录',
-  NO_PERMISSION = '1102:无权限访问',
-  ONLY_ADMIN_CAN_LOGIN = '1103:不是管理员，无法登录',
-  REQUEST_INVALIDATED = '1104:当前请求已失效',
-  ACCOUNT_LOGGED_IN_ELSEWHERE = '1105:您的账号已在其他地方登录',
-  GUEST_ACCOUNT_RESTRICTED_OPERATION = '1106:游客账号不允许操作',
-  REQUESTED_RESOURCE_NOT_FOUND = '1107:所请求的资源不存在',
-  NO_LOGIN = '1108:请重新登录',
+  // ! Authentication & Authorization
+  INVALID_LOGIN = '1101:Session expired, please relogin',
+  NO_PERMISSION = '1102:Access denied: insufficient privileges',
+  ONLY_ADMIN_CAN_LOGIN = '1103:Admin privileges required for login',
+  REQUEST_INVALIDATED = '1104:Request has expired',
+  ACCOUNT_LOGGED_IN_ELSEWHERE = '1105:Account logged in elsewhere',
+  GUEST_ACCOUNT_RESTRICTED_OPERATION = '1106:Guest account operations disabled',
+  REQUESTED_RESOURCE_NOT_FOUND = '1107:Requested resource not found',
+  NO_LOGIN = '1108:Authentication required, please login',
 
-  TOO_MANY_REQUESTS = '1201:请求频率过快，请一分钟后再试',
-  MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY = '1202:一天最多发送5条验证码',
-  VERIFICATION_CODE_SEND_FAILED = '1203:验证码发送失败',
+  // ! Rate Limiting
+  TOO_MANY_REQUESTS = '1201:Request throttled, try again in 60 seconds',
+  MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY = '1202:Verification code limit exceeded (5/day)',
+  VERIFICATION_CODE_SEND_FAILED = '1203:Failed to send verification code',
 
-  INSECURE_MISSION = '1301:不安全的任务，确保执行的加入@Mission注解',
-  EXECUTED_MISSION_NOT_FOUND = '1302:所执行的任务不存在',
-  MISSION_EXECUTION_FAILED = '1303:任务执行失败',
-  MISSION_NOT_FOUND = '1304:任务不存在',
+  // ! Task System
+  INSECURE_MISSION = '1301:Unsecured task execution detected',
+  EXECUTED_MISSION_NOT_FOUND = '1302:Scheduled task not found',
+  MISSION_EXECUTION_FAILED = '1303:Task execution failed',
+  MISSION_NOT_FOUND = '1304:Task does not exist',
 
-  // !!项目业务-Catch
-  // src\socket\shared\auth.gateway.ts
-  AuthenticationFailed = "认证失败",
-  // src\shared\database\constraints\unique.constraint.ts
-  DuplicateRecordExists = "已存在相同的",
-  // src\modules\user\dto\password.dto.ts
-  InvalidPasswordFormat = "密码格式不正确",
-  PasswordRequirements = "密码必须包含数字、字母,长度为6-16",
-  // src\modules\user\user.service.ts
-  CannotDeleteRootUser = "不能删除root用户",
-  // src\modules\system\role\role.service.ts
-  CannotDeleteSuperAdmin = "不能删除超级管理员",
-  // src\modules\system\role\role.dto.ts
-  RoleValueLengthTooShort = "角色值长度不能小于2",
-  RoleValueAlphanumericOnly = "角色值只能包含字母和数字",
-  RoleNameLengthTooShort = "角色名称长度不能小于2",
-  // src\modules\system\role\role.controller.ts
-  RoleHasAssociatedUsers = "该角色存在关联用户，无法删除",
-  // src\modules\system\param-config\param-config.dto.ts
-  KeyNameAlreadyExists = "该键名已存在",
-  // src\modules\system\menu\menu.controller.ts
-  MenuHasAssociatedRoles = "该菜单存在关联角色，无法删除",
-  DictionaryNotRepeatable = "字典不可重复",
-  // src\modules\system\dict-item\dict-type.dto.ts
-  DuplicateDictionaryName = "已存在相同名称的字典类型",
-  DuplicateEnglishDictionaryName = "已存在相同英文名称的字典类型",
-  DuplicateDictionaryCode = "已存在相同编码的字典类型",
-  // src\modules\system\dict-item\dict-item.dto.ts
-  DuplicateDictionaryItemName = "已存在相同名称的字典项",
-  DuplicateEnglishDictionaryItemName = "已存在相同英文名称的字典项",
-  DuplicateDictionaryItemCode = "已存在相同编码的字典项",
-  // src\helper\crud\base.service.ts
-  RecordNotFound = "未找到该记录",
-  // src\helper\crud\base.service.ts
-  RequestTimeout = "请求超时",
-  // src\modules\device\device.service.ts
-  DuplicateDeviceAliasOrSN = "不可添加【别名】或【SN】相同的设备",
-  DictionaryMissingFields = "device_type、model、status在字典中不存在",
-  // src\modules\e_table\e_table.service.ts
-  TableNameExists = "已存在相同名称的表名",
-  DuplicateChannelNumber = "已存在相同的信道号",
-  // src\modules\hop-freq\hop-freq.service.ts
-  DataLimitExceeded = "当前数据总量(新增数据 + 现有数据)已超过80条,已达到系统上限。请减少新增数据或清理现有数据后再试",
-  // src\modules\hop-freq\hop-freq.service.ts
-  UniqueAliasRequired = "别名必须唯一,请重新输入一个未被使用的名称",
-  TypeNoLongerExists = "所选类型已不存在，请刷新页面或重新选择有效类型",
-  // src\modules\network-template\network-template.service.ts
-  DuplicateNetworkTemplateName = "已存在相同名称的网络模板",
-  // src\modules\p_shot_message\p_shot_message.service.ts
-  DuplicateSMSContent = "短信内容已存在，请勿重复提交",
-  SystemDataLimitReached = "系统数据已达上限(100条)，无法继续添加。请删除部分数据后重试",
-  // src\modules\pm-master\pm-master.service.ts
-  DuplicateTaskTemplateName = "已存在相同名称的任务规划模板",
-  // src\modules\pm-sub\pm-sub.service.ts
-  DuplicateSubtaskName = "已存在名称相同的子任务",
-  // src\modules\system\dict-item\dict-item.service.ts
-  InvalidDictionaryFieldValue = "该字段的值不在当前字典范围内，请选择有效的字典项或更新字典",
-  // src\modules\system\dict-type\dict-type.service.ts
-  UniqueDictionaryKeyValueRequired = "字典键、值必须唯一，请勿重复添加",
-  // src\modules\system\param-config\param-config.dto.ts
-  DuplicateKeyName = "该键名已存在",
-  // src\modules\wave_device_config\wave_device_config.service.ts
-  OperationFailedDictionaryOrParameterError = "操作失败，原因可能是字典不存在或传入参数有误，请检查后重试",
+  // ! Domain-Specific Business Logic
+  AuthenticationFailed = "Authentication failed",
+  DuplicateRecordExists = "Duplicate record detected",
+  InvalidPasswordFormat = "Invalid password format",
+  PasswordRequirements = "Password must contain 6-16 characters with letters and numbers",
+  CannotDeleteRootUser = "Root user deletion prohibited",
+  CannotDeleteSuperAdmin = "Super admin deletion restricted",
+  RoleValueLengthTooShort = "Role value requires minimum 2 characters",
+  RoleValueAlphanumericOnly = "Role value must be alphanumeric",
+  RoleNameLengthTooShort = "Role name requires minimum 2 characters",
+  KeyNameAlreadyExists = "Key name already exists",
+  MenuHasAssociatedRoles = "Menu contains role associations, remove first",
+  DictionaryNotRepeatable = "Dictionary entries must be unique",
+  DuplicateDictionaryName = "Duplicate dictionary name",
+  DuplicateDictionaryItemName = "Duplicate dictionary item name",
+  DuplicateEnglishDictionaryName = "Duplicate English dictionary name", 
+  DuplicateEnglishDictionaryItemName = "Duplicate English dictionary item",
+  DuplicateDictionaryCode = "Duplicate dictionary code",
+  DuplicateDictionaryItemCode = "Duplicate dictionary item code",
+  RecordNotFound = "Record not found",
+  RequestTimeout = "Request timeout",
+  DuplicateDeviceAliasOrSN = "Duplicate device alias or SN",
+  DictionaryMissingFields = "Required dictionary fields missing: device_type, model, status",
+  TableNameExists = "Table name already exists",
+  DuplicateChannelNumber = "Duplicate channel number",
+  DataLimitExceeded = "Data limit exceeded (80 entries), please clean up",
+  UniqueAliasRequired = "Alias must be unique",
+  TypeNoLongerExists = "Selected type no longer available, please refresh",
+  DuplicateNetworkTemplateName = "Duplicate network template name",
+  DuplicateSMSContent = "Duplicate SMS content detected",
+  SystemDataLimitReached = "System data limit reached (100 entries)",
+  DuplicateTaskTemplateName = "Duplicate task template name",
+  DuplicateSubtaskName = "Duplicate subtask name",
+  InvalidDictionaryFieldValue = "Invalid dictionary field value",
+  UniqueDictionaryKeyValueRequired = "Dictionary key-value pairs must be unique",
+  DuplicateTaskName = "Duplicate task name",
+  CronExpressionRequired = "Cron expression required",
+  TaskNotFoundById = "Task not found with specified ID",
+  ScheduledTaskParametersMissing = "Scheduled task parameters missing",
+  ScheduledTaskNotFound = "Scheduled task not found",
+  EmailTaskParametersMissing = "Email task parameters incomplete",
+  HttpRequestTaskParametersMissing = "HTTP request parameters incomplete",
+  OperationFailedDictionaryOrParameterError = "Operation failed: verify dictionary existence or parameters",
 
-  // ! 中间价错误 例如定时任务 等等
-  // src\utils\ip.util.ts
-  InternalIP = "内网IP",
-  ThirdPartyApiRequestFailed = "第三方接口请求失败",
-  // src\utils\ip.util.ts
-  DemoModeOperationNotAllowed = "演示模式下不允许操作",
-  // src\socket\base.gateway.ts
-  WebSocketDisconnected = "WebSocket 断开",
-  WebSocketConnected = "WebSocket 已连接",
-  // src\shared\redis\redis-subpub.ts
-  ReceiveEvent = "接收事件：",
-  PublishEvent = "发布事件：",
-  // src\shared\mailer\mailer.service.ts
-  VerificationCode = "验证码",
-  // src\shared\helper\cron.service.ts
-  DeleteExpired = "删除过期的",
-  IssuedAt = "签发于",
-  Deleted = "删除了",
-  ExpiredItemsCleared = "个过期的",
-  StartScanningClearExpired = "开始扫表，清除过期的",
-  // src\modules\system\task\task.service.ts
-  TaskNotFound = "任务不存在",
-  // src\modules\sse\sse.controller.ts
-  Closed = "已关闭",
-  // src\common\interceptors\logging.interceptor.ts
-  Response = "响应",
-  Request = "请求",
-  // src\modules\system\task\task.dto.ts
-  DuplicateTaskName = "已存在相同名称的任务",
-  CronExpressionRequired = "Cron表达式不能为空，请输入有效的表达式",
-  // src\modules\system\task\task.service.ts
-  TaskNotFoundById = "未找到相关任务,请检查任务id后重试",
-  // src\modules\system\task\task.service.ts
-  ScheduledTaskParametersMissing = "定时任务参数为空，请填写必要参数以停止和删除任务",
-  // src\modules\system\task\task.service.ts
-  ScheduledTaskNotFound = "指定的定时任务不存在",
-  // src\modules\tasks\jobs\email.job.ts
-  EmailTaskParametersMissing = "邮件发送任务参数为空，请检查并补充必要信息",
-  // src\modules\tasks\jobs\http-request.job.ts
-  HttpRequestTaskParametersMissing = "HTTP 请求任务参数为空，请检查并补充必要参数",
+  // ! Infrastructure Components
+  InternalIP = "Internal network IP",
+  ThirdPartyApiRequestFailed = "Third-party API request failed",
+  DemoModeOperationNotAllowed = "Operation disabled in demo mode",
+  WebSocketDisconnected = "WebSocket connection lost",
+  WebSocketConnected = "WebSocket connected",
+  ReceiveEvent = "Event received:",
+  PublishEvent = "Event published:",
+  VerificationCode = "Verification code",
+  DeleteExpired = "Expired records deletion initiated",
+  IssuedAt = "Issued at",
+  Deleted = "Deleted",
+  ExpiredItemsCleared = "expired items cleared",
+  StartScanningClearExpired = "Starting scheduled cleanup of expired records",
+  Closed = "Connection closed",
+  Response = "Response",
+  Request = "Request",
 
-  //! 邮箱发送 和 文件上传 暂不需要
-  // src\modules\tools\upload\upload.dto.ts
-  InvalidFileType = "文件类型不正确",
-  // src\modules\tools\upload\upload.controller.ts
-  UploadFailed = "上传失败",
-  // src\modules\auth\dto\captcha.dto.ts  用于邮件发送
-  InvalidPhoneNumberFormat = "手机号格式不正确",
-  InvalidEmailFormat = "邮箱格式不正确",
+  // ! File Handling
+  InvalidFileType = "Invalid file type",
+  UploadFailed = "Upload failed",
+  InvalidPhoneNumberFormat = "Invalid phone number format",
+  InvalidEmailFormat = "Invalid email format"
 }
