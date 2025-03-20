@@ -1,5 +1,6 @@
 import type { Socket } from 'socket.io'
 
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { BusinessEvents } from './business-event.constant'
 
 export abstract class BaseGateway {
@@ -17,13 +18,13 @@ export abstract class BaseGateway {
 
   handleDisconnect(client: Socket) {
     client.send(
-      this.gatewayMessageFormat(BusinessEvents.GATEWAY_CONNECT, 'WebSocket 断开'),
+      this.gatewayMessageFormat(BusinessEvents.GATEWAY_CONNECT, ErrorEnum.WebSocketDisconnected),
     )
   }
 
   handleConnect(client: Socket) {
     client.send(
-      this.gatewayMessageFormat(BusinessEvents.GATEWAY_CONNECT, 'WebSocket 已连接'),
+      this.gatewayMessageFormat(BusinessEvents.GATEWAY_CONNECT, ErrorEnum.WebSocketConnected),
     )
   }
 }

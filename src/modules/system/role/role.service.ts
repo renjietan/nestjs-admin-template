@@ -10,6 +10,7 @@ import { RoleEntity } from '~/entities/role.entity'
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
 
+import { ErrorEnEnum } from '~/constants/error--en-code.constant'
 import { RoleDto, RoleQueryDto, RoleUpdateDto } from './role.dto'
 
 @Injectable()
@@ -79,7 +80,7 @@ export class RoleService {
 
   async delete(id: number): Promise<void> {
     if (id === ROOT_ROLE_ID)
-      throw new Error('不能删除超级管理员')
+      throw new Error(ErrorEnEnum.CannotDeleteSuperAdmin)
     await this.roleRepository.delete(id)
   }
 

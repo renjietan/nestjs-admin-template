@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Exact, Order } from "~/common/dto/pager.dto";
 import { BusinessException } from "~/common/exceptions/biz.exception";
+import { ErrorEnum } from "~/constants/error-code.constant";
 import { ETableEntity } from "~/entities/e_table";
 import { ETableDetailEntity } from "~/entities/e_table_detail";
 import { paginate } from "~/helper/paginate";
@@ -68,7 +69,7 @@ export class ETableDetailService {
     }).andWhere('encrypt.channelNo = :channelNo', {
       channelNo: data.channelNo,
     }).getOne();
-    if (!!encrypt) throw new BusinessException("500:已存在相同的信道号");
+    if (!!encrypt) throw new BusinessException(ErrorEnum.DuplicateChannelNumber);
     let dict_entites = await this.dict_item_service.validateDict({
       waveType: data.waveType
     })
@@ -91,7 +92,7 @@ export class ETableDetailService {
         channelNo: data.channelNo,
       }
     })
-    if(res?.id != id) throw new BusinessException("500:已存在相同的信道号")
+    if(res?.id != id) throw new BusinessException(ErrorEnum.DuplicateChannelNumber)
     return await this.encrypt_entity
       .createQueryBuilder()
       .update(ETableDetailEntity)

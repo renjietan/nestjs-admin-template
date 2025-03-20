@@ -3,6 +3,7 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm'
 import { DataSource, EntityManager, Not, Repository } from 'typeorm'
 import { IdsDto } from '~/common/dto/ids.dto'
 import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { FHoppingEntity } from '~/entities/f-hopping'
 import { FTableEntity } from '~/entities/f-table'
 import { paginate } from '~/helper/paginate'
@@ -40,7 +41,7 @@ export class HopFreqService {
     const exist_data = await this.f_table_entity.find()
     console.log('exist_data', exist_data.length)
     if (exist_data.length >= 80) {
-      throw new BusinessException('500:当前数据总量(新增数据 + 现有数据)已超过80条,已达到系统上限。请减少新增数据或清理现有数据后再试')
+      throw new BusinessException(ErrorEnum.DataLimitExceeded)
     }
     const _temp = default_hopping_conf.find(item => item.type == data.type)
     const isExist = await this.f_table_entity.findOne({
@@ -49,10 +50,10 @@ export class HopFreqService {
       },
     })
     if (isExist) {
-      throw new BusinessException('500:别名必须唯一,请重新输入一个未被使用的名称')
+      throw new BusinessException(ErrorEnum.UniqueAliasRequired)
     }
     if (!_temp) {
-      throw new BusinessException('500:所选类型已不存在，请刷新页面或重新选择有效类型')
+      throw new BusinessException(ErrorEnum.TypeNoLongerExists)
     }
 
     data.point_count = data.point_count ? data.point_count : _temp.point_count
@@ -116,7 +117,7 @@ export class HopFreqService {
     for (const id of data.ids) {
       await this.remove(id)
     }
-    return 'success'
+    return ErrorEnum.OperationSuccess
   }
 
   async update(id: number, alias: string) {
@@ -127,7 +128,7 @@ export class HopFreqService {
       },
     })
     if (isExist) {
-      throw new BusinessException('500:别名必须唯一,请重新输入一个未被使用的名称')
+      throw new BusinessException(ErrorEnum.UniqueAliasRequired)
     }
     return await this.f_table_entity.createQueryBuilder().update(FTableEntity).set({
       alias,
@@ -168,7 +169,7 @@ export class HopFreqService {
     const { f_table_id } = data
     const _temp = default_hopping_conf.find(item => item.type == data.type)
     if (!_temp) {
-      throw new BusinessException('500:所选类型已不存在，请刷新页面或重新选择有效类型')
+      throw new BusinessException(ErrorEnum.TypeNoLongerExists)
     }
     const cur_table_entity = new FTableEntity()
     cur_table_entity.id = f_table_id
@@ -194,7 +195,7 @@ export class HopFreqService {
       db.value = Number(item)
       await this.f_hopping_entity.save(db)
     }
-    return 'success'
+    return ErrorEnum.OperationSuccess
   }
 
   async findHopByTableId(f_table_id: number) {
@@ -231,7 +232,7 @@ export class HopFreqService {
 
     const _temp = default_hopping_conf.find(item => item.type == data.type)
     if (!_temp) {
-      throw new BusinessException('500:所选类型已不存在，请刷新页面或重新选择有效类型')
+      throw new BusinessException(ErrorEnum.TypeNoLongerExists)
     }
     const point_count = _ids.length
     data.law_end = data.law_end ? data.law_end : _temp.law_end
@@ -253,7 +254,7 @@ export class HopFreqService {
   g_random_freq(data: GFreqHopDto) {
     const _temp = default_hopping_conf.find(item => item.type == data.type)
     if (!_temp) {
-      throw new BusinessException('500:所选类型已不存在，请刷新页面或重新选择有效类型')
+      throw new BusinessException(ErrorEnum.TypeNoLongerExists)
     }
     data.point_count = data.point_count ? data.point_count : _temp.point_count
     data.law_end = data.law_end ? data.law_end : _temp.law_end

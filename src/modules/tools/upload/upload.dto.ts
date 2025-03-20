@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger'
 
 import { IsDefined } from 'class-validator'
 
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { IsFile } from './file.constraint'
 
 export class FileUploadDto {
@@ -20,7 +21,7 @@ export class FileUploadDto {
       fileSize: 1024 * 1024 * 10,
     },
     {
-      message: '文件类型不正确',
+      message: ErrorEnum.InvalidFileType,
     },
   )
   file: MultipartFile

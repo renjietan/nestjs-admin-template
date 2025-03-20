@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { BusinessException } from "~/common/exceptions/biz.exception";
+import { ErrorEnum } from "~/constants/error-code.constant";
 import { ETableEntity } from "~/entities/e_table";
 import { paginate } from "~/helper/paginate";
 import { BatchCreateEncryptDto } from "../e_table_detail/dto/batchCreate.e.table.detail.dto";
@@ -41,7 +42,7 @@ export class ETableService {
         },
       });
       if (!!table)
-        throw new BusinessException("500: 已存在相同名称的表名");
+        throw new BusinessException(ErrorEnum.TableNameExists);
       let dict_entites = await this.dict_item_service.validateDict({
         waveType: data.waveType,
       });
@@ -107,10 +108,10 @@ export class ETableService {
       return await this.e_table_entity.manager.transaction(async () => {
         await this.e_table_entity.delete(id);
         await this.e_table_entity_detail_service.deleteByTableId(id);
-        return "Deletion success";
+        return ErrorEnum.OperationSuccess;
       });
     } catch (error) {
-      throw new BusinessException("500:操作失败");
+      throw new BusinessException(ErrorEnum.OperationFailed);
     }
   }
 }

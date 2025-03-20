@@ -113,7 +113,7 @@ export class MailerService {
   }
 
   async sendVerificationCode(to, code = randomValue(4, '1234567890')) {
-    const subject = `[${this.appConfig.name}] 验证码`
+    const subject = `[${this.appConfig.name}] ${ ErrorEnum.VerificationCode }`
 
     try {
       await this.mailerService.sendMail({

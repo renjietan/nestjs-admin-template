@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { FindManyOptions, Like, Not, Repository } from 'typeorm'
 import { IdsDto } from '~/common/dto/ids.dto'
 import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { DeviceEntity } from '~/entities/d_device'
 import { paginate } from '~/helper/paginate'
 import { DictItemService } from '../system/dict-item/dict-item.service'
@@ -44,7 +45,7 @@ export class DeviceService {
       }],
     })
     if (exist) {
-      throw new BusinessException('500:不可添加相同【别名】或【SN】的设备')
+      throw new BusinessException(ErrorEnum.DuplicateDeviceAliasOrSN)
     }
     let dict_entites =  await this.dict_item_service.validateDict({
       device_type: data.device_type,
@@ -73,9 +74,9 @@ export class DeviceService {
       }],
     })
     if (exist) {
-      throw new BusinessException('500:不可添加【别名】或【SN】相同的设备')
+      throw new BusinessException(ErrorEnum.DuplicateDeviceAliasOrSN)
     }
-    await this.dict_item_service.validateDict({
+    let dict_entites = await this.dict_item_service.validateDict({
       device_type: data.device_type,
       model: data.model,
       status: data.status
@@ -83,17 +84,11 @@ export class DeviceService {
     return await this.d_device_entity.createQueryBuilder().update(DeviceEntity).set({
       SN: data.SN,
       alias: data.alias,
-      device_type: {
-        value: data.device_type
-      },
-      model: {
-        value: data.model
-      },
+      device_type: dict_entites.device_type,
+      model: dict_entites.model,
       remarks: data.remarks,
       updateBy: userId,
-      status: {
-        value: data.status
-      },
+      status: dict_entites.status
     }).where({
       id,
     }).execute()

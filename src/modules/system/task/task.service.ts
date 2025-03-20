@@ -120,7 +120,7 @@ export class TaskService implements OnModuleInit {
       .getOne()
 
     if (!task)
-      throw new NotFoundException('未找到相关任务,请检查任务id后重试')
+      throw new NotFoundException(ErrorEnum.TaskNotFoundById)
 
     return task
   }
@@ -130,7 +130,7 @@ export class TaskService implements OnModuleInit {
    */
   async delete(task: TaskEntity): Promise<void> {
     if (!task)
-      throw new BadRequestException('定时任务参数为空，请填写必要参数以停止和删除任务')
+      throw new BadRequestException(ErrorEnum.ScheduledTaskParametersMissing)
 
     await this.stop(task)
     await this.taskRepository.delete(task.id)
@@ -304,7 +304,7 @@ export class TaskService implements OnModuleInit {
 
       // 所执行的任务不存在
       if (!service || !(exec in service))
-        throw new NotFoundException('指定的定时任务不存在')
+        throw new NotFoundException(ErrorEnum.TaskNotFound)
 
       // 检测是否有Mission注解
       const hasMission = this.reflector.get<boolean>(
@@ -318,7 +318,7 @@ export class TaskService implements OnModuleInit {
     catch (e) {
       if (e instanceof UnknownElementException) {
         // 任务不存在
-        throw new NotFoundException('指定的定时任务不存在')
+        throw new NotFoundException(`${ ErrorEnum.TaskNotFound }`)
       }
       else {
         // 其余错误则不处理，继续抛出

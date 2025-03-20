@@ -21,6 +21,8 @@ import { isEmpty } from 'lodash'
 import { PagerDto } from '~/common/dto/pager.dto'
 import { IsUnique } from '~/shared/database/constraints/unique.constraint'
 
+import { ErrorEnEnum } from '~/constants/error--en-code.constant'
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { TaskEntity } from '../../../entities/task.entity'
 
 // cron 表达式验证，bull lib下引用了cron-parser
@@ -29,7 +31,7 @@ export class IsCronExpression implements ValidatorConstraintInterface {
   validate(value: string, _args: ValidationArguments) {
     try {
       if (isEmpty(value))
-        throw new BadRequestException('Cron表达式不能为空，请输入有效的表达式')
+        throw new BadRequestException(ErrorEnum.CronExpressionRequired)
 
       parser.parseExpression(value)
       return true
@@ -46,7 +48,7 @@ export class IsCronExpression implements ValidatorConstraintInterface {
 
 export class TaskDto {
   @ApiProperty({ description: '任务名称' })
-  @IsUnique({ entity: TaskEntity, message: '已存在相同名称的任务' })
+  @IsUnique({ entity: TaskEntity, message: ErrorEnEnum.DuplicateTaskName })
   @IsString()
   @MinLength(2)
   @MaxLength(50)

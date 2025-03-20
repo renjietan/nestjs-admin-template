@@ -8,6 +8,7 @@ import { Exact } from "~/common/dto/pager.dto";
 import { DictTypeEntity } from "~/entities/dict-type.entity";
 
 import { BusinessException } from "~/common/exceptions/biz.exception";
+import { ErrorEnum } from "~/constants/error-code.constant";
 import { paginate } from "~/helper/paginate";
 import { createPaginationObject } from "~/helper/paginate/create-pagination";
 import { Pagination } from "~/helper/paginate/pagination";
@@ -62,7 +63,7 @@ export class DictTypeService {
           let entity_item = await manager.findOne(DictItemEntity, {
             where: query.items,
           });
-          if(entity_type || entity_item) throw new BusinessException("500: 字典键、值必须唯一，请勿重复添加")
+          if(entity_type || entity_item) throw new BusinessException(ErrorEnum.UniqueDictionaryKeyValueRequired)
         }
         const res = [];
         let index = 0
@@ -102,7 +103,7 @@ export class DictTypeService {
       } catch (error) {
         console.log('==================== manager end error =======================');
         console.log("error==============", error);
-        throw new BusinessException(`500:操作失败`)
+        throw new BusinessException(ErrorEnum.OperationFailed)
       }
     });
   }

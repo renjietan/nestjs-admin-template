@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator'
+import { ErrorEnum } from '~/constants/error-code.constant'
 
 export class ImageCaptchaDto {
   @ApiProperty({
@@ -32,13 +33,13 @@ export class ImageCaptchaDto {
 
 export class SendEmailCodeDto {
   @ApiProperty({ description: '邮箱' })
-  @IsEmail({}, { message: '邮箱格式不正确' })
+  @IsEmail({}, { message: ErrorEnum.InvalidEmailFormat })
   email: string
 }
 
 export class SendSmsCodeDto {
   @ApiProperty({ description: '手机号' })
-  @IsMobilePhone('zh-CN', {}, { message: '手机号格式不正确' })
+  @IsMobilePhone('zh-CN', {}, { message: ErrorEnum.InvalidPhoneNumberFormat })
   phone: string
 }
 

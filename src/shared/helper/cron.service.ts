@@ -7,6 +7,7 @@ import { LessThan } from 'typeorm'
 
 import { CronOnce } from '~/common/decorators/cron-once.decorator'
 import { ConfigKeyPaths } from '~/config'
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { AccessTokenEntity } from '~/entities/access-token.entity'
 
 @Injectable()
@@ -18,7 +19,7 @@ export class CronService {
 
   @CronOnce(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async deleteExpiredJWT() {
-    this.logger.log('--> 开始扫表，清除过期的 token')
+    this.logger.log(`--> ${ ErrorEnum.StartScanningClearExpired } token`)
 
     const expiredTokens = await AccessTokenEntity.find({
       where: {
@@ -34,7 +35,7 @@ export class CronService {
         await AccessTokenEntity.remove(token)
 
         this.logger.debug(
-          `--> 删除过期的 token：${value}, 签发于 ${dayjs(created_at).format(
+          `--> ${ ErrorEnum.DeleteExpired } token：${value}, ${ ErrorEnum.IssuedAt } ${dayjs(created_at).format(
             'YYYY-MM-DD H:mm:ss',
           )}`,
         )
@@ -43,6 +44,6 @@ export class CronService {
       }),
     )
 
-    this.logger.log(`--> 删除了 ${deleteCount} 个过期的 token`)
+    this.logger.log(`--> ${ ErrorEnum.Deleted } ${deleteCount} ${ ErrorEnum.ExpiredItemsCleared } token`)
   }
 }

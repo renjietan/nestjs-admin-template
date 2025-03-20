@@ -7,6 +7,7 @@ import { Order } from '~/common/dto/pager.dto'
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { DictItemEntity } from '~/entities/dict-item.entity'
 
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
 import { DictItemDto, DictItemQueryDto } from './dict-item.dto'
@@ -106,7 +107,7 @@ export class DictItemService {
     for (const key in data) {
       const dict_model = await this.findOneByCode(data[key])
       if (!dict_model) {
-        throw new BusinessException(`500:该字段的值不在当前字典范围内，请选择有效的字典项或更新字典`)
+        throw new BusinessException(ErrorEnum.InvalidDictionaryFieldValue)
       }
       else {
         res[key] = dict_model

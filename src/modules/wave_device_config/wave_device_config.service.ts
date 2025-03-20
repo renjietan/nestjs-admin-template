@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Equal, In, Repository } from 'typeorm'
 import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { WaveDeviceConfigEntity } from '~/entities/wave_device_config'
 import { paginate } from '~/helper/paginate'
 import { DictItemService } from '../system/dict-item/dict-item.service'
@@ -59,7 +60,7 @@ export class WaveDeviceConfigService {
     const { list } = params
     const validate_error = await this.validate_wave_list(list)
     if (validate_error.length > 0) {
-      throw new BusinessException(`500:操作失败，原因可能是字典不存在或传入参数有误，请检查后重试 }`)
+      throw new BusinessException(ErrorEnum.OperationFailedDictionaryOrParameterError)
     }
     return await this.waveDeviceConfigEntity.manager.transaction(async (manager) => {
       await manager.clear(WaveDeviceConfigEntity)
