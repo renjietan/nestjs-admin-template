@@ -1,7 +1,7 @@
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm'
+import { ApiProperty } from '@nestjs/swagger'
+import { Column, Entity, OneToMany, Relation } from 'typeorm'
 import { CompleteEntity } from '~/common/entity/common.entity'
 import { FHoppingEntity } from './f-hopping'
-import { ApiProperty } from '@nestjs/swagger'
 
 @Entity('f_table')
 export class FTableEntity  extends CompleteEntity{
@@ -12,6 +12,10 @@ export class FTableEntity  extends CompleteEntity{
   @ApiProperty({ description: '类型' })
   @Column('varchar', { name: 'type' })
   type: string
+
+  @ApiProperty({ description: '排序编号' })
+  @Column('integer', { name: 'order' })
+  order: number
 
   @ApiProperty({ description: '最小数' })
   @Column('integer', { name: 'law_start' })

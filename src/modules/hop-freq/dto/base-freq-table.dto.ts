@@ -1,6 +1,5 @@
-import { ApiExcludeEndpoint, ApiExtraModels, ApiHideProperty, ApiProperty } from '@nestjs/swagger'
-import { Exclude, Expose } from 'class-transformer'
-import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator'
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger'
+import { IsInt, IsNotEmpty, IsNumber, IsOptional } from 'class-validator'
 
 export class BaseFreqTableDto {
   @ApiHideProperty() // 完全隐藏
@@ -16,6 +15,14 @@ export class BaseFreqTableDto {
     example: 'VHF',
   })
   type: string
+
+  @IsNotEmpty()
+  @IsInt()
+  @ApiProperty({
+    description: '排序编号',
+    example: 1,
+  })
+  order: number
 
   @IsNotEmpty()
   @ApiProperty({

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator'
+import { IsInt, IsNotEmpty, IsNumber, IsOptional } from 'class-validator'
 
 export class BaseTableDto {
   @IsNotEmpty()
@@ -15,6 +15,14 @@ export class BaseTableDto {
     example: '别名',
   })
   alias: string
+
+  @IsNotEmpty()
+  @IsInt()
+  @ApiProperty({
+    description: '排序编号',
+    example: 1,
+  })
+  order: number
 
   @ApiProperty()
   point_count: number

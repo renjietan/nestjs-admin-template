@@ -3,7 +3,7 @@ export enum ErrorEnum {
   DEFAULT = '0:未知错误',
   OperationFailed = '500:操作失败',
   SERVER_ERROR = '500:服务繁忙，请稍后再试',
-  OperationSuccess = '200:操作成功',
+  OperationSuccess = '操作成功',
 
   // !核心业务逻辑
   SYSTEM_USER_EXISTS = '1001:系统用户已存在',
@@ -111,13 +111,13 @@ export enum ErrorEnum {
 
   // ! 中间价
   // src\utils\ip.util.ts
-  InternalIP = '500:内网IP',
+  InternalIP = '内网IP',
   ThirdPartyApiRequestFailed = '500:第三方接口请求失败',
   // src\utils\permission.util.ts
   DemoModeOperationNotAllowed = '500:演示模式下不允许操作',
   // src\socket\base.gateway.ts
   WebSocketDisconnected = '500:WebSocket 断开',
-  WebSocketConnected = '200:WebSocket 已连接',
+  WebSocketConnected = 'WebSocket 已连接',
   // src\shared\redis\redis-subpub.ts
   ReceiveEvent = '接收事件：',
   PublishEvent = '发布事件：',

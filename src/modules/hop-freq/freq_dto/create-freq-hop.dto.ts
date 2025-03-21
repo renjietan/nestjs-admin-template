@@ -15,4 +15,11 @@ export class CreateFreqHopDto {
     example: 1,
   })
   value: number
+
+  @IsNotEmpty()
+  @ApiProperty({
+    description: '排序',
+    example: 1,
+  })
+  order: number
 }

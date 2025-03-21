@@ -54,7 +54,10 @@ export class HopFreqController {
     const uId = user?.uid
     const isExsit = (law_conf?.length ?? 0) > 0
     // NOTE(2025-01-08 10:28:30 谭人杰): 如果为空，则按照默认配置来执行
-    law_conf = isExsit ? law_conf : default_hopping_conf
+    law_conf = (isExsit ? law_conf : default_hopping_conf).map((item, index) => {
+      !item.order && (item.order = index)
+      return item
+    })
     const _hc: {
       [key: string]: BaseFreqTableDto
     } = default_hopping_conf.reduce((cur, pre) => {
@@ -92,6 +95,7 @@ export class HopFreqController {
           type,
           createById: uId,
           point_count,
+          order: index + i + 1
         }
         return { ...obj }
       })
@@ -104,23 +108,22 @@ export class HopFreqController {
     }
     try {
       const res = await this.f_table_entity.manager.transaction(async (manager) => {
-        let index = 1
         for (const item of data) {
           await this.f_table_seivce.create_table({
             type: item.type,
-            alias: `Table No.${index}`,
+            alias: `Table No.${item.order}`,
             point_count: item.point_count,
             law_start: item.law_start,
             law_spacing: item.law_spacing,
             law_end: item.law_end,
+            order: item.order
           }, uId)
-          index++
         }
       })
       return res
     }
     catch (error) {
-      throw new BusinessException(`500:${error}`)
+      throw new BusinessException(ErrorEnum.OperationFailed)
     }
   }
 
@@ -246,6 +249,7 @@ export class HopFreqController {
 
   @ApiOperation({
     summary: '根据跳频表  覆盖频点数据',
+    description: "更新跳频表 -> 根据跳频表ID删除频点数据 -> 根据跳频表ID新增新的频点数据"
   })
   @Put('cover_freq')
   @ApiResult({ type: String })

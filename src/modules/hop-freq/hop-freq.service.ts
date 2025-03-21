@@ -34,12 +34,12 @@ export class HopFreqService {
     temp.law_spaceing = data.law_spacing
     temp.law_start = data.law_start
     temp.type = data.type
+    temp.order = data.order
     return await this.f_table_entity.save(temp)
   }
 
   async create_table(data: BaseTableDto, uId: number) {
     const exist_data = await this.f_table_entity.find()
-    console.log('exist_data', exist_data.length)
     if (exist_data.length >= 80) {
       throw new BusinessException(ErrorEnum.DataLimitExceeded)
     }
@@ -72,6 +72,7 @@ export class HopFreqService {
         db.law_spaceing = data.law_spacing
         db.law_start = data.law_start
         db.type = data.type
+        db.order = data.order
         const table = await manager.save(db)
         const points = Array.from({
           length: data.point_count,
@@ -95,7 +96,7 @@ export class HopFreqService {
   async findAll() {
     const res = await paginate(this.f_table_entity, { page: undefined, pageSize: undefined }, {
       order: {
-        alias: 'ASC',
+        order: "ASC"
       },
     })
     return res
@@ -108,6 +109,9 @@ export class HopFreqService {
       },
       relations: {
         hoppings: true,
+      },
+      order: {
+        order: "ASC"
       },
     })
     return results
@@ -171,48 +175,46 @@ export class HopFreqService {
     if (!_temp) {
       throw new BusinessException(ErrorEnum.TypeNoLongerExists)
     }
-    const cur_table_entity = new FTableEntity()
-    cur_table_entity.id = f_table_id
-    // await this.f_hopping_entity.delete({
-    //   f_table: cur_table_entity,
-    // })
-    await this.f_table_entity.createQueryBuilder().update(FTableEntity).set({
-      type: data.type,
-      law_start: data.law_start,
-      law_spaceing: data.law_spacing,
-      law_end: data.law_end,
-      createBy: uId,
-    }).where({
-      id: f_table_id,
-    }).execute()
-    const _values = data.values.split(',')
-    for (const item of _values) {
-      const db = new FHoppingEntity()
-      db.createBy = uId
-      const _f_table = new FTableEntity()
-      _f_table.id = f_table_id
-      db.f_table = _f_table
-      db.value = Number(item)
-      await this.f_hopping_entity.save(db)
-    }
-    return ErrorEnum.OperationSuccess
+    return await this.f_hopping_entity.manager.transaction(async manager => {
+      let table_entity = await this.f_table_entity.findOneBy({ id: f_table_id })
+      if (!table_entity) throw new BusinessException(ErrorEnum.RecordNotFound)
+      let f_table_obj = {
+        type: data.type,
+        law_start: data.law_start,
+        law_spaceing: data.law_spacing,
+        law_end: data.law_end,
+        createBy: uId,
+        order: data.order
+      }
+      await manager.update(FTableEntity, { id: f_table_id }, f_table_obj)
+      await manager.delete(FHoppingEntity, { f_table: table_entity })
+      const _values = data.values.split(',').map((item, index) => {
+        let temp = new FHoppingEntity()
+        temp.createBy = uId
+        temp.f_table = table_entity
+        temp.value = Number(item)
+        return temp
+      })
+      f_table_obj["hoppings"] = _values
+      await manager.insert(FHoppingEntity, _values)
+      return ErrorEnum.OperationSuccess
+    })
   }
 
   async findHopByTableId(f_table_id: number) {
     const temp = new FTableEntity()
     temp.id = f_table_id
-    const res = await paginate(this.f_table_entity, { page: undefined, pageSize: undefined }, {
+    const res = await paginate(this.f_hopping_entity, { page: undefined, pageSize: undefined }, {
       where: {
-        id: f_table_id,
+        f_table: {
+          id: f_table_id
+        }
       },
+      order: {
+        value: "ASC"
+      }
     })
-    const _res = { ...res, items: res.items?.[0]?.hoppings ?? [] }
-    _res.meta.currentPage = 1
-    _res.meta.itemCount = _res.items.length
-    _res.meta.itemsPerPage = _res.items.length
-    _res.meta.totalItems = _res.items.length
-    _res.meta.totalPages = 1
-    return _res
+    return res
   }
 
   async update_hop(freqhop_dto: UpdateFreqHopDto) {

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator'
+import { IsInt, IsNotEmpty, IsNumber } from 'class-validator'
 
 export class CoverFreqHopDto {
   @IsNotEmpty()
@@ -16,12 +16,18 @@ export class CoverFreqHopDto {
   })
   type: string
 
-  @IsOptional()
+  @IsInt()
+  @IsNotEmpty()
+  @ApiProperty()
+  order: number
+
+  @IsNotEmpty()
   @IsNumber()
   @ApiProperty()
-  law_start?: number
+  law_start: number
 
-  @IsOptional()
+
+  @IsNotEmpty()
   @IsNumber()
   @ApiProperty({
     description: '间隔：如果为空, 将会计算出 一个间隔值',
@@ -30,14 +36,14 @@ export class CoverFreqHopDto {
   })
   law_spacing?: number
 
-  @IsOptional()
+
+  @IsNotEmpty()
   @IsNumber()
   @ApiProperty()
   law_end?: number
 
-  @IsNotEmpty({
-    message: 'f_table_id cannot be empty',
-  })
+  @IsNotEmpty()
+  @IsNumber()
   @ApiProperty()
   f_table_id: number
 }

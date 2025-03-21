@@ -40,7 +40,7 @@ export class PShotMessageService {
   async findAll(dto: SearchPShotMessageDto, isLike = true) {
     return paginate(this.p_shot_message_entity, { page: dto.page, pageSize: dto.pageSize }, {
       where: {
-        text_message: Like(dto.text_message)
+        ...(dto.text_message && { text_message: isLike ? Like(dto.text_message) : dto.text_message })
       },
     })
   }

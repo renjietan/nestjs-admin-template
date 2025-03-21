@@ -39,9 +39,7 @@ import { RedisModule } from './redis/redis.module'
     }),
     // redis
     RedisModule,
-    // mailer
     MailerModule,
-    // helper
     HelperModule,
   ],
   exports: [HttpModule, MailerModule, RedisModule, HelperModule],
