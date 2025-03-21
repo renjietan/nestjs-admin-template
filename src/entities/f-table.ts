@@ -13,9 +13,6 @@ export class FTableEntity  extends CompleteEntity{
   @Column('varchar', { name: 'type' })
   type: string
 
-  @ApiProperty({ description: '排序编号' })
-  @Column('integer', { name: 'order' })
-  order: number
 
   @ApiProperty({ description: '最小数' })
   @Column('integer', { name: 'law_start' })

@@ -18,7 +18,6 @@ import { BaseTableDto } from './dto/base_table'
 import { CreateFreqTableDto } from './dto/create-freq-table.dto'
 import { CoverFreqHopDto } from './freq_dto/cover-freq-hop.dto'
 import { CreateFreqHopDto } from './freq_dto/create-freq-hop.dto'
-import { GFreqHopDto } from './freq_dto/g-freq-hop.dto'
 import { ResetFreqHopDto } from './freq_dto/reset-freq-hop.dto'
 import { UpdateFreqHopDto } from './freq_dto/update-freq-hop.dto'
 import { HopFreqService } from './hop-freq.service'
@@ -237,15 +236,15 @@ export class HopFreqController {
     return this.f_table_seivce.resetHopByIds(resetFreqHopDto)
   }
 
-  @ApiOperation({
-    summary: '生成频点随机数据，不存库',
-  })
-  @Post('g_random_freq')
-  @ApiResult({ type: [Object], isPage: true })
-  @Perm(permissions.LIST)
-  g_random_freq(@Body() data: GFreqHopDto) {
-    return this.f_table_seivce.g_random_freq(data)
-  }
+  // @ApiOperation({
+  //   summary: '生成频点随机数据，不存库',
+  // })
+  // @Post('g_random_freq')
+  // @ApiResult({ type: [Object], isPage: true })
+  // @Perm(permissions.LIST)
+  // g_random_freq(@Body() data: GFreqHopDto) {
+  //   return this.f_table_seivce.g_random_freq(data)
+  // }
 
   @ApiOperation({
     summary: '根据跳频表  覆盖频点数据',

@@ -34,7 +34,6 @@ export class HopFreqService {
     temp.law_spaceing = data.law_spacing
     temp.law_start = data.law_start
     temp.type = data.type
-    temp.order = data.order
     return await this.f_table_entity.save(temp)
   }
 
@@ -72,7 +71,6 @@ export class HopFreqService {
         db.law_spaceing = data.law_spacing
         db.law_start = data.law_start
         db.type = data.type
-        db.order = data.order
         const table = await manager.save(db)
         const points = Array.from({
           length: data.point_count,
@@ -96,7 +94,7 @@ export class HopFreqService {
   async findAll() {
     const res = await paginate(this.f_table_entity, { page: undefined, pageSize: undefined }, {
       order: {
-        order: "ASC"
+        alias: "ASC"
       },
     })
     return res
@@ -111,7 +109,7 @@ export class HopFreqService {
         hoppings: true,
       },
       order: {
-        order: "ASC"
+        alias: "ASC"
       },
     })
     return results
@@ -178,15 +176,6 @@ export class HopFreqService {
     return await this.f_hopping_entity.manager.transaction(async manager => {
       let table_entity = await this.f_table_entity.findOneBy({ id: f_table_id })
       if (!table_entity) throw new BusinessException(ErrorEnum.RecordNotFound)
-      let f_table_obj = {
-        type: data.type,
-        law_start: data.law_start,
-        law_spaceing: data.law_spacing,
-        law_end: data.law_end,
-        createBy: uId,
-        order: data.order
-      }
-      await manager.update(FTableEntity, { id: f_table_id }, f_table_obj)
       await manager.delete(FHoppingEntity, { f_table: table_entity })
       const _values = data.values.split(',').map((item, index) => {
         let temp = new FHoppingEntity()
@@ -195,7 +184,6 @@ export class HopFreqService {
         temp.value = Number(item)
         return temp
       })
-      f_table_obj["hoppings"] = _values
       await manager.insert(FHoppingEntity, _values)
       return ErrorEnum.OperationSuccess
     })
@@ -210,9 +198,6 @@ export class HopFreqService {
           id: f_table_id
         }
       },
-      order: {
-        value: "ASC"
-      }
     })
     return res
   }
@@ -265,9 +250,16 @@ export class HopFreqService {
       const _law_spacing = b_diff(data.law_start, data.law_end, data.point_count, _temp.law_spacing)
       data.law_spacing = _law_spacing < _temp.law_spacing ? _temp.law_spacing : _law_spacing
     }
-    return Array.from({ length: data.point_count }).map((item, index) => {
-      const value = data.law_start + index * data.law_spacing
-      return value > data.law_end ? data.law_end : value
-    })
+    if (!!data.law_start && !data.law_end) {
+      return Array.from({ length: data.point_count }).map((item, index) => {
+        const value = data.law_start + index * data.law_spacing
+        return value > data.law_end ? data.law_end : value
+      })
+    } else if (!data.law_start && !!data.law_end) {
+      return Array.from({ length: data.point_count }).map((item, index) => {
+        const value = data.law_end - index * data.law_spacing
+        return value > data.law_end ? data.law_end : value
+      })
+    }
   }
 }
