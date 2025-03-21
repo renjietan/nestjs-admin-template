@@ -4,6 +4,7 @@ import { IsOptional, IsString, MinLength } from 'class-validator'
 import { PagerDto } from '~/common/dto/pager.dto'
 import { IsUnique } from '~/shared/database/constraints/unique.constraint'
 
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { ParamConfigEntity } from '../../../entities/param-config.entity'
 
 export class ParamConfigDto {
@@ -12,7 +13,7 @@ export class ParamConfigDto {
   name: string
 
   @ApiProperty({ description: '参数键名' })
-  @IsUnique({ entity: ParamConfigEntity, message: '该键名已存在' })
+  @IsUnique({ entity: ParamConfigEntity, message: ErrorEnum.KeyNameAlreadyExists })
   @IsString()
   @MinLength(3)
   key: string

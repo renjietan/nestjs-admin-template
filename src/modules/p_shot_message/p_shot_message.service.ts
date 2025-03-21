@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Brackets, Like, Repository } from 'typeorm'
 import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { PShotMessageEntity } from '~/entities/p_shot_message'
 import { paginate } from '~/helper/paginate'
 import { IdsDto } from '../../common/dto/ids.dto'
@@ -25,10 +26,10 @@ export class PShotMessageService {
     ).getOne()
     const count = await this.p_shot_message_entity.createQueryBuilder('p_shot_message').getCount()
     if (data) {
-      throw new BusinessException('500:短信内容已存在，请勿重复提交')
+      throw new BusinessException(ErrorEnum.DuplicateSMSContent)
     }
     if (count >= 100) {
-      throw new BusinessException('500:系统数据已达上限(100条)，无法继续添加。请删除部分数据后重试')
+      throw new BusinessException(ErrorEnum.SystemDataLimitReached)
     }
     const temp = new PShotMessageEntity()
     temp.text_message = dto.text_message

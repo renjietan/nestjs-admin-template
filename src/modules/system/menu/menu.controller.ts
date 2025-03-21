@@ -8,7 +8,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common'
-import { ApiExcludeController, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { flattenDeep } from 'lodash'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
@@ -18,6 +18,7 @@ import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { CreatorPipe } from '~/common/pipes/creator.pipe'
 import { UpdaterPipe } from '~/common/pipes/updater.pipe'
 
+import { ErrorEnEnum } from '~/constants/error--en-code.constant'
 import { MenuDto, MenuQueryDto, MenuUpdateDto } from './menu.dto'
 import { MenuItemInfo } from './menu.model'
 import { MenuService } from './menu.service'
@@ -89,7 +90,7 @@ export class MenuController {
   @Perm(permissions.DELETE)
   async delete(@IdParam() id: number): Promise<void> {
     if (await this.menuService.checkRoleByMenuId(id))
-      throw new BadRequestException('该菜单存在关联角色，无法删除')
+      throw new BadRequestException(ErrorEnEnum.MenuHasAssociatedRoles)
 
     // 如果有子目录，一并删除
     const childMenus = await this.menuService.findChildMenus(id)

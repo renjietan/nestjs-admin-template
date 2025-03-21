@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Like, Repository } from 'typeorm'
 import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { NNetWorkTemplateEntity } from '~/entities/n_network_template'
 import { paginate } from '~/helper/paginate'
 import { delChildren } from '~/utils/sql_str'
@@ -23,7 +24,7 @@ export class NetworkTemplateService {
       type: data?.type ?? 1
     }, false)
     if (entities.meta.itemCount > 0) {
-      throw new BusinessException('500:已存在相同名称的网络模板')
+      throw new BusinessException(ErrorEnum.DuplicateNetworkTemplateName)
     }
     const entity = new NNetWorkTemplateEntity()
     entity.createBy = uId
@@ -40,7 +41,7 @@ export class NetworkTemplateService {
       type: data?.type ?? 1
     }, false)
     if (entities.meta.itemCount > 0 && entities?.items?.[0]?.id != id) {
-      throw new BusinessException('500:已存在相同名称的网络模板')
+      throw new BusinessException(ErrorEnum.DuplicateNetworkTemplateName)
     }
     let dict_entites = await this.dict_item_service.validateDict({
       waveForm: data.waveForm,

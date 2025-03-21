@@ -8,6 +8,7 @@ import { IdParam } from '~/common/decorators/path-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { IdsDto } from '~/common/dto/ids.dto'
 import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { DeviceEntity } from '~/entities/d_device'
 import { DictItemEntity } from '~/entities/dict-item.entity'
 import { DictItemService } from '../system/dict-item/dict-item.service'
@@ -29,7 +30,7 @@ export const permissions = definePermission('device:manager', {
 export class DeviceController {
   constructor(
     private readonly deviceService: DeviceService,
-    private readonly dict_item_service: DictItemService
+    private readonly dict_item_service: DictItemService,
   ) { }
 
   @ApiOperation({
@@ -49,25 +50,27 @@ export class DeviceController {
   @ApiResult({ type: InsertResult })
   @Perm(permissions.CREATE)
   async create(@Body() data: DeviceDto, @AuthUser() user: IAuthUser) {
-    let { device_type, model, status } = data
-    let res = await this.dict_item_service.page({})
-    let { items } = res
-    let dict_entity = items.reduce((cur, pre: DictItemEntity) => {
+    const { device_type, model, status } = data
+    const res = await this.dict_item_service.page({})
+    const { items } = res
+    const dict_entity = items.reduce((cur, pre: DictItemEntity) => {
       if (pre.value == device_type) {
         cur.device_type = device_type
-      } else if (pre.value == model) {
+      }
+      else if (pre.value == model) {
         cur.model = model
-      } else if (pre.value == status) {
+      }
+      else if (pre.value == status) {
         cur.status = status
       }
       return cur
     }, {
       device_type: null,
       model: null,
-      status: null
+      status: null,
     })
-    if(Object.values(dict_entity).every(item => !!item)) {
-      throw new BusinessException('500: device_type、model、status在字典中不存在')
+    if (Object.values(dict_entity).every(item => !!item)) {
+      throw new BusinessException(ErrorEnum.OperationFailedDictionaryOrParameterError)
     }
     return await this.deviceService.create(data, user?.uid)
   }
@@ -78,7 +81,7 @@ export class DeviceController {
   @Put('update/:id')
   @ApiResult({ type: UpdateResult })
   @Perm(permissions.UPDATE)
-  async update(@IdParam() id: string, @Body() updateDto: DeviceDto,  @AuthUser() user: IAuthUser) {
+  async update(@IdParam() id: string, @Body() updateDto: DeviceDto, @AuthUser() user: IAuthUser) {
     console.log('update', id, updateDto)
     return await this.deviceService.update(+id, updateDto, user?.uid)
   }

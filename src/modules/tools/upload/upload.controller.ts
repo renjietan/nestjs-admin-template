@@ -7,6 +7,7 @@ import { definePermission, Perm } from '~/common/decorators/auth/permission.deco
 
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { FileUploadDto } from './upload.dto'
 import { UploadService } from './upload.service'
 
@@ -48,7 +49,7 @@ export class UploadController {
     }
     catch (error) {
       console.log(error)
-      throw new BadRequestException('上传失败')
+      throw new BadRequestException(ErrorEnum.UploadFailed)
     }
   }
 }

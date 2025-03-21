@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import Redis from 'ioredis'
 import { isEmpty, isNil } from 'lodash'
-import { EntityManager, In, Like, Repository } from 'typeorm'
+import { EntityManager, Like, Repository } from 'typeorm'
 
 import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 
@@ -229,7 +229,7 @@ export class UserService {
   async delete(userIds: number[]): Promise<void | never> {
     const rootUserId = await this.findRootUserId()
     if (userIds.includes(rootUserId))
-      throw new BadRequestException('不能删除root用户!')
+      throw new BadRequestException(ErrorEnum.CannotDeleteRootUser)
 
     await this.userRepository.delete(userIds)
   }

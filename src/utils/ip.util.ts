@@ -5,6 +5,7 @@ import type { IncomingMessage } from 'node:http'
  * @description IP utility functions
  */
 import axios from 'axios'
+import { ErrorEnum } from '~/constants/error-code.constant'
 
 /* 判断IP是不是内网 */
 function isLAN(ip: string) {
@@ -50,7 +51,7 @@ export function getIp(request: FastifyRequest | IncomingMessage) {
 
 export async function getIpAddress(ip: string) {
   if (isLAN(ip))
-    return '内网IP'
+    return ErrorEnum.InternalIP
   try {
     let { data } = await axios.get(
       `https://whois.pconline.com.cn/ipJson.jsp?ip=${ip}&json=true`,
@@ -61,6 +62,6 @@ export async function getIpAddress(ip: string) {
     return data.addr.trim().split(' ').at(0)
   }
   catch (error) {
-    return '第三方接口请求失败'
+    return ErrorEnum.ThirdPartyApiRequestFailed
   }
 }

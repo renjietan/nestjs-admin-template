@@ -4,6 +4,7 @@ import { MenuEntity } from '~/entities/menu.entity'
 import { envBoolean } from '~/global/env'
 import { isExternal } from '~/utils/is.util'
 
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { uniqueSlash } from './tool.util'
 
 export interface RouteRecordRaw {
@@ -182,5 +183,5 @@ export function generatorMenu(menu: MenuEntity[]) {
 /** 检测是否为演示环境, 如果为演示环境，则拒绝该操作 */
 export function checkIsDemoMode() {
   if (envBoolean('IS_DEMO'))
-    throw new ForbiddenException('演示模式下不允许操作')
+    throw new ForbiddenException(ErrorEnum.DemoModeOperationNotAllowed)
 }

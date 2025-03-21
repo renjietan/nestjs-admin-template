@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import { IdsDto } from '~/common/dto/ids.dto';
 import { BusinessException } from '~/common/exceptions/biz.exception';
+import { ErrorEnum } from '~/constants/error-code.constant';
 import { PMMasterEntity } from '~/entities/pm_master';
 import { paginate } from '~/helper/paginate';
 import { PMMasterSearchDto } from './dto/pm-master-search.dto';
@@ -27,7 +28,7 @@ export class PmMasterService {
             pm_name: dto.pm_name
         }, false)
         if (isExist.items.length > 0) {
-            throw new BusinessException('500:已存在相同名称的任务规划模板')
+            throw new BusinessException(ErrorEnum.DuplicateTaskTemplateName)
         }
         let _entity = new PMMasterEntity()
         _entity.createBy = uId
@@ -42,7 +43,7 @@ export class PmMasterService {
     async update(id: number, dto: PMMasterDto, uId: number) {
         let isExist = await this.search(dto)
         if (isExist.items.length > 0) {
-            throw new BusinessException('500:已存在相同名称的任务规划模板')
+            throw new BusinessException(ErrorEnum.DuplicateTaskTemplateName)
         }
         return await this.pm_master_entity.createQueryBuilder().update(PMMasterEntity).set({
             ...dto,

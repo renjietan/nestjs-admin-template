@@ -1,12 +1,12 @@
+import { } from '@nestjs/common'
+import { OnEvent } from '@nestjs/event-emitter'
+import { JwtService } from '@nestjs/jwt'
 import type {
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets'
-import type { Socket } from 'socket.io'
-import { } from '@nestjs/common'
-import { OnEvent } from '@nestjs/event-emitter'
-import { JwtService } from '@nestjs/jwt'
 import { WebSocketServer } from '@nestjs/websockets'
+import type { Socket } from 'socket.io'
 import { Namespace } from 'socket.io'
 
 import { EventBusEvents } from '~/constants/event-bus.constant'
@@ -14,6 +14,7 @@ import { EventBusEvents } from '~/constants/event-bus.constant'
 import { TokenService } from '~/modules/auth/services/token.service'
 import { CacheService } from '~/shared/redis/cache.service'
 
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { BroadcastBaseGateway } from '../base.gateway'
 import { BusinessEvents } from '../business-event.constant'
 
@@ -42,7 +43,7 @@ export function createAuthGateway(options: AuthGatewayOptions): new (...args: an
 
     async authFailed(client: Socket) {
       client.send(
-        this.gatewayMessageFormat(BusinessEvents.AUTH_FAILED, '认证失败'),
+        this.gatewayMessageFormat(BusinessEvents.AUTH_FAILED, ErrorEnum.AuthenticationFailed),
       )
       client.disconnect()
     }

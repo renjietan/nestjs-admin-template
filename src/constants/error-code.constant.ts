@@ -1,8 +1,9 @@
 export enum ErrorEnum {
   // !公用
   DEFAULT = '0:未知错误',
-  OperationFailed = "操作失败",
+  OperationFailed = '500:操作失败',
   SERVER_ERROR = '500:服务繁忙，请稍后再试',
+  OperationSuccess = '200:操作成功',
 
   // !核心业务逻辑
   SYSTEM_USER_EXISTS = '1001:系统用户已存在',
@@ -50,115 +51,109 @@ export enum ErrorEnum {
 
   // !特定的业务逻辑
   // src\socket\shared\auth.gateway.ts
-  AuthenticationFailed = "认证失败",
+  AuthenticationFailed = '500:认证失败',
   // src\shared\database\constraints\unique.constraint.ts
-  DuplicateRecordExists = "已存在相同的",
+  DuplicateRecordExists = '500:已存在相同的',
   // src\modules\user\dto\password.dto.ts
-  InvalidPasswordFormat = "密码格式不正确",
-  PasswordRequirements = "密码必须包含数字、字母,长度为6-16",
+  InvalidPasswordFormat = '500:密码格式不正确',
+  PasswordRequirements = '500:密码必须包含数字、字母,长度为6-16',
   // src\modules\user\user.service.ts
-  CannotDeleteRootUser = "不能删除root用户",
+  CannotDeleteRootUser = '500:不能删除root用户',
   // src\modules\system\role\role.service.ts
-  CannotDeleteSuperAdmin = "不能删除超级管理员",
+  CannotDeleteSuperAdmin = '500:不能删除超级管理员',
   // src\modules\system\role\role.dto.ts
-  RoleValueLengthTooShort = "角色值长度不能小于2",
-  RoleValueAlphanumericOnly = "角色值只能包含字母和数字",
-  RoleNameLengthTooShort = "角色名称长度不能小于2",
+  RoleValueLengthTooShort = '500:角色值长度不能小于2',
+  RoleValueAlphanumericOnly = '500:角色值只能包含字母和数字',
+  RoleNameLengthTooShort = '500:角色名称长度不能小于2',
   // src\modules\system\role\role.controller.ts
-  RoleHasAssociatedUsers = "该角色存在关联用户，无法删除",
+  RoleHasAssociatedUsers = '500:该角色存在关联用户，无法删除',
   // src\modules\system\param-config\param-config.dto.ts
-  KeyNameAlreadyExists = "该键名已存在",
+  KeyNameAlreadyExists = '500:该键名已存在',
   // src\modules\system\menu\menu.controller.ts
-  MenuHasAssociatedRoles = "该菜单存在关联角色，无法删除",
-  DictionaryNotRepeatable = "字典不可重复",
+  MenuHasAssociatedRoles = '500:该菜单存在关联角色，无法删除',
   // src\modules\system\dict-item\dict-type.dto.ts
-  DuplicateDictionaryName = "已存在相同名称的字典类型",
-  DuplicateEnglishDictionaryName = "已存在相同英文名称的字典类型",
-  DuplicateDictionaryCode = "已存在相同编码的字典类型",
+  DuplicateDictionaryName = '500:已存在相同名称的字典类型',
+  DuplicateEnglishDictionaryName = '500:已存在相同英文名称的字典类型',
+  DuplicateDictionaryCode = '500:已存在相同编码的字典',
   // src\modules\system\dict-item\dict-item.dto.ts
-  DuplicateDictionaryItemName = "已存在相同名称的字典项",
-  DuplicateEnglishDictionaryItemName = "已存在相同英文名称的字典项",
-  DuplicateDictionaryItemCode = "已存在相同编码的字典项",
+  DuplicateDictionaryItemName = '500:已存在相同名称的字典项',
+  DuplicateEnglishDictionaryItemName = '500:已存在相同英文名称的字典项',
+  DuplicateDictionaryItemCode = '500:已存在相同编码的字典项',
   // src\helper\crud\base.service.ts
-  RecordNotFound = "未找到该记录",
-  // src\helper\crud\base.service.ts
-  RequestTimeout = "请求超时",
+  RecordNotFound = '500:未找到该记录',
+  // src\common\interceptors\timeout.interceptor.ts
+  RequestTimeout = '500:请求超时',
   // src\modules\device\device.service.ts
-  DuplicateDeviceAliasOrSN = "不可添加【别名】或【SN】相同的设备",
-  DictionaryMissingFields = "device_type、model、status在字典中不存在",
+  DuplicateDeviceAliasOrSN = '500:不可添加【别名】或【SN】相同的设备',
   // src\modules\e_table\e_table.service.ts
-  TableNameExists = "已存在相同名称的表名",
-  DuplicateChannelNumber = "已存在相同的信道号",
+  TableNameExists = '500:已存在相同名称的表名',
+  DuplicateChannelNumber = '500:已存在相同的信道号',
   // src\modules\hop-freq\hop-freq.service.ts
-  DataLimitExceeded = "当前数据总量(新增数据 + 现有数据)已超过80条,已达到系统上限。请减少新增数据或清理现有数据后再试",
-  // src\modules\hop-freq\hop-freq.service.ts
-  UniqueAliasRequired = "别名必须唯一,请重新输入一个未被使用的名称",
-  TypeNoLongerExists = "所选类型已不存在，请刷新页面或重新选择有效类型",
+  DataLimitExceeded = '500:当前数据总量(新增数据 + 现有数据)已超过80条,已达到系统上限。请减少新增数据或清理现有数据后再试',
+  UniqueAliasRequired = '500:别名必须唯一,请重新输入一个未被使用的名称',
+  TypeNoLongerExists = '500:所选类型已不存在，请刷新页面或重新选择有效类型',
   // src\modules\network-template\network-template.service.ts
-  DuplicateNetworkTemplateName = "已存在相同名称的网络模板",
+  DuplicateNetworkTemplateName = '500:已存在相同名称的网络模板',
   // src\modules\p_shot_message\p_shot_message.service.ts
-  DuplicateSMSContent = "短信内容已存在，请勿重复提交",
-  SystemDataLimitReached = "系统数据已达上限(100条)，无法继续添加。请删除部分数据后重试",
+  DuplicateSMSContent = '500:短信内容已存在，请勿重复提交',
+  SystemDataLimitReached = '500:系统数据已达上限(100条)，无法继续添加。请删除部分数据后重试',
   // src\modules\pm-master\pm-master.service.ts
-  DuplicateTaskTemplateName = "已存在相同名称的任务规划模板",
+  DuplicateTaskTemplateName = '500:已存在相同名称的任务规划模板',
   // src\modules\pm-sub\pm-sub.service.ts
-  DuplicateSubtaskName = "已存在名称相同的子任务",
+  DuplicateSubtaskName = '500:已存在名称相同的子任务',
   // src\modules\system\dict-item\dict-item.service.ts
-  InvalidDictionaryFieldValue = "该字段的值不在当前字典范围内，请选择有效的字典项或更新字典",
+  InvalidDictionaryFieldValue = '500:该字段的值不在当前字典范围内，请选择有效的字典项或更新字典',
   // src\modules\system\dict-type\dict-type.service.ts
-  UniqueDictionaryKeyValueRequired = "字典键、值必须唯一，请勿重复添加",
-  // src\modules\system\param-config\param-config.dto.ts
-  DuplicateKeyName = "该键名已存在",
+  UniqueDictionaryKeyValueRequired = '500:字典键、值必须唯一，请勿重复添加',
   // src\modules\wave_device_config\wave_device_config.service.ts
-  OperationFailedDictionaryOrParameterError = "操作失败，原因可能是字典不存在或传入参数有误，请检查后重试",
+  OperationFailedDictionaryOrParameterError = '500:操作失败，原因可能是字典不存在或传入参数有误，请检查后重试',
+  InvalidIdFormat = 'id验证失败',
 
   // ! 中间价
   // src\utils\ip.util.ts
-  InternalIP = "内网IP",
-  ThirdPartyApiRequestFailed = "第三方接口请求失败",
-  // src\utils\ip.util.ts
-  DemoModeOperationNotAllowed = "演示模式下不允许操作",
+  InternalIP = '500:内网IP',
+  ThirdPartyApiRequestFailed = '500:第三方接口请求失败',
+  // src\utils\permission.util.ts
+  DemoModeOperationNotAllowed = '500:演示模式下不允许操作',
   // src\socket\base.gateway.ts
-  WebSocketDisconnected = "WebSocket 断开",
-  WebSocketConnected = "WebSocket 已连接",
+  WebSocketDisconnected = '500:WebSocket 断开',
+  WebSocketConnected = '200:WebSocket 已连接',
   // src\shared\redis\redis-subpub.ts
-  ReceiveEvent = "接收事件：",
-  PublishEvent = "发布事件：",
+  ReceiveEvent = '接收事件：',
+  PublishEvent = '发布事件：',
   // src\shared\mailer\mailer.service.ts
-  VerificationCode = "验证码",
+  VerificationCode = '验证码',
   // src\shared\helper\cron.service.ts
-  DeleteExpired = "删除过期的",
-  IssuedAt = "签发于",
-  Deleted = "删除了",
-  ExpiredItemsCleared = "个过期的",
-  StartScanningClearExpired = "开始扫表，清除过期的",
+  DeleteExpired = '删除过期的',
+  IssuedAt = '签发于',
+  Deleted = '删除了',
+  ExpiredItemsCleared = '个过期的',
+  StartScanningClearExpired = '开始扫表，清除过期的',
   // src\modules\system\task\task.service.ts
-  TaskNotFound = "任务不存在",
+  TaskNotFound = '500:指定的定时任务不存在',
   // src\modules\sse\sse.controller.ts
-  Closed = "已关闭",
+  Closed = '已关闭',
   // src\common\interceptors\logging.interceptor.ts
-  Response = "响应",
-  Request = "请求",
+  Response = '响应',
+  Request = '请求',
   // src\modules\system\task\task.dto.ts
-  DuplicateTaskName = "已存在相同名称的任务",
-  CronExpressionRequired = "Cron表达式不能为空，请输入有效的表达式",
+  DuplicateTaskName = '500:已存在相同名称的任务',
+  CronExpressionRequired = '500:Cron表达式不能为空，请输入有效的表达式',
   // src\modules\system\task\task.service.ts
-  TaskNotFoundById = "未找到相关任务,请检查任务id后重试",
-  // src\modules\system\task\task.service.ts
-  ScheduledTaskParametersMissing = "定时任务参数为空，请填写必要参数以停止和删除任务",
-  // src\modules\system\task\task.service.ts
-  ScheduledTaskNotFound = "指定的定时任务不存在",
+  TaskNotFoundById = '500:未找到相关任务,请检查任务id后重试',
+  ScheduledTaskParametersMissing = '500:定时任务参数为空，请填写必要参数以停止和删除任务',
+  ScheduledTaskNotFound = '500:指定的定时任务不存在',
   // src\modules\tasks\jobs\email.job.ts
-  EmailTaskParametersMissing = "邮件发送任务参数为空，请检查并补充必要信息",
+  EmailTaskParametersMissing = '500:邮件发送任务参数为空，请检查并补充必要信息',
   // src\modules\tasks\jobs\http-request.job.ts
-  HttpRequestTaskParametersMissing = "HTTP 请求任务参数为空，请检查并补充必要参数",
+  HttpRequestTaskParametersMissing = '500:HTTP 请求任务参数为空，请检查并补充必要参数',
 
-  //! 邮箱发送 和 文件上传 暂不需要
+  // ! 邮箱发送 和 文件上传 暂不需要
   // src\modules\tools\upload\upload.dto.ts
-  InvalidFileType = "文件类型不正确",
+  InvalidFileType = '500:文件类型不正确',
   // src\modules\tools\upload\upload.controller.ts
-  UploadFailed = "上传失败",
+  UploadFailed = '500:上传失败',
   // src\modules\auth\dto\captcha.dto.ts  用于邮件发送
-  InvalidPhoneNumberFormat = "手机号格式不正确",
-  InvalidEmailFormat = "邮箱格式不正确",
+  InvalidPhoneNumberFormat = '500:手机号格式不正确',
+  InvalidEmailFormat = '500:邮箱格式不正确',
 }

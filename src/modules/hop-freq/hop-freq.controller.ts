@@ -8,6 +8,7 @@ import { definePermission, Perm } from '~/common/decorators/auth/permission.deco
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { IdsDto } from '~/common/dto/ids.dto'
 import { BusinessException } from '~/common/exceptions/biz.exception'
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { FHoppingEntity } from '~/entities/f-hopping'
 import { FTableEntity } from '~/entities/f-table'
 import { default_hopping_conf } from '~/utils/init.mock.data'
@@ -99,7 +100,7 @@ export class HopFreqController {
     const all_data = await this.f_table_entity.find()
     const total_len = data.length + all_data.length
     if (total_len > 80) {
-      throw new BusinessException('500:当前数据总量（新增数据 + 现有数据)已超过80条,已达到系统上限。请减少新增数据或清理现有数据后再试')
+      throw new BusinessException(ErrorEnum.DataLimitExceeded)
     }
     try {
       const res = await this.f_table_entity.manager.transaction(async (manager) => {

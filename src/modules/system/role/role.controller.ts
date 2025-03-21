@@ -10,7 +10,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common'
-import { ApiExcludeController, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator'
@@ -22,6 +22,7 @@ import { SseService } from '~/modules/sse/sse.service'
 
 import { MenuService } from '../menu/menu.service'
 
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { RoleDto, RoleQueryDto, RoleUpdateDto } from './role.dto'
 import { RoleInfo } from './role.model'
 import { RoleService } from './role.service'
@@ -83,7 +84,7 @@ export class RoleController {
   @Perm(permissions.DELETE)
   async delete(@IdParam() id: number): Promise<void> {
     if (await this.roleService.checkUserByRoleId(id))
-      throw new BadRequestException('该角色存在关联用户，无法删除')
+      throw new BadRequestException(ErrorEnum.RoleHasAssociatedUsers)
 
     await this.roleService.delete(id)
     await this.menuService.refreshOnlineUserPerms(false)

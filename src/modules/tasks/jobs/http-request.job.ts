@@ -3,6 +3,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 
 import { LoggerService } from '~/shared/logger/logger.service'
 
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { Mission } from '../mission.decorator'
 
 /**
@@ -26,7 +27,7 @@ export class HttpRequestJob {
       this.logger.log(result, HttpRequestJob.name)
     }
     else {
-      throw new BadRequestException('HTTP 请求任务参数为空，请检查并补充必要参数')
+      throw new BadRequestException(ErrorEnum.HttpRequestTaskParametersMissing)
     }
   }
 }
