@@ -186,11 +186,8 @@ export class HopFreqService {
         createBy: uId,
         order: data.order
       }
-      console.log('========================1');
       await manager.update(FTableEntity, { id: f_table_id }, f_table_obj)
-      console.log('========================2');
       await manager.delete(FHoppingEntity, { f_table: table_entity })
-      console.log('========================3');
       const _values = data.values.split(',').map((item, index) => {
         let temp = new FHoppingEntity()
         temp.createBy = uId
@@ -199,7 +196,6 @@ export class HopFreqService {
         return temp
       })
       f_table_obj["hoppings"] = _values
-      console.log('========================4');
       await manager.insert(FHoppingEntity, _values)
       return ErrorEnum.OperationSuccess
     })
