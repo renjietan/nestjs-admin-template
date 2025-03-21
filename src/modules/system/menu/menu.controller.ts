@@ -18,7 +18,7 @@ import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { CreatorPipe } from '~/common/pipes/creator.pipe'
 import { UpdaterPipe } from '~/common/pipes/updater.pipe'
 
-import { ErrorEnEnum } from '~/constants/error--en-code.constant'
+import { ErrorEnum } from '~/constants/error-code.constant'
 import { MenuDto, MenuQueryDto, MenuUpdateDto } from './menu.dto'
 import { MenuItemInfo } from './menu.model'
 import { MenuService } from './menu.service'
@@ -90,7 +90,7 @@ export class MenuController {
   @Perm(permissions.DELETE)
   async delete(@IdParam() id: number): Promise<void> {
     if (await this.menuService.checkRoleByMenuId(id))
-      throw new BadRequestException(ErrorEnEnum.MenuHasAssociatedRoles)
+      throw new BadRequestException(ErrorEnum.MenuHasAssociatedRoles)
 
     // 如果有子目录，一并删除
     const childMenus = await this.menuService.findChildMenus(id)

@@ -9,7 +9,7 @@ import {
 import { isNil, merge } from 'lodash'
 import { ClsService } from 'nestjs-cls'
 import { DataSource, Not, ObjectType } from 'typeorm'
-import { ErrorEnEnum } from '~/constants/error--en-code.constant'
+import { ErrorEnum } from '~/constants/error-code.constant'
 
 interface Condition {
   entity: ObjectType<any>
@@ -51,7 +51,7 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
       if (!condition.message) {
         const targetColumn = repo.metadata.columns.find(n => n.propertyName === condition.field)
         if (targetColumn?.comment) {
-          args.constraints[0].message = `${ ErrorEnEnum.DuplicateRecordExists }${targetColumn.comment}`
+          args.constraints[0].message = `${ ErrorEnum.DuplicateRecordExists }${targetColumn.comment}`
         }
       }
 

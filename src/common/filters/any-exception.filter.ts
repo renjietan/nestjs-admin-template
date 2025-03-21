@@ -41,16 +41,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     // 系统内部错误时
     if (status === HttpStatus.INTERNAL_SERVER_ERROR && !(exception instanceof BusinessException)) {
-      console.log('if===================1', status);
-      console.log('if===================2', message);
       Logger.error(exception, undefined, 'Catch')
       // 生产环境下隐藏错误信息
       if (!isDev)
         message = ErrorEnum.SERVER_ERROR?.split(':')[1]
     }
     else {
-      console.log('else===================1', status);
-      console.log('else===================2', message);
       this.logger.warn(`错误信息：(${status}) ${message} Path: ${decodeURI(url)}`,)
     }
 
@@ -68,7 +64,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
   getStatus(exception: unknown): number {
     if (exception instanceof HttpException) {
-      console.log("This is HttpException");
       return exception.getStatus()
     }
     else if (exception instanceof QueryFailedError) {

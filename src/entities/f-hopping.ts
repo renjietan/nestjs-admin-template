@@ -7,7 +7,7 @@ import { FTableEntity } from './f-table'
 @Entity({ name: 'f_hopping' })
 export class FHoppingEntity extends CompleteEntity {
     @ApiProperty({ description: '关联的 f_table 的 id' })
-    @ManyToOne(() => FTableEntity, (fTable) => fTable.hoppings)
+    @ManyToOne(() => FTableEntity, (fTable) => fTable.hoppings, { onDelete: "CASCADE" })
     @JoinColumn({ name: 'f_table_id' })
     f_table: FTableEntity
 

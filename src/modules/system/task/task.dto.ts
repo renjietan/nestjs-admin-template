@@ -21,7 +21,6 @@ import { isEmpty } from 'lodash'
 import { PagerDto } from '~/common/dto/pager.dto'
 import { IsUnique } from '~/shared/database/constraints/unique.constraint'
 
-import { ErrorEnEnum } from '~/constants/error--en-code.constant'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { TaskEntity } from '../../../entities/task.entity'
 
@@ -48,7 +47,7 @@ export class IsCronExpression implements ValidatorConstraintInterface {
 
 export class TaskDto {
   @ApiProperty({ description: '任务名称' })
-  @IsUnique({ entity: TaskEntity, message: ErrorEnEnum.DuplicateTaskName })
+  @IsUnique({ entity: TaskEntity, message: ErrorEnum.DuplicateTaskName })
   @IsString()
   @MinLength(2)
   @MaxLength(50)

@@ -13,14 +13,13 @@ export class FTableEntity  extends CompleteEntity{
   @Column('varchar', { name: 'type' })
   type: string
 
-
   @ApiProperty({ description: '最小数' })
   @Column('integer', { name: 'law_start' })
   law_start: number
 
   @ApiProperty({ description: '间隔值' })
   @Column('integer', { name: 'law_spaceing' })
-  law_spaceing: number
+  law_spacing: number
 
   @ApiProperty({ description: '最大数' })
   @Column('integer', { name: 'law_end' })
@@ -30,5 +29,5 @@ export class FTableEntity  extends CompleteEntity{
   @OneToMany(() => FHoppingEntity, hopping => hopping.f_table, {
     cascade: true, // 级联操作（自动保存子表）
   })
-  hoppings: Relation<FHoppingEntity[]>
+  hoppings?: Relation<FHoppingEntity[]>
 }

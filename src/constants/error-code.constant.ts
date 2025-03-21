@@ -92,6 +92,7 @@ export enum ErrorEnum {
   DataLimitExceeded = '500:当前数据总量(新增数据 + 现有数据)已超过80条,已达到系统上限。请减少新增数据或清理现有数据后再试',
   UniqueAliasRequired = '500:别名必须唯一,请重新输入一个未被使用的名称',
   TypeNoLongerExists = '500:所选类型已不存在，请刷新页面或重新选择有效类型',
+  HFTableNameNotExists = "500:跳频表已不存在,请刷新页面后,再试一次",
   // src\modules\network-template\network-template.service.ts
   DuplicateNetworkTemplateName = '500:已存在相同名称的网络模板',
   // src\modules\p_shot_message\p_shot_message.service.ts
