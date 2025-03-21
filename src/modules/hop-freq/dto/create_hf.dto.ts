@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { Type } from 'class-transformer'
 import { IsArray, IsNumber, IsOptional } from 'class-validator'
 import { ErrorEnum } from '~/constants/error-code.constant'
+import { FHoppingEntity } from '~/entities/f-hopping'
 import { FTableEntity } from '~/entities/f-table'
 import { IsUnique } from '~/shared/database/constraints/unique.constraint'
 
@@ -41,5 +43,6 @@ export class CreateHF {
   @ApiProperty({
     description: '频点列表',
   })
-  points: []
+  @Type(() => FHoppingEntity)
+  points: FHoppingEntity[]
 }

@@ -29,6 +29,11 @@ export class HopFreqService {
 
   async create_hc(dto: CreateHF) {
     return await this.f_table_entity.manager.transaction(async manager => {
+      let res = await manager.save(FTableEntity, dto)
+      dto.points = dto.points.map(item => {
+        return item
+      })
+      await manager.insert(FHoppingEntity, dto.points)
       return 
     })
   }
