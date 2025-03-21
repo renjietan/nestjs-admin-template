@@ -46,6 +46,15 @@ export class HopFreqController {
   })
   @ApiResult({ type: String })
   @Perm(permissions.CREATE)
+  async create_hf() {}
+
+  @Patch()
+  @ApiOperation({
+    summary: '批量新增: 初始化 80张表时, law_conf可传空',
+    description: '查看最下方 CreateFreqTableDto 参数说明',
+  })
+  @ApiResult({ type: String })
+  @Perm(permissions.CREATE)
   async init(@Body() createFreqTableDto: CreateFreqTableDto, @AuthUser() user: IAuthUser) {
     let {
       law_conf,

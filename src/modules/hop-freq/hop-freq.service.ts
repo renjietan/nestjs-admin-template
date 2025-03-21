@@ -11,6 +11,7 @@ import { b_diff } from '~/utils'
 import { default_hopping_conf } from '~/utils/init.mock.data'
 import { BaseFreqTableDto } from './dto/base-freq-table.dto'
 import { BaseTableDto } from './dto/base_table'
+import { CreateHF } from './dto/create_hf.dto'
 import { CoverFreqHopDto } from './freq_dto/cover-freq-hop.dto'
 import { CreateFreqHopDto } from './freq_dto/create-freq-hop.dto'
 import { GFreqHopDto } from './freq_dto/g-freq-hop.dto'
@@ -25,6 +26,12 @@ export class HopFreqService {
     @InjectDataSource() private dataSource: DataSource,
     private readonly entity_manager: EntityManager,
   ) { }
+
+  async create_hc(dto: CreateHF) {
+    return await this.f_table_entity.manager.transaction(async manager => {
+      return 
+    })
+  }
 
   async create(alias: string, createBy: number, data: BaseFreqTableDto) {
     const temp = new FTableEntity()
