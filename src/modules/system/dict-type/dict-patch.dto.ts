@@ -1,7 +1,7 @@
 import { ApiProperty, PartialType } from "@nestjs/swagger"
 import { Type } from "class-transformer"
-import { IsArray, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, MinLength, ValidateNested } from "class-validator"
-import { Exact } from "~/common/dto/pager.dto"
+import { IsArray, IsInt, IsNotEmpty, IsOptional, IsString, MinLength, ValidateNested } from "class-validator"
+import { AllowCleanDto } from "~/common/dto/clean.dto"
 import { DictItemEntity } from "~/entities/dict-item.entity"
 import { DictTypeEntity } from "~/entities/dict-type.entity"
 
@@ -75,12 +75,7 @@ export class DictFullDto extends DictTypeByPatchDto {
 }
 
 
-export class PatchDto {
-    @IsEnum(Exact)
-    @ApiProperty({ description: '是否允许清空表', enum: Exact })
-    @IsNotEmpty()
-    allow_clean: number
-
+export class PatchDto extends AllowCleanDto {
     @IsNotEmpty()
     @IsArray()
     @ValidateNested({

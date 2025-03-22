@@ -1,65 +1,65 @@
-export const default_hopping_conf = [{
+export const hf_cof = {
+  VHF: {
     id: 0,
-    type: 'VHF',
+    type: "VHF",
     count: 10,
     law_start: 30,
     law_end: 87.975,
     law_spacing: 0.025,
     point_count: 232,
-  }, {
-    id: 1,
-    type: 'UVHF30-512',
+  },
+  "UVHF30-512": {
+    id: 7,
+    type: "UVHF30-512",
     count: 10,
     law_start: 30,
     law_end: 511.975,
     law_spacing: 0.025,
     point_count: 232,
-  }, {
+  },
+  "UVHF225-512": {
     id: 2,
-    type: 'UVHF225-512',
+    type: "UVHF225-512",
     count: 10,
     law_start: 225,
-    law_end: 511.900,
+    law_end: 511.9,
     law_spacing: 0.1,
     point_count: 256,
-  }, {
+  },
+  "UVHF30-400": {
     id: 3,
-    type: 'UVHF30-400',
+    type: "UVHF30-400",
     count: 10,
     law_start: 30,
     law_end: 399.975,
     law_spacing: 0.025,
     point_count: 232,
-  }, {
+  },
+  "UHF350-450": {
     id: 4,
-    type: 'UHF350-450',
+    type: "UHF350-450",
     count: 10,
     law_start: 350,
-    law_end: 449.950,
-    law_spacing: 0.050,
+    law_end: 449.95,
+    law_spacing: 0.05,
     point_count: 256,
-  }, {
+  },
+  "UVHF225-678": {
     id: 5,
-    type: 'UVHF225-678',
+    type: "UVHF225-678",
     count: 10,
     law_start: 225,
-    law_end: 677.950,
-    law_spacing: 0.050,
+    law_end: 677.95,
+    law_spacing: 0.05,
     point_count: 256,
-  }, {
+  },
+  VHF2: {
     id: 6,
-    type: 'VHF2',
+    type: "VHF2",
     count: 10,
     law_start: 30,
     law_end: 87.975,
     law_spacing: 0.025,
     point_count: 232,
-  }, {
-    id: 7,
-    type: 'UVHF30-512',
-    count: 10,
-    law_start: 30,
-    law_end: 511.975,
-    law_spacing: 0.025,
-    point_count: 232,
-  }]
+  },
+};

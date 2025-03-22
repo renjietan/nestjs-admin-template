@@ -9,6 +9,7 @@ import { CreatorPipe } from '~/common/pipes/creator.pipe'
 import { UpdaterPipe } from '~/common/pipes/updater.pipe'
 import { DictTypeEntity } from '~/entities/dict-type.entity'
 
+import { Exact } from '~/common/dto/pager.dto'
 import { Pagination } from '~/helper/paginate/pagination'
 import { PatchDto } from './dict-patch.dto'
 import { DictTypeDto, DictTypeQueryDto } from './dict-type.dto'
@@ -33,6 +34,7 @@ export class DictTypeController {
   @ApiResult({ type: [DictTypeEntity], isPage: true })
   @Perm(permissions.CREATE)
   async patch(@Body() dto: PatchDto): Promise<any> {
+    dto.allow_clean = dto?.allow_clean ?? Exact.TRUE
     return this.dictTypeService.patch(dto)
   }
 
