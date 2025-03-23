@@ -141,7 +141,7 @@ CREATE TABLE `n_network_template`  (
   `update_by` int NULL DEFAULT NULL COMMENT '更新者',
   `name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文件夹名称或网络模板名称',
   `other_conf` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '其他参数-JSON字符串, 根据配置表参数不同',
-  `h_table_id` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '调频表ID  逗号分隔的字符串',
+  `h_table_id` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '眺频表ID  逗号分隔的字符串',
   `type` int NOT NULL DEFAULT 1 COMMENT '1-文件夹类型; 2-网络模板类型',
   `ts_ids` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '时序表ID  逗号分隔',
   `pId` int NOT NULL DEFAULT 0 COMMENT '父ID',

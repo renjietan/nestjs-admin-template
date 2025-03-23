@@ -4,10 +4,10 @@ import {
   Injectable,
   NestInterceptor,
   RequestTimeoutException,
-} from '@nestjs/common'
-import { Observable, throwError, TimeoutError } from 'rxjs'
-import { catchError, timeout } from 'rxjs/operators'
-import { ErrorEnum } from '~/constants/error-code.constant'
+} from '@nestjs/common';
+import { Observable, throwError, TimeoutError } from 'rxjs';
+import { catchError, timeout } from 'rxjs/operators';
+import { ErrorEnum } from '~/constants/error-code.constant';
 
 @Injectable()
 export class TimeoutInterceptor implements NestInterceptor {

@@ -14,7 +14,7 @@ export class NNetWorkTemplateEntity extends CompleteEntity {
   other_conf: string
 
   @ApiProperty()
-  @Column('text', { name: 'h_table_id', comment: '调频表ID  逗号分隔的字符串', nullable: true })
+  @Column('text', { name: 'h_table_id', comment: '眺频表ID  逗号分隔的字符串', nullable: true })
   h_table_ids: string
 
   @ApiProperty()

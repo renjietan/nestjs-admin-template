@@ -38,7 +38,7 @@ export enum ErrorEnum {
   REQUESTED_RESOURCE_NOT_FOUND = '1107:所请求的资源不存在',
   NO_LOGIN = '1108:请重新登录',
 
-  // !限流
+  // !邮件发送限流
   TOO_MANY_REQUESTS = '1201:请求频率过快，请一分钟后再试',
   MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY = '1202:一天最多发送5条验证码',
   VERIFICATION_CODE_SEND_FAILED = '1203:验证码发送失败',
@@ -82,7 +82,7 @@ export enum ErrorEnum {
   // src\helper\crud\base.service.ts
   RecordNotFound = '500:未找到该记录',
   // src\common\interceptors\timeout.interceptor.ts
-  RequestTimeout = '500:请求超时',
+  RequestTimeout = '请求超时',
   // src\modules\device\device.service.ts
   DuplicateDeviceAliasOrSN = '500:不可添加【别名】或【SN】相同的设备',
   // src\modules\e_table\e_table.service.ts

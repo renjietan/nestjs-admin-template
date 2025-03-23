@@ -4,7 +4,6 @@ import { ClassSerializerInterceptor, Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
-import { ThrottlerGuard } from '@nestjs/throttler'
 import { ClsModule } from 'nestjs-cls'
 
 import config from '~/config'
@@ -25,6 +24,7 @@ import { TasksModule } from './modules/tasks/tasks.module'
 import { TestModule } from './modules/test/test.module'
 import { ToolsModule } from './modules/tools/tools.module'
 
+import { ThrottlerGuard } from '@nestjs/throttler'
 import { DeviceModule } from './modules/device/device.module'
 import { ETableModule } from './modules/e_table/e_table.module'
 import { ETableDetailModule } from './modules/e_table_detail/e_table_detail.module'
@@ -87,13 +87,13 @@ import { SocketModule } from './socket/socket.module'
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
 
     { provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor },
-    { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
-    { provide: APP_INTERCEPTOR, useFactory: () => new TimeoutInterceptor(15 * 1000) },
+    { provide: APP_INTERCEPTOR, useClass: TransformInterceptor }, // 统一处理接口请求与响应结果
+    { provide: APP_INTERCEPTOR, useFactory: () => new TimeoutInterceptor(15 * 1000) }, // 接口超时
     { provide: APP_INTERCEPTOR, useClass: IdempotenceInterceptor },
 
-    { provide: APP_GUARD, useClass: JwtAuthGuard },
-    { provide: APP_GUARD, useClass: RbacGuard },
-    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_GUARD, useClass: JwtAuthGuard }, // JWT TOKEN权限验证
+    { provide: APP_GUARD, useClass: RbacGuard },  // 接口权限
+    { provide: APP_GUARD, useClass: ThrottlerGuard }, // 接口限流;参考：https://gitcode.com/gh_mirrors/th/throttler
   ],
 })
 export class AppModule {}

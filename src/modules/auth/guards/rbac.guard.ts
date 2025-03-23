@@ -58,10 +58,8 @@ export class RbacGuard implements CanActivate {
       return true
 
     const allPermissions = await this.authService.getPermissionsCache(user?.uid) ?? await this.authService.getPermissions(user?.uid)
-    // console.log(allPermissions)
     let canNext = false
 
-    // handle permission strings
     if (Array.isArray(payloadPermission)) {
       // 只要有一个权限满足即可
       canNext = payloadPermission.every(i => allPermissions.includes(i))
@@ -72,9 +70,7 @@ export class RbacGuard implements CanActivate {
 
     if (!canNext) {
       throw new BusinessException(ErrorEnum.NO_PERMISSION)
-      console.log('RbacGuard canNext==========', canNext)
     }
-
     return true
   }
 }

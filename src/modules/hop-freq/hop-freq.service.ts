@@ -30,14 +30,14 @@ export class HopFreqService {
     let res = this.parseQueryDataByConf(dto, uId);
     let { create_count, data } = res;
     return await this.f_table_entity.manager.transaction(async (manager) => {
-      await manager.query("SET FOREIGN_KEY_CHECKS = 0;")
-      await manager.clear(FTableEntity)
-      await manager.clear(FHoppingEntity)
-      await manager.query("SET FOREIGN_KEY_CHECKS = 1;")
+      await manager.query("SET FOREIGN_KEY_CHECKS = 0;");
+      await manager.clear(FTableEntity);
+      await manager.clear(FHoppingEntity);
       let exist_count = await this.f_table_entity.count();
       if (exist_count + create_count > 80)
         throw new BusinessException(ErrorEnum.DataLimitExceeded);
       let res = await manager.save(FTableEntity, data);
+      await manager.query("SET FOREIGN_KEY_CHECKS = 1;");
       return res;
     });
   }
@@ -45,7 +45,8 @@ export class HopFreqService {
   async page(dto: SearchHFDto) {
     let query = this.f_table_entity
       .createQueryBuilder("f_table")
-      .loadRelationCountAndMap("f_table.point_count", "f_table.hoppings");
+      .leftJoinAndSelect('f_table.type', 'type')
+      .loadRelationCountAndMap("f_table.point_count", "f_table.hoppings")
     !!dto.alias &&
       query.where("f_table.alias LIKE :alias", { alias: `%${dto.alias}%` });
     !!dto.type && query.where("f_table.type = :type", { type: dto.type });

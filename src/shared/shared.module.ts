@@ -24,7 +24,7 @@ import { RedisModule } from './redis/redis.module'
     // rate limit
     ThrottlerModule.forRoot([
       {
-        limit: 20,
+        limit: 30,
         ttl: 60000,
       },
     ]),

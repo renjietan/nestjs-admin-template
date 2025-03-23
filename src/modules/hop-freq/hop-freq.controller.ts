@@ -64,7 +64,7 @@ export const permissions = definePermission("confg:hopFreq", {
     DELETE: "delete",
   } as const);
 
-@ApiTags("Config - 调频表")
+@ApiTags("Config - 眺频表")
 @ApiSecurityAuth()
 @Controller("freq-table")
 export class HopFreqController {
@@ -162,7 +162,7 @@ export class HopFreqController {
   @ApiOperation({
     summary: "批量新增",
     description: `频点表: 
-      allow-clean = 1  代表插入数据前,是否需要根据[tableId]删除调频表的数据
+      allow-clean = 1  代表插入数据前,是否需要根据[tableId]删除眺频表的数据
     `,
   })
   @ApiResult({

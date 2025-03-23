@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types'
 import { ApiProperty } from '@nestjs/swagger'
-import { NetWorkTemplateDTO } from './NetWorkTemplateDTO'
 import { IsNotEmpty, IsOptional } from 'class-validator'
+import { NetWorkTemplateDTO } from './NetWorkTemplateDTO'
 
 enum n_network_template_type {
   Folder = 1,
@@ -30,7 +30,7 @@ export class UpdateNetWorkTemplateDTO extends PartialType(NetWorkTemplateDTO) {
   other_conf?: string
 
   @IsOptional()
-  @ApiProperty({ description: '调频表ID  逗号分隔的字符串', example: '23,24', required: false })
+  @ApiProperty({ description: '眺频表ID  逗号分隔的字符串', example: '23,24', required: false })
   h_table_ids?: string
 
   @IsOptional()

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, OneToMany, Relation } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, Relation } from 'typeorm'
 import { CompleteEntity } from '~/common/entity/common.entity'
+import { DictItemEntity } from './dict-item.entity'
 import { FHoppingEntity } from './f-hopping'
 
 @Entity('f_table')
@@ -9,8 +10,9 @@ export class FTableEntity  extends CompleteEntity{
   @Column("varchar", { name: 'alias' })
   alias: string
 
-  @ApiProperty({ description: '类型' })
-  @Column('varchar', { name: 'type' })
+  @ApiProperty({ description: '类型', type: DictItemEntity })
+  @ManyToOne(() => DictItemEntity, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: "type", referencedColumnName: "value" })
   type: string
 
   @ApiProperty({ description: '最小数' })
