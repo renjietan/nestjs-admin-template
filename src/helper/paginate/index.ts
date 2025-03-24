@@ -51,8 +51,9 @@ async function paginateQueryBuilder<T>(
   queryBuilder: SelectQueryBuilder<T>,
   options: IPaginationOptions,
 ): Promise<Pagination<T>> {
+  console.log('========================paginateQueryBuilder');
+  console.log(queryBuilder);
   const { page, pageSize, paginationType } = options
-
   if (paginationType === PaginationTypeEnum.TAKE_AND_SKIP) {
     !!page
     && !!pageSize
@@ -69,8 +70,8 @@ async function paginateQueryBuilder<T>(
   return createPaginationObject<T>({
     items,
     totalItems: total,
-    currentPage: page,
-    limit: pageSize,
+    currentPage: !!page && !!pageSize ? page : 1,
+    limit: !!page && !!pageSize ? pageSize : total,
   })
 }
 
@@ -78,13 +79,13 @@ export async function paginateRaw<T>(
   queryBuilder: SelectQueryBuilder<T>,
   options: IPaginationOptions,
 ): Promise<Pagination<T>> {
+  console.log('========================paginateRaw');
   const [page, limit, paginationType] = resolveOptions(options)
-
   const promises: [Promise<T[]>, Promise<number> | undefined] = [
-    (paginationType === PaginationTypeEnum.LIMIT_AND_OFFSET
+    !!page && !!limit ? (paginationType === PaginationTypeEnum.LIMIT_AND_OFFSET
       ? queryBuilder.limit(limit).offset((page - 1) * limit)
       : queryBuilder.take(limit).skip((page - 1) * limit)
-    ).getRawMany<T>(),
+    ).getRawMany<T>() : queryBuilder.getRawMany<T>(),
     queryBuilder.getCount(),
   ]
 
@@ -103,15 +104,15 @@ export async function paginateRawAndEntities<T>(
   options: IPaginationOptions,
 ): Promise<[Pagination<T>, Partial<T>[]]> {
   const [page, limit, paginationType] = resolveOptions(options)
-
+  console.log('========================paginateRawAndEntities');
   const promises: [
     Promise<{ entities: T[], raw: T[] }>,
     Promise<number> | undefined,
   ] = [
-    (paginationType === PaginationTypeEnum.LIMIT_AND_OFFSET
+    !!page && !!limit ? (paginationType === PaginationTypeEnum.LIMIT_AND_OFFSET
       ? queryBuilder.limit(limit).offset((page - 1) * limit)
       : queryBuilder.take(limit).skip((page - 1) * limit)
-    ).getRawAndEntities<T>(),
+    ).getRawAndEntities<T>() : queryBuilder.getRawAndEntities<T>(),
     queryBuilder.getCount(),
   ]
 

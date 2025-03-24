@@ -103,7 +103,7 @@ export enum ErrorEnum {
   // src\modules\pm-sub\pm-sub.service.ts
   DuplicateSubtaskName = '500:已存在名称相同的子任务',
   // src\modules\system\dict-item\dict-item.service.ts
-  InvalidDictionaryFieldValue = '500:该字段的值不在当前字典范围内，请选择有效的字典项或更新字典',
+  InvalidDictionaryFieldValue = '500:所选的值不在当前字典范围内，请选择有效的字典项或更新字典',
   // src\modules\system\dict-type\dict-type.service.ts
   UniqueDictionaryKeyValueRequired = '500:字典键、值必须唯一，请勿重复添加',
   // src\modules\wave_device_config\wave_device_config.service.ts

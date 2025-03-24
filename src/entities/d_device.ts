@@ -1,6 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Relation } from "typeorm";
-import { CompleteEntity } from "~/common/entity/common.entity";
 import { ApiProperty } from '@nestjs/swagger';
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { CompleteEntity } from "~/common/entity/common.entity";
 import { DictItemEntity } from "./dict-item.entity";
 
 @Entity("d_device")
@@ -21,18 +21,18 @@ export class DeviceEntity extends CompleteEntity {
   @Column("varchar", { name: "remarks", comment: '备注', nullable: true })
   remarks: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: '类型', type: DictItemEntity })
   @ManyToOne(() => DictItemEntity, { cascade: true, createForeignKeyConstraints: false })
   @JoinColumn({ name: 'device_type', referencedColumnName: 'value' })
   device_type: DictItemEntity;
 
-  @ApiProperty()
+  @ApiProperty({ description: '型号', type: DictItemEntity })
   @ManyToOne(() => DictItemEntity, { cascade: true, createForeignKeyConstraints: false, })
   @JoinColumn({ name: 'model', referencedColumnName: 'value' })
   model: DictItemEntity;
 
-  @ApiProperty()
-  @ManyToOne(() => DictItemEntity, { cascade: true, createForeignKeyConstraints: false })
-  @JoinColumn({ name: 'status', referencedColumnName: 'value' })
+  @ApiProperty({ description: '状态', type: DictItemEntity })
+  @ManyToOne(() => DictItemEntity, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: "status", referencedColumnName: "value" })
   status: DictItemEntity;
 }
