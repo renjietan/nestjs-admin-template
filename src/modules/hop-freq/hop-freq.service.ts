@@ -53,7 +53,11 @@ export class HopFreqService {
       query.where("f_table.alias LIKE :alias", { alias: `%${dto.alias}%` });
     !!dto.type && query.where("f_table.type = :type", { type: dto.type });
     console.log('order=============', `f_table.${dto?.field ?? "alias"}`, dto?.order ?? "ASC");
-    query.orderBy(`f_table.${dto?.field ?? "alias"}`, dto?.order ?? "ASC");
+    if(!!dto?.field && !!dto?.order) {
+      query.orderBy(`f_table.${dto.field}`, dto.order);
+    } else {
+      query.orderBy("f_table.created_at", "ASC")
+    }
     return await paginate(query, { page: dto.page, pageSize: dto.pageSize });
   }
 
