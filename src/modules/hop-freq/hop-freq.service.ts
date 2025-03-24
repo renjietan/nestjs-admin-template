@@ -51,8 +51,8 @@ export class HopFreqService {
       query.where("f_table.alias LIKE :alias", { alias: `%${dto.alias}%` });
     !!dto.type && query.where("f_table.type = :type", { type: dto.type });
     !!dto.field &&
-      !!dto.order &&
-      query.orderBy(`f_table.${dto.field}`, dto.order);
+      !!dto.order ?
+      query.orderBy(`f_table.${dto.field}`, dto.order) : query.orderBy(`f_table.alias`, "ASC");
     return await paginate(query, { page: dto.page, pageSize: dto.pageSize });
   }
 
