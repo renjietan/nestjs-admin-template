@@ -11,8 +11,8 @@ import { createPaginationObject } from './create-pagination'
 import { IPaginationOptions, PaginationTypeEnum } from './interface'
 import { Pagination } from './pagination'
 
-const DEFAULT_LIMIT = 10
-const DEFAULT_PAGE = 1
+const DEFAULT_LIMIT = undefined
+const DEFAULT_PAGE = undefined
 
 function resolveOptions(
   options: IPaginationOptions,
@@ -29,10 +29,9 @@ function resolveOptions(
 async function paginateRepository<T>(
   repository: Repository<T>,
   options: IPaginationOptions,
-  searchOptions?: FindOptionsWhere<T> | FindManyOptions<T>,
+  searchOptions: FindOptionsWhere<T> | FindManyOptions<T> = {},
 ): Promise<Pagination<T>> {
   const { page, pageSize } = options
-  searchOptions = searchOptions || {}
   !searchOptions["order"] && (searchOptions["order"] = { createdAt: Order.DESC })
   const [items, total] = await repository.findAndCount({
     ...(!!options.page
@@ -51,19 +50,12 @@ async function paginateQueryBuilder<T>(
   queryBuilder: SelectQueryBuilder<T>,
   options: IPaginationOptions,
 ): Promise<Pagination<T>> {
-  console.log('========================paginateQueryBuilder');
   const { page, pageSize, paginationType } = options
-  if (paginationType === PaginationTypeEnum.TAKE_AND_SKIP) {
-    !!page
-    && !!pageSize
-    && queryBuilder.take(pageSize).skip((page - 1) * pageSize)
-  }
-  else {
-    !!page
-    && !!pageSize
-    && queryBuilder.limit(pageSize).offset((page - 1) * pageSize)
-  }
-
+  !!page && !!pageSize && paginationType === PaginationTypeEnum.TAKE_AND_SKIP ? 
+  queryBuilder.take(pageSize).skip((page - 1) * pageSize) : queryBuilder.limit(pageSize).offset((page - 1) * pageSize)
+  let order = queryBuilder.expressionMap.orderBys
+  let table_name = queryBuilder.expressionMap.mainAlias.name
+  Object.values(order).length == 0 && queryBuilder.orderBy(`${table_name}.created_at`, "DESC")
   const [items, total] = await queryBuilder.getManyAndCount()
 
   return createPaginationObject<T>({
@@ -78,17 +70,17 @@ export async function paginateRaw<T>(
   queryBuilder: SelectQueryBuilder<T>,
   options: IPaginationOptions,
 ): Promise<Pagination<T>> {
-  console.log('========================paginateRaw');
+  console.log('========================paginateRaw SelectQueryBuilder IPaginationOptions');
   const [page, limit, paginationType] = resolveOptions(options)
-  const promises: [Promise<T[]>, Promise<number> | undefined] = [
-    !!page && !!limit ? (paginationType === PaginationTypeEnum.LIMIT_AND_OFFSET
-      ? queryBuilder.limit(limit).offset((page - 1) * limit)
-      : queryBuilder.take(limit).skip((page - 1) * limit)
-    ).getRawMany<T>() : queryBuilder.getRawMany<T>(),
-    queryBuilder.getCount(),
-  ]
-
-  const [items, total] = await Promise.all(promises)
+  if (!!page && !!limit) {
+    paginationType === PaginationTypeEnum.LIMIT_AND_OFFSET ?
+      queryBuilder.limit(limit).offset((page - 1) * limit) : queryBuilder.take(limit).skip((page - 1) * limit)
+  }
+  let order = queryBuilder.expressionMap.orderBys
+  let table_name = queryBuilder.expressionMap.mainAlias.name
+  Object.values(order).length == 0 && queryBuilder.orderBy(`${table_name}.created_at`, "DESC")
+  let query_count = queryBuilder.getCount()
+  const [items, total] = await Promise.all([queryBuilder.getRawMany(), query_count])
 
   return createPaginationObject<T>({
     items,
@@ -108,12 +100,12 @@ export async function paginateRawAndEntities<T>(
     Promise<{ entities: T[], raw: T[] }>,
     Promise<number> | undefined,
   ] = [
-    !!page && !!limit ? (paginationType === PaginationTypeEnum.LIMIT_AND_OFFSET
-      ? queryBuilder.limit(limit).offset((page - 1) * limit)
-      : queryBuilder.take(limit).skip((page - 1) * limit)
-    ).getRawAndEntities<T>() : queryBuilder.getRawAndEntities<T>(),
-    queryBuilder.getCount(),
-  ]
+      !!page && !!limit ? (paginationType === PaginationTypeEnum.LIMIT_AND_OFFSET
+        ? queryBuilder.limit(limit).offset((page - 1) * limit)
+        : queryBuilder.take(limit).skip((page - 1) * limit)
+      ).getRawAndEntities<T>() : queryBuilder.getRawAndEntities<T>(),
+      queryBuilder.getCount(),
+    ]
 
   const [itemObject, total] = await Promise.all(promises)
 

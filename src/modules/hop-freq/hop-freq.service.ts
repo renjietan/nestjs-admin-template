@@ -52,7 +52,6 @@ export class HopFreqService {
     !!dto.alias &&
       query.where("f_table.alias LIKE :alias", { alias: `%${dto.alias}%` });
     !!dto.type && query.where("f_table.type = :type", { type: dto.type });
-    console.log('order=============', `f_table.${dto?.field ?? "alias"}`, dto?.order ?? "ASC");
     if(!!dto?.field && !!dto?.order) {
       query.orderBy(`f_table.${dto.field}`, dto.order);
     } else {
