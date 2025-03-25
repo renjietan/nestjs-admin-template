@@ -16,7 +16,7 @@ export class DeviceService {
     @InjectRepository(DeviceEntity)
     private readonly d_device_entity: Repository<DeviceEntity>,
     private readonly dict_item_service: DictItemService
-  ) {}
+  ) { }
 
   async search(data: SearchDto) {
     return await paginate(
