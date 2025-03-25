@@ -33,7 +33,7 @@ export class DictItemService {
   }: DictItemQueryDto): Promise<Pagination<DictItemEntity>> {
     const queryBuilder = this.dictItemRepository.createQueryBuilder('dict_item').orderBy({ [field || 'orderNo']: order || Order.ASC }).where({
       ...(label && { label: Like(`%${label}%`) }),
-      ...(value && { value: Like(`%${value}%`) }),
+      ...(value && { value }),
       ...(typeId && { type: { id: typeId } }),
     }).leftJoinAndSelect('dict_item.type', 'type')
 
@@ -78,20 +78,6 @@ export class DictItemService {
    */
   async delete(id: number): Promise<void> {
     await this.dictItemRepository.delete(id)
-  }
-
-  /**
-   * 查询单个
-   */
-  async findOne(id: number): Promise<DictItemEntity> {
-    return this.dictItemRepository.findOneBy({ id })
-  }
-
-  /**
-   * 根据 value 值 查询单个
-   */
-  async findOneByCode(code: string): Promise<DictItemEntity> {
-    return this.dictItemRepository.findOneBy({ value: code })
   }
 
   /**

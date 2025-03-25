@@ -54,14 +54,6 @@ export class DictTypeController {
     return this.dictTypeService.page(dto)
   }
 
-  @Get('select-options')
-  @ApiOperation({ summary: '一次性获取所有的字典类型(不分页)' })
-  @ApiResult({ type: [DictTypeEntity] })
-  @Perm(permissions.LIST)
-  async getAll(): Promise<DictTypeEntity[]> {
-    return this.dictTypeService.getAll()
-  }
-
   @Post()
   @ApiOperation({ summary: '新增字典类型' })
   @Perm(permissions.CREATE)

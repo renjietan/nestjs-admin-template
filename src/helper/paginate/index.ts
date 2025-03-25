@@ -51,8 +51,9 @@ async function paginateQueryBuilder<T>(
   options: IPaginationOptions,
 ): Promise<Pagination<T>> {
   const { page, pageSize, paginationType } = options
-  !!page && !!pageSize && paginationType === PaginationTypeEnum.TAKE_AND_SKIP ? 
-  queryBuilder.take(pageSize).skip((page - 1) * pageSize) : queryBuilder.limit(pageSize).offset((page - 1) * pageSize)
+  console.log("!!page && !!pageSize && paginationType === PaginationTypeEnum.TAKE_AND_SKIP", !!page && !!pageSize && paginationType === PaginationTypeEnum.TAKE_AND_SKIP);
+  !!page && !!pageSize && (paginationType === PaginationTypeEnum.TAKE_AND_SKIP ?
+    queryBuilder.take(pageSize).skip((page - 1) * pageSize) : queryBuilder.limit(pageSize).offset((page - 1) * pageSize))
   let order = queryBuilder.expressionMap.orderBys
   let table_name = queryBuilder.expressionMap.mainAlias.name
   Object.values(order).length == 0 && queryBuilder.orderBy(`${table_name}.created_at`, "DESC")
@@ -72,10 +73,8 @@ export async function paginateRaw<T>(
 ): Promise<Pagination<T>> {
   console.log('========================paginateRaw SelectQueryBuilder IPaginationOptions');
   const [page, limit, paginationType] = resolveOptions(options)
-  if (!!page && !!limit) {
-    paginationType === PaginationTypeEnum.LIMIT_AND_OFFSET ?
-      queryBuilder.limit(limit).offset((page - 1) * limit) : queryBuilder.take(limit).skip((page - 1) * limit)
-  }
+  !!page && !!limit && (paginationType === PaginationTypeEnum.LIMIT_AND_OFFSET ?
+    queryBuilder.limit(limit).offset((page - 1) * limit) : queryBuilder.take(limit).skip((page - 1) * limit))
   let order = queryBuilder.expressionMap.orderBys
   let table_name = queryBuilder.expressionMap.mainAlias.name
   Object.values(order).length == 0 && queryBuilder.orderBy(`${table_name}.created_at`, "DESC")
