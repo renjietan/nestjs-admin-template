@@ -8,6 +8,7 @@ import { FHoppingEntity } from "~/entities/f-hopping";
 import { FTableEntity } from "~/entities/f-table";
 import { paginate } from "~/helper/paginate";
 import { b_diff } from "~/utils";
+import { DictItemService } from "../system/dict-item/dict-item.service";
 import { hf_cof } from "./dict";
 import {
   CreateFreqTableDto,
@@ -23,7 +24,8 @@ export class HopFreqService {
     @InjectRepository(FTableEntity)
     private readonly f_table_entity: Repository<FTableEntity>,
     @InjectRepository(FHoppingEntity)
-    private readonly f_hopping_entity: Repository<FHoppingEntity>
+    private readonly f_hopping_entity: Repository<FHoppingEntity>,
+    private readonly dict_item_service: DictItemService
   ) {}
 
   async init(dto: CreateFreqTableDto, uId: number) {
@@ -45,14 +47,17 @@ export class HopFreqService {
   async page(dto: SearchHFDto) {
     let query = this.f_table_entity
       .createQueryBuilder("f_table")
-      .leftJoinAndSelect('f_table.type', 'type')
-      .loadRelationCountAndMap("f_table.point_count", "f_table.hoppings")
+      .leftJoinAndSelect("f_table.type", "type")
+      .loadRelationCountAndMap("f_table.point_count", "f_table.hoppings");
     !!dto.alias &&
       query.where("f_table.alias LIKE :alias", { alias: `%${dto.alias}%` });
     !!dto.type && query.where("f_table.type = :type", { type: dto.type });
-    !!dto.field &&
-      !!dto.order ?
-      query.orderBy(`f_table.${dto.field}`, dto.order) : query.orderBy(`f_table.alias`, "ASC");
+    console.log('order=============', `f_table.${dto?.field ?? "alias"}`, dto?.order ?? "ASC");
+    if(!!dto?.field && !!dto?.order) {
+      query.orderBy(`f_table.${dto.field}`, dto.order);
+    } else {
+      query.orderBy("f_table.created_at", "ASC")
+    }
     return await paginate(query, { page: dto.page, pageSize: dto.pageSize });
   }
 
@@ -78,6 +83,9 @@ export class HopFreqService {
   }
 
   async create_hF(dto: CreateTableDto, uId: number) {
+    let table_entity = await this.dict_item_service.validateDict({
+      type: dto.type,
+    });
     let entity = new FTableEntity();
     entity.alias = dto.alias;
     entity.createBy = uId;

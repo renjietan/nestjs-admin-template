@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
-import { Like, Repository } from 'typeorm'
+import { In, Like, Repository } from 'typeorm'
 
 import { Order } from '~/common/dto/pager.dto'
-import { BusinessException } from '~/common/exceptions/biz.exception'
 import { DictItemEntity } from '~/entities/dict-item.entity'
 
+import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
@@ -103,16 +103,33 @@ export class DictItemService {
    * @date 2025-03-14 11:47:43
    */
   async validateDict<T extends Record<string, any>>(data: T): Promise<DictItemResult<T>> {
-    const res = {} as DictItemResult<T>
-    for (const key in data) {
-      const dict_model = await this.findOneByCode(data[key])
-      if (!dict_model) {
-        throw new BusinessException(ErrorEnum.InvalidDictionaryFieldValue)
+    let values = Object.values(data)
+    let _res = await this.dictItemRepository.find({
+      where: {
+        value: In(values)
       }
-      else {
-        res[key] = dict_model
-      }
-    }
-    return res
+    })
+    if(_res.length == 0) throw new BusinessException(ErrorEnum.InvalidDictionaryFieldValue)
+    let res = _res.reduce((cur, pre) => {
+      cur[pre.value]  = pre
+      return cur
+    }, {})
+    
+    let _re1s = Object.keys(data).reduce((cur, pre) => {
+      cur[pre] = res[pre]
+      return cur
+    }, {}) as DictItemResult<T>
+    
+    return _re1s
+    // for (const key in data) {
+    //   const dict_model = await this.findOneByCode(data[key])
+    //   if (!dict_model) {
+    //     throw new BusinessException(ErrorEnum.InvalidDictionaryFieldValue)
+    //   }
+    //   else {
+    //     res[key] = dict_model
+    //   }
+    // }
+    // return res
   }
 }

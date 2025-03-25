@@ -31,7 +31,7 @@ export class PagerDto<T = any> extends OrderDto {
   @IsInt()
   @Expose()
   @IsOptional({ always: true })
-  @Transform(({ value: val }) => (val ? Number.parseInt(val) : 1), {
+  @Transform(({ value: val }) => (val ? Number.parseInt(val) : undefined), {
     toClassOnly: true,
   })
   page?: number
@@ -42,7 +42,7 @@ export class PagerDto<T = any> extends OrderDto {
   @IsInt()
   @IsOptional({ always: true })
   @Expose()
-  @Transform(({ value: val }) => (val ? Number.parseInt(val) : 10), {
+  @Transform(({ value: val }) => (val ? Number.parseInt(val) : undefined), {
     toClassOnly: true,
   })
   pageSize?: number
