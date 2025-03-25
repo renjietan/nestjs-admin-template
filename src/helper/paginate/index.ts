@@ -52,7 +52,6 @@ async function paginateQueryBuilder<T>(
   options: IPaginationOptions,
 ): Promise<Pagination<T>> {
   console.log('========================paginateQueryBuilder');
-  console.log(queryBuilder);
   const { page, pageSize, paginationType } = options
   if (paginationType === PaginationTypeEnum.TAKE_AND_SKIP) {
     !!page
