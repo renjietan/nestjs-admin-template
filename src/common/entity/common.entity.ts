@@ -1,12 +1,11 @@
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger'
+import { ApiHideProperty } from '@nestjs/swagger'
 import { Exclude } from 'class-transformer'
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  VirtualColumn,
+  UpdateDateColumn
 } from 'typeorm'
 
 // 如果觉得前端转换时间太麻烦，并且不考虑通用性的话，可以在服务端进行转换，eg: @UpdateDateColumn({ name: 'updated_at', transformer })
@@ -45,11 +44,11 @@ export abstract class CompleteEntity extends CommonEntity {
   //  * 不会保存到数据库中的虚拟列，数据量大时可能会有性能问题，有性能要求请考虑在 service 层手动实现
   //  * @see https://typeorm.io/decorator-reference#virtualcolumn
   //  */
-  @ApiProperty({ description: '创建者' })
-  @VirtualColumn({ query: alias => `SELECT username FROM sys_user WHERE id = ${alias}.create_by` })
-  creator: string
+  // @ApiProperty({ description: '创建者' })
+  // @VirtualColumn({ query: alias => `SELECT username FROM sys_user WHERE id = ${alias}.create_by` })
+  // creator: string
 
-  @ApiProperty({ description: '更新者' })
-  @VirtualColumn({ query: alias => `SELECT username FROM sys_user WHERE id = ${alias}.update_by` })
-  updater: string
+  // @ApiProperty({ description: '更新者' })
+  // @VirtualColumn({ query: alias => `SELECT username FROM sys_user WHERE id = ${alias}.update_by` })
+  // updater: string
 }

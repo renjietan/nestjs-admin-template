@@ -12,7 +12,6 @@ export interface IPaginationOptions {
   paginationType?: PaginationTypeEnum,
   field?: string,
   order?: Order,
-  relations?: []
 }
 
 export interface IPaginationMeta extends ObjectLiteral {

@@ -10,7 +10,6 @@ import { DictTypeEntity } from "~/entities/dict-type.entity";
 import { BusinessException } from "~/common/exceptions/biz.exception";
 import { ErrorEnum } from "~/constants/error-code.constant";
 import { paginate } from "~/helper/paginate";
-import { createPaginationObject } from "~/helper/paginate/create-pagination";
 import { Pagination } from "~/helper/paginate/pagination";
 import { DictItemService } from "../dict-item/dict-item.service";
 import { PatchDto } from "./dict-patch.dto";
@@ -109,21 +108,9 @@ export class DictTypeService {
   }
 
   async full() {
-    const entities = await this.dict_service.page({});
-    const items = entities.items.reduce((cur, pre) => {
-      const type_id = pre?.type?.id;
-      !cur[type_id] && (cur[type_id] = { ...pre.type, children: [] });
-      delete pre.type;
-      cur[type_id].children.push(pre);
-      return cur;
-    }, {});
-    const _items = Object.values(items);
-    return createPaginationObject({
-      items: _items,
-      totalItems: _items.length,
-      currentPage: 1,
-      limit: _items.length,
-    });
+    let query = this.dictTypeRepository.createQueryBuilder("dict_type")
+    .leftJoinAndMapMany("dict_type.items", DictItemEntity, "dict_item", "dict_type.id = dict_item.type_id")
+    return await paginate(query, { page: undefined, pageSize: undefined })
   }
 
   /**
@@ -137,6 +124,7 @@ export class DictTypeService {
   }: DictTypeQueryDto): Promise<Pagination<DictTypeEntity>> {
     const queryBuilder = this.dictTypeRepository
       .createQueryBuilder("dict_type")
+      .leftJoinAndMapMany("dict_type.items", DictItemEntity, "dict_item", "dict_type.id = dict_item.type_id")
       .where({
         ...(name && { name }),
         ...(code && { code }),
@@ -171,8 +159,7 @@ export class DictTypeService {
    */
   async findOne(id: number): Promise<DictTypeEntity> {
     return await this.dictTypeRepository.createQueryBuilder("sys_dict_type")
-      .leftJoinAndSelect("sys_dict_item", "sys_dict_item")
-      .where("sys_dict_item.type_id = :id", { id })
-      .getOneOrFail()
+      .leftJoinAndMapMany("sys_dict_type.items", DictItemEntity, "sys_dict_item", "sys_dict_type.id = sys_dict_item.type_id")
+      .where("sys_dict_item.type_id = :id", { id }).getOne()
   }
 }
