@@ -170,9 +170,9 @@ export class DictTypeService {
    * 查询单个
    */
   async findOne(id: number): Promise<DictTypeEntity> {
-    return this.dictTypeRepository.createQueryBuilder("dict_type").
-      leftJoinAndSelect("sys_dict_item", "dict_item").where({
-        id
-      }).getOne()
+    return await this.dictTypeRepository.createQueryBuilder("sys_dict_type")
+      .leftJoinAndSelect("sys_dict_item", "sys_dict_item")
+      .where("sys_dict_item.type_id = :id", { id })
+      .getOneOrFail()
   }
 }
