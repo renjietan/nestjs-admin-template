@@ -23,7 +23,7 @@ export class DictTypeService {
     @InjectRepository(DictItemEntity) private dictItemRepository: Repository<DictItemEntity>,
     private readonly dict_service: DictItemService,
 
-  ) {}
+  ) { }
 
   async patch(dto: PatchDto) {
     let { allow_clean, dicts } = dto;
@@ -63,7 +63,7 @@ export class DictTypeService {
           let entity_item = await manager.findOne(DictItemEntity, {
             where: query.items,
           });
-          if(entity_type || entity_item) throw new BusinessException(ErrorEnum.UniqueDictionaryKeyValueRequired)
+          if (entity_type || entity_item) throw new BusinessException(ErrorEnum.UniqueDictionaryKeyValueRequired)
         }
         const res = [];
         let index = 0
@@ -95,7 +95,7 @@ export class DictTypeService {
             orderNo: index + 1,
           }));
           await manager.insert(DictItemEntity, items);
-          let db_item_entites = await manager.find(DictItemEntity, { where: { type: { id:  insert_entity.id } } })
+          let db_item_entites = await manager.find(DictItemEntity, { where: { type: { id: insert_entity.id } } })
           insert_type_obj.items = db_item_entites;
           res.push(insert_type_obj);
         }
@@ -145,18 +145,6 @@ export class DictTypeService {
     return paginate(queryBuilder, { page, pageSize });
   }
 
-  /** 一次性获取所有的字典类型 */
-  async getAll() {
-    return this.dictTypeRepository.find();
-  }
-
-  /**
-   * 获取参数总数
-   */
-  async countConfigList(): Promise<number> {
-    return this.dictTypeRepository.count();
-  }
-
   /**
    * 新增
    */
@@ -182,6 +170,9 @@ export class DictTypeService {
    * 查询单个
    */
   async findOne(id: number): Promise<DictTypeEntity> {
-    return this.dictTypeRepository.findOneBy({ id });
+    return this.dictTypeRepository.createQueryBuilder("dict_type").
+      leftJoinAndSelect("sys_dict_item", "dict_item").where({
+        id
+      }).getOne()
   }
 }
