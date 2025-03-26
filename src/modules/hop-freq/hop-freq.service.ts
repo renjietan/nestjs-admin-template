@@ -131,13 +131,15 @@ export class HopFreqService {
     let table_entity = await this.findTableById(table_id);
     if (!table_entity)
       throw new BusinessException(ErrorEnum.HFTableNameNotExists);
-    if (dto.allow_clean == 1)
-      await this.f_hopping_entity
+    if (dto.allow_clean == 1) {
+      let res_del = await this.f_hopping_entity
         .createQueryBuilder()
         .delete()
         .from(FHoppingEntity)
         .where("f_table_id = :f_table_id", { f_table_id: table_id })
         .execute();
+      console.log(res_del);
+    }
     let entity_obj = dto.values.map((item) => ({
       value: item,
       f_table: table_entity,

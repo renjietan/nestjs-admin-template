@@ -12,6 +12,6 @@ export class FHoppingEntity extends CompleteEntity {
     f_table: FTableEntity
 
     @ApiProperty({ description: '值' })
-    @Column('integer', { name: 'value' })
+    @Column('float', { name: 'value' })
     value: number
 }
