@@ -47,6 +47,7 @@ export class DeviceController {
   async create(@Body() data: DeviceDto, @AuthUser() user: IAuthUser) {
     return await this.deviceService.create(data, user?.uid)
   }
+
   @ApiOperation({
     summary: '编辑',
   })
