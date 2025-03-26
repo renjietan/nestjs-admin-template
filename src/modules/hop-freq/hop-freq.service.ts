@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Not, Repository } from "typeorm";
+import { IdsDto } from "~/common/dto/ids.dto";
 import { PagerDto } from "~/common/dto/pager.dto";
 import { BusinessException } from "~/common/exceptions/biz.exception";
 import { ErrorEnum } from "~/constants/error-code.constant";
@@ -116,6 +117,11 @@ export class HopFreqService {
   async delete_hf(id: number) {
     await this.f_table_entity.delete(id);
   }
+
+  async delete_hfs(dto: IdsDto) {
+    await this.f_table_entity.delete(dto?.ids)
+  }
+
 
   async findTableById(table_id: number) {
     return await this.f_table_entity.findOneBy({ id: table_id });

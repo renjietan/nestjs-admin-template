@@ -35,6 +35,7 @@ import {
 import {
   ApiSecurityAuth
 } from "~/common/decorators/swagger.decorator";
+import { IdsDto } from "~/common/dto/ids.dto";
 import {
   PagerDto
 } from "~/common/dto/pager.dto";
@@ -147,8 +148,8 @@ export class HopFreqController {
 
   @Delete("delete_hf/:id")
   @ApiOperation({
-    summary: "删除",
-    description: "跳频表",
+    summary: "批量删除",
+    description: "跳频表 以及 对应的频点",
   })
   @ApiResult({
     type: String
@@ -156,6 +157,17 @@ export class HopFreqController {
   @Perm(permissions.DELETE)
   async delete_hf(@IdParam() id: string) {
     return this.f_table_seivce.delete_hf(+id);
+  }
+
+  
+  @Delete("delete_hfs")
+  @ApiOperation({
+    summary: "删除",
+    description: "批量删除 以及 对应的频点",
+  })
+  @Perm(permissions.DELETE)
+  async delete_hfs(@Body() dto: IdsDto) {
+    return this.f_table_seivce.delete_hfs(dto);
   }
 
   @Patch("create_hz/:table_id")
