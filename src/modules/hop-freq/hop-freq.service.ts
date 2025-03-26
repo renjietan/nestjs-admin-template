@@ -127,7 +127,7 @@ export class HopFreqService {
     return await this.f_table_entity.findOneBy({ id: table_id });
   }
 
-  async create_hz(table_id: number, dto: CreateHzDtos, uId: number) {
+  async create_hzs(table_id: number, dto: CreateHzDtos, uId: number) {
     let table_entity = await this.findTableById(table_id);
     if (!table_entity)
       throw new BusinessException(ErrorEnum.HFTableNameNotExists);
@@ -144,6 +144,10 @@ export class HopFreqService {
       createBy: uId,
     }));
     await this.f_hopping_entity.insert(entity_obj);
+  }
+
+  async update_hzs(table_id: number, dto: CreateHzDtos, uId: number) {
+    
   }
 
   parseQueryDataByConf(dto: CreateFreqTableDto, uId: number) {

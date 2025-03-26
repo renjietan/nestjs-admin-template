@@ -177,9 +177,6 @@ export class HopFreqController {
       allow-clean = 1  代表插入数据前,是否需要根据[tableId]删除眺频表的数据
     `,
   })
-  @ApiResult({
-    type: String
-  })
   @Perm(permissions.CREATE)
   async create_hz(
     @Param("table_id") table_id: string,
@@ -187,6 +184,21 @@ export class HopFreqController {
     @AuthUser() user: IAuthUser
   ) {
     dto.allow_clean = dto?.allow_clean ?? 1
-    return this.f_table_seivce.create_hz(+table_id, dto, user?.uid);
+    return this.f_table_seivce.create_hzs(+table_id, dto, user?.uid);
+  }
+
+  @Patch("update_hf/:table_id")
+  @ApiOperation({
+    summary: "批量更新",
+    description: `频点`,
+  })
+  @Perm(permissions.UPDATE)
+  async update_hz(
+    @Param("table_id") table_id: string,
+    @Body() dto: CreateHzDtos,
+    @AuthUser() user: IAuthUser
+  ) {
+    dto.allow_clean = dto?.allow_clean ?? 1
+    return this.f_table_seivce.update_hzs(+table_id, dto, user?.uid);
   }
 }
