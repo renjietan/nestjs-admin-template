@@ -9,9 +9,6 @@
     "pnpm": ">=8"
   },
   "scripts": {
-    "view:help": "erdia build",
-    "view": "erdia build -d ./data-source.ts -o D:/work/nest/nestjs-admin-template/tanrenjie11111.png",
-    "view:db": "erdia generate -d mysql://root:123456@localhost:3306/nest-admin --out  D:/work/nest/nestjs-admin-template/tanrenjie11111.png",
     "res": "cd ./src/modules && nest g --no-spec resource",
     "postinstall": "npm run gen-env-types",
     "prebuild": "rimraf dist",
@@ -127,7 +124,6 @@
     "@types/ua-parser-js": "^0.7.39",
     "cross-env": "^7.0.3",
     "cross-env-shell": "^7.0.3",
-    "erdia": "^3.7.1",
     "eslint": "^9.11.1",
     "jest": "^29.7.0",
     "lint-staged": "^15.2.10",
