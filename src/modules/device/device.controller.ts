@@ -7,11 +7,7 @@ import { definePermission, Perm } from '~/common/decorators/auth/permission.deco
 import { IdParam } from '~/common/decorators/path-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { IdsDto } from '~/common/dto/ids.dto'
-import { BusinessException } from '~/common/exceptions/biz.exception'
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { DeviceEntity } from '~/entities/d_device'
-import { DictItemEntity } from '~/entities/dict-item.entity'
-import { DictItemService } from '../system/dict-item/dict-item.service'
 import { DeviceService } from './device.service'
 import { DeviceDto } from './dto/device.dto'
 import { SearchDto } from './dto/search.dto'
@@ -30,7 +26,6 @@ export const permissions = definePermission('device:manager', {
 export class DeviceController {
   constructor(
     private readonly deviceService: DeviceService,
-    private readonly dict_item_service: DictItemService,
   ) { }
 
   @ApiOperation({
@@ -50,31 +45,8 @@ export class DeviceController {
   @ApiResult({ type: InsertResult })
   @Perm(permissions.CREATE)
   async create(@Body() data: DeviceDto, @AuthUser() user: IAuthUser) {
-    const { device_type, model, status } = data
-    const res = await this.dict_item_service.page({})
-    const { items } = res
-    const dict_entity = items.reduce((cur, pre: DictItemEntity) => {
-      if (pre.value == device_type) {
-        cur.device_type = device_type
-      }
-      else if (pre.value == model) {
-        cur.model = model
-      }
-      else if (pre.value == status) {
-        cur.status = status
-      }
-      return cur
-    }, {
-      device_type: null,
-      model: null,
-      status: null,
-    })
-    if (Object.values(dict_entity).every(item => !!item)) {
-      throw new BusinessException(ErrorEnum.OperationFailedDictionaryOrParameterError)
-    }
     return await this.deviceService.create(data, user?.uid)
   }
-
   @ApiOperation({
     summary: '编辑',
   })

@@ -92,7 +92,8 @@ export class DictItemService {
     let values = Object.values(data)
     let _res = await this.dictItemRepository.find({
       where: {
-        value: In(values)
+        value: In(values),
+        status: 1
       }
     })
     if(_res.length == 0) throw new BusinessException(ErrorEnum.InvalidDictionaryFieldValue)
