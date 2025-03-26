@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "strict": false,
     "incremental": true,
     "target": "ES2022",
     "lib": ["ESNext"],
