@@ -75,7 +75,9 @@ async function bootstrap() {
 
   setupSwagger(app, configService)
 
+
   await app.listen(port, '0.0.0.0', async () => {
+    console.log("DB===============", configService.get("database"));
     app.useLogger(app.get(LoggerService))
     const url = await app.getUrl()
     const { pid } = process
