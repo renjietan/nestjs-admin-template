@@ -16,15 +16,15 @@ export class FTableEntity  extends CompleteEntity{
   type: string
 
   @ApiProperty({ description: '最小数' })
-  @Column('integer', { name: 'law_start' })
+  @Column('float', { name: 'law_start' })
   law_start: number
 
   @ApiProperty({ description: '间隔值' })
-  @Column('integer', { name: 'law_spaceing' })
+  @Column('float', { name: 'law_spaceing' })
   law_spacing: number
 
   @ApiProperty({ description: '最大数' })
-  @Column('integer', { name: 'law_end' })
+  @Column('float', { name: 'law_end' })
   law_end: number
 
   @ApiProperty({ description: '别名' })
