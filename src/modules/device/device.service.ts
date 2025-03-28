@@ -59,7 +59,9 @@ export class DeviceService {
       model: data.model,
       status: data.status,
     });
-    console.log('dict_entites========================', dict_entites);
+    console.log('device_type========================', dict_entites.device_type);
+    console.log('model========================', dict_entites.model);
+    console.log('status========================', dict_entites.status);
     const data_base = new DeviceEntity();
     data_base.SN = data.SN;
     data_base.alias = data.alias;

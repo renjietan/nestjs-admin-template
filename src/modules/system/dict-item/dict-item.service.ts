@@ -104,12 +104,11 @@ export class DictItemService {
       cur[pre.value] = pre
       return cur
     }, {})
-    const entity_obj = keys.map(item => {
-      let value = data[item]
-      return {
-        [item]: res[value]
-      }
-    }) as DictItemResult<T>
+    const entity_obj = keys.reduce((cur, pre) => {
+      let value = data[pre]
+      cur[pre] = res[value]
+      return cur
+    }, {}) as DictItemResult<T>
     console.log(entity_obj);
     return entity_obj
   }
