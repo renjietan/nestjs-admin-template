@@ -104,7 +104,6 @@ export class DictItemService {
       cur[pre.value] = pre
       return cur
     }, {})
-    console.log("res===================", res);
     const entity_obj = keys.map(item => {
       let value = data[item]
       return {
