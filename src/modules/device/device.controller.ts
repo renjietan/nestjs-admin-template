@@ -45,6 +45,7 @@ export class DeviceController {
   @ApiResult({ type: InsertResult })
   @Perm(permissions.CREATE)
   async create(@Body() data: DeviceDto, @AuthUser() user: IAuthUser) {
+    console.log('data================', data);
     return await this.deviceService.create(data, user?.uid)
   }
 
@@ -55,7 +56,6 @@ export class DeviceController {
   @ApiResult({ type: UpdateResult })
   @Perm(permissions.UPDATE)
   async update(@IdParam() id: string, @Body() updateDto: DeviceDto, @AuthUser() user: IAuthUser) {
-    console.log('update', id, updateDto)
     return await this.deviceService.update(+id, updateDto, user?.uid)
   }
 

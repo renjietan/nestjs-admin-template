@@ -59,6 +59,7 @@ export class DeviceService {
       model: data.model,
       status: data.status,
     });
+    console.log('dict_entites========================', dict_entites);
     const data_base = new DeviceEntity();
     data_base.SN = data.SN;
     data_base.alias = data.alias;

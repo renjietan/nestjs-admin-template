@@ -90,34 +90,28 @@ export class DictItemService {
    */
   async validateDict<T extends Record<string, any>>(data: T): Promise<DictItemResult<T>> {
     const values = Object.values(data)
+    const keys = Object.keys(data)
     const _res = await this.dictItemRepository.find({
       where: {
-        value: In(values),
+        value: In(Array.from(new Set(values))),
         status: 1,
       },
     })
     if (_res.length == 0)
       throw new BusinessException(ErrorEnum.InvalidDictionaryFieldValue)
+    
     const res = _res.reduce((cur, pre) => {
       cur[pre.value] = pre
       return cur
     }, {})
-
-    const _re1s = Object.keys(data).reduce((cur, pre) => {
-      cur[pre] = res[pre]
-      return cur
-    }, {}) as DictItemResult<T>
-
-    return _re1s
-    // for (const key in data) {
-    //   const dict_model = await this.findOneByCode(data[key])
-    //   if (!dict_model) {
-    //     throw new BusinessException(ErrorEnum.InvalidDictionaryFieldValue)
-    //   }
-    //   else {
-    //     res[key] = dict_model
-    //   }
-    // }
-    // return res
+    console.log("res===================", res);
+    const entity_obj = keys.map(item => {
+      let value = data[item]
+      return {
+        [item]: res[value]
+      }
+    }) as DictItemResult<T>
+    console.log(entity_obj);
+    return entity_obj
   }
 }
