@@ -3,7 +3,6 @@ import { IsNotEmpty, IsOptional } from "class-validator";
 
 export class UpdateTableDto {
   @IsNotEmpty()
-  @IsOptional()
   @ApiProperty({ description: "别名", example: "别名" })
   alias?: string;
 

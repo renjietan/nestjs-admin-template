@@ -100,7 +100,6 @@ export class HopFreqService {
     let entity = await this.f_table_entity.findOne({
       where: { id: Not(id), alias: dto.alias },
     });
-    console.log('entity==============', entity);
     if (entity) throw new BusinessException(ErrorEnum.TableNameExists);
     await this.f_table_entity
       .createQueryBuilder()
