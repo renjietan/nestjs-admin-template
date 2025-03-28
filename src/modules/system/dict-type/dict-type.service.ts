@@ -152,6 +152,10 @@ export class DictTypeService {
    */
   async delete(id: number): Promise<void> {
     await this.dictTypeRepository.delete(id);
+    await this.dictItemRepository.createQueryBuilder().delete().from(DictItemEntity)
+    .where("type_id = :type_id", { 
+      type_id: id
+    }).execute()
   }
 
   /**

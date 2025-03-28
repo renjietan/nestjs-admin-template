@@ -74,7 +74,7 @@ export enum ErrorEnum {
   // src\modules\system\dict-item\dict-type.dto.ts
   DuplicateDictionaryName = '500:已存在相同名称的字典类型',
   DuplicateEnglishDictionaryName = '500:已存在相同英文名称的字典类型',
-  DuplicateDictionaryCode = '500:已存在相同编码的字典',
+  DuplicateDictionaryCode = '500:已存在相同编码的字典类型',
   // src\modules\system\dict-item\dict-item.dto.ts
   DuplicateDictionaryItemName = '500:已存在相同名称的字典项',
   DuplicateEnglishDictionaryItemName = '500:已存在相同英文名称的字典项',

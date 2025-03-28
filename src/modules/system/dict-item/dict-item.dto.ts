@@ -12,7 +12,7 @@ export class DictItemDto extends PartialType(DictItemEntity) {
   @IsInt()
   typeId: number
 
-  @IsUnique({ entity: DictItemEntity, message: ErrorEnum.DuplicateDictionaryName })
+  @IsUnique({ entity: DictItemEntity, message: ErrorEnum.DuplicateEnglishDictionaryItemName })
   @ApiProperty({ description: '字典项键名' })
   @IsString()
   @MinLength(1)
@@ -24,7 +24,7 @@ export class DictItemDto extends PartialType(DictItemEntity) {
   @MinLength(1)
   en_label: string
 
-  @IsUnique({ entity: DictItemEntity, message: ErrorEnum.DuplicateDictionaryCode })
+  @IsUnique({ entity: DictItemEntity, message: ErrorEnum.DuplicateDictionaryItemCode })
   @ApiProperty({ description: '字典项值' })
   @IsString()
   @MinLength(1)
