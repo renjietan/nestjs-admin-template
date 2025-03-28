@@ -186,19 +186,4 @@ export class HopFreqController {
     dto.allow_clean = dto?.allow_clean ?? 1
     return this.f_table_seivce.create_hzs(+table_id, dto, user?.uid);
   }
-
-  @Patch("update_hf/:table_id")
-  @ApiOperation({
-    summary: "批量更新",
-    description: `频点`,
-  })
-  @Perm(permissions.UPDATE)
-  async update_hz(
-    @Param("table_id") table_id: string,
-    @Body() dto: CreateHzDtos,
-    @AuthUser() user: IAuthUser
-  ) {
-    dto.allow_clean = dto?.allow_clean ?? 1
-    return this.f_table_seivce.update_hzs(+table_id, dto, user?.uid);
-  }
 }
