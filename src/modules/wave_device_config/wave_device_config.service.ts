@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Equal, In, Repository } from 'typeorm'
+import { Equal, FindManyOptions, In, Repository } from 'typeorm'
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { WaveDeviceConfigEntity } from '~/entities/wave_device_config'
@@ -21,20 +21,26 @@ export class WaveDeviceConfigService {
   async search(data: SearcheWaveDeviceConfigDto) {
     const pageNum = data?.page
     const pageSize = data?.pageSize
-    let where_query = {
+    let where_query: FindManyOptions = {
       where: {
         ...(!!data?.waveTypes && { waveTypes: In(data.waveTypes.split(',')) }),
-        ...(!!data?.deviceModel && { deviceModel: Equal(data.deviceModel) })
+        ...(!!data?.deviceModel && { deviceModel: Equal(data.deviceModel) }),
+      },
+      relations: {
+        deviceType: true,
+        deviceModel: true,
+        waveType: true,
+        valueType: true
       }
     }
     return paginate(this.waveDeviceConfigEntity, {
       page: pageNum,
-      pageSize: pageSize
+      pageSize: pageSize,
     }, where_query)
   }
 
   async create(params: CreateWaveDeviceConfigDto, uId: number) {
-    await this.dict_item_service.validateDict({
+    let dict_entites = await this.dict_item_service.validateDict({
       deviceType: params.deviceType,
       deviceModel: params.deviceModel,
       waveType: params.waveType,
@@ -42,8 +48,8 @@ export class WaveDeviceConfigService {
     })
     const entity = new WaveDeviceConfigEntity()
     entity.createBy = uId
-    entity.deviceModel = params.deviceModel
-    entity.deviceType = params.deviceType
+    entity.deviceModel = dict_entites.deviceModel
+    entity.deviceType = dict_entites.deviceType
     entity.step_value = params.step_value
     entity.name = params.name
     entity.waveType = params.waveType

@@ -1,7 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
-import { DictItemEntity } from './dict-item.entity'
-import { CompleteEntity } from '~/common/entity/common.entity'
 import { ApiProperty } from '@nestjs/swagger'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
+import { CompleteEntity } from '~/common/entity/common.entity'
+import { DictItemEntity } from './dict-item.entity'
 
 @Entity('wave_device_config')
 export class WaveDeviceConfigEntity extends CompleteEntity {
