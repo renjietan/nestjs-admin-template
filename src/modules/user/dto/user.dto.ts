@@ -7,18 +7,19 @@ import {
   IsInt,
   IsOptional,
   IsString,
-  MaxLength,
-  MinLength
+  Matches
 } from 'class-validator'
 
 import { PagerDto } from '~/common/dto/pager.dto'
+import { ErrorEnum } from '~/constants/error-code.constant'
 
 export class UserDto {
 
   @ApiProperty({ description: '登录账号', example: 'admin' })
   @IsString()
-  @MinLength(4)
-  @MaxLength(20)
+  @Matches(/^[a-zA-Z0-9_-]{4,20}$/, {
+    message: ErrorEnum.UsernameFailed
+  })
   username: string
 
   @ApiProperty({ description: '登录密码', example: 'a123456' })
@@ -48,9 +49,19 @@ export class UserDto {
 
 export class UserUpdateDto extends PartialType(UserDto) {}
 
-export class UserQueryDto extends IntersectionType(PagerDto<UserDto>, PartialType(UserDto)) {
+export class UserQueryDto extends IntersectionType(PagerDto<UserDto>) {
+  @ApiProperty({ description: '登录账号', example: 'admin' })
+  @IsString()
+  @IsOptional()
+  username?: string
+
   @ApiProperty({ description: '状态', example: 0, required: false })
   @IsInt()
   @IsOptional()
   status?: number
+
+  @ApiProperty({ description: '呢称', example: 'admin' })
+  @IsString()
+  @IsOptional()
+  nickname?: string
 }

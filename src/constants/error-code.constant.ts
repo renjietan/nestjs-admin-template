@@ -50,6 +50,8 @@ export enum ErrorEnum {
   MISSION_NOT_FOUND = '1304:任务不存在',
 
   // !特定的业务逻辑
+  // src\modules\user\dto\user.dto.ts
+  UsernameFailed = '用户名必须是4-20位字母数字/下划线/横线组合',
   // src\socket\shared\auth.gateway.ts
   AuthenticationFailed = '500:认证失败',
   // src\shared\database\constraints\unique.constraint.ts
