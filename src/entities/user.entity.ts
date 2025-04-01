@@ -2,16 +2,19 @@ import { Exclude } from 'class-transformer'
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   Relation
 } from 'typeorm'
 
 import { CommonEntity } from '~/common/entity/common.entity'
 
-import { RoleEntity } from '~/entities/role.entity'
 import { AccessTokenEntity } from './access-token.entity'
+import { DictItemEntity } from './dict-item.entity'
+import { RoleEntity } from './role.entity'
 
 @Entity({ name: 'sys_user' })
 export class UserEntity extends CommonEntity {
@@ -34,13 +37,21 @@ export class UserEntity extends CommonEntity {
   @Column({ type: 'tinyint', nullable: true, default: 1 })
   status: number
 
-  @ManyToMany(() => RoleEntity, role => role.users)
+  
+  @ManyToMany(() => RoleEntity, role => role.users, {
+    // ! 由于前端 不使用  路由以及权限接口， 所以这里，不强制关联
+    createForeignKeyConstraints: false
+  })
   @JoinTable({
     name: 'sys_user_roles',
-    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    joinColumn: { name: 'user_id', referencedColumnName: 'id', },
     inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
   })
   roles: Relation<RoleEntity[]>
+
+  @ManyToOne(() => DictItemEntity, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'role_id', referencedColumnName: "value"})
+  role: DictItemEntity
 
   @OneToMany(() => AccessTokenEntity, accessToken => accessToken.user, {
     cascade: true,

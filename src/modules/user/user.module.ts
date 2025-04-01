@@ -6,6 +6,7 @@ import { MenuModule } from '../system/menu/menu.module'
 
 import { ParamConfigModule } from '../system/param-config/param-config.module'
 
+import { DictItemModule } from '../system/dict-item/dict-item.module'
 import { RoleModule } from '../system/role/role.module'
 import { UserController } from './user.controller'
 import { UserService } from './user.service'
@@ -18,6 +19,7 @@ const providers = [UserService]
     RoleModule,
     MenuModule,
     ParamConfigModule,
+    DictItemModule
   ],
   controllers: [UserController],
   providers: [...providers],

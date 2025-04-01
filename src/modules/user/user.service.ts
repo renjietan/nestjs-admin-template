@@ -23,6 +23,7 @@ import { AccessTokenEntity } from '../../entities/access-token.entity'
 import { RoleEntity } from '../../entities/role.entity'
 import { UserEntity } from '../../entities/user.entity'
 
+import { DictItemService } from '../system/dict-item/dict-item.service'
 import { ParamConfigService } from '../system/param-config/param-config.service'
 import { UserStatus } from './constant'
 import { PasswordUpdateDto } from './dto/password.dto'
@@ -41,6 +42,7 @@ export class UserService {
     @InjectEntityManager() private entityManager: EntityManager,
     private readonly paramConfigService: ParamConfigService,
     private readonly qqService: QQService,
+    private readonly dict_item_service: DictItemService
   ) {}
 
   async findUserById(id: number): Promise<UserEntity | undefined> {
@@ -141,7 +143,15 @@ export class UserService {
     })
     if (!isEmpty(exists))
       throw new BusinessException(ErrorEnum.SYSTEM_USER_EXISTS)
-
+    let dict_entites = {
+      role: null
+    }
+    if(data.role_id) {
+      dict_entites = await  this.dict_item_service.validateDict({
+        role: data.role_id
+      })
+    }
+    
     await this.entityManager.transaction(async (manager) => {
       const salt = randomValue(32)
 
@@ -158,9 +168,9 @@ export class UserService {
         username,
         password,
         ...data,
+        role: dict_entites.role,
         psalt: salt,
       })
-
       const result = await manager.save(u)
       return result
     })
@@ -174,17 +184,25 @@ export class UserService {
     { 
       password, 
       roleIds, 
-      status, 
+      status,
       ...data 
     }: UserUpdateDto,
   ): Promise<void> {
     await this.entityManager.transaction(async (manager) => {
       if (password)
         await this.forceUpdatePassword(id, password)
-
+      let dict_entites = {
+        role_id: null
+      }
+      if(data.role_id) {
+        dict_entites = await  this.dict_item_service.validateDict({
+          role_id: data.role_id
+        })
+      }
       await manager.update(UserEntity, id, {
         ...data,
         status,
+        role: dict_entites.role_id
       })
 
       const user = await this.userRepository
@@ -256,7 +274,8 @@ export class UserService {
   }: UserQueryDto): Promise<Pagination<UserEntity>> {
     const queryBuilder = this.userRepository
       .createQueryBuilder('user')
-      .leftJoinAndSelect('user.roles', 'role')
+      .leftJoinAndSelect('user.roles', 'roles')
+      .leftJoinAndSelect('user.role', 'role')
       .where({
         ...(username ? { username: Like(`%${username}%`) } : null),
         ...(nickname ? { nickname: Like(`%${nickname}%`) } : null),

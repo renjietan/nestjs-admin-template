@@ -32,6 +32,11 @@ export class UserDto {
   @ArrayMaxSize(3)
   roleIds: number[]
 
+  @ApiProperty({ description: '如果角色与权限 无需 保存在后端， 使用此接口', required: false })
+  @IsString()
+  @IsOptional()
+  role_id?: string
+
   @ApiProperty({ description: '呢称', example: 'admin' })
   @IsOptional()
   @IsString()
