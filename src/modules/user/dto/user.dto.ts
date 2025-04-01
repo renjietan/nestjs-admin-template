@@ -69,4 +69,9 @@ export class UserQueryDto extends IntersectionType(PagerDto<UserDto>) {
   @IsString()
   @IsOptional()
   nickname?: string
+
+  @ApiProperty({ description: '角色', example: 'string' })
+  @IsString()
+  @IsOptional()
+  role?: string
 }

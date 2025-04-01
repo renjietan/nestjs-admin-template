@@ -23,6 +23,7 @@ import { AccessTokenEntity } from '../../entities/access-token.entity'
 import { RoleEntity } from '../../entities/role.entity'
 import { UserEntity } from '../../entities/user.entity'
 
+import { DictItemEntity } from '~/entities/dict-item.entity'
 import { DictItemService } from '../system/dict-item/dict-item.service'
 import { ParamConfigService } from '../system/param-config/param-config.service'
 import { UserStatus } from './constant'
@@ -232,6 +233,7 @@ export class UserService {
     const user = await this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.roles', 'roles')
+      .leftJoinAndSelect('user.role', 'role')
       .where('user.id = :id', { id })
       .getOne()
     
@@ -271,7 +273,10 @@ export class UserService {
     username,
     nickname,
     status,
+    role
   }: UserQueryDto): Promise<Pagination<UserEntity>> {
+    let role_entity = new DictItemEntity()
+    role_entity.value = role
     const queryBuilder = this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.roles', 'roles')
@@ -279,6 +284,7 @@ export class UserService {
       .where({
         ...(username ? { username: Like(`%${username}%`) } : null),
         ...(nickname ? { nickname: Like(`%${nickname}%`) } : null),
+        ...(role ? { role: role_entity } : null),
         ...(!isNil(status) ? { status } : null),
       })
 
