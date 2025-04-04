@@ -200,6 +200,7 @@ export class UserService {
           role_id: data.role_id
         })
       }
+      delete data.role_id
       await manager.update(UserEntity, id, {
         ...data,
         status,
