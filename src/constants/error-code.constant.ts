@@ -132,8 +132,6 @@ export enum ErrorEnum {
   Deleted = '删除了',
   ExpiredItemsCleared = '个过期的',
   StartScanningClearExpired = '开始扫表，清除过期的',
-  // src\modules\system\task\task.service.ts
-  TaskNotFound = '500:指定的定时任务不存在',
   // src\modules\sse\sse.controller.ts
   Closed = '已关闭',
   // src\common\interceptors\logging.interceptor.ts

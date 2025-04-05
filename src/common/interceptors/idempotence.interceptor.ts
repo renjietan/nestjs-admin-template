@@ -4,13 +4,13 @@ import type {
   NestInterceptor,
 } from '@nestjs/common'
 
-import type { FastifyRequest } from 'fastify'
 import {
   ConflictException,
   Injectable,
   SetMetadata,
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
+import type { FastifyRequest } from 'fastify'
 import { catchError, tap } from 'rxjs'
 
 import { CacheService } from '~/shared/redis/cache.service'
@@ -58,7 +58,6 @@ export class IdempotenceInterceptor implements NestInterceptor {
 
   async intercept(context: ExecutionContext, next: CallHandler) {
     const request = context.switchToHttp().getRequest<FastifyRequest>()
-
     // skip Get 请求
     if (request.method.toUpperCase() === 'GET')
       return next.handle()
@@ -73,8 +72,8 @@ export class IdempotenceInterceptor implements NestInterceptor {
       return next.handle()
 
     const {
-      errorMessage = 'The same request can only be sent once within 60 seconds after success',
-      pendingMessage = 'Same request being processed...',
+      errorMessage = '同一个请求在成功后的60秒内只能发送一次',
+      pendingMessage = '同样的请求正在处理中…',
       handler: errorHandler,
       expired = 60,
       disableGenerateKey = false,

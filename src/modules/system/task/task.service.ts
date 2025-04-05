@@ -304,7 +304,7 @@ export class TaskService implements OnModuleInit {
 
       // 所执行的任务不存在
       if (!service || !(exec in service))
-        throw new NotFoundException(ErrorEnum.TaskNotFound)
+        throw new NotFoundException(ErrorEnum.ScheduledTaskNotFound)
 
       // 检测是否有Mission注解
       const hasMission = this.reflector.get<boolean>(
@@ -318,7 +318,7 @@ export class TaskService implements OnModuleInit {
     catch (e) {
       if (e instanceof UnknownElementException) {
         // 任务不存在
-        throw new NotFoundException(`${ ErrorEnum.TaskNotFound }`)
+        throw new NotFoundException(`${ ErrorEnum.ScheduledTaskNotFound }`)
       }
       else {
         // 其余错误则不处理，继续抛出

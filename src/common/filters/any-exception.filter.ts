@@ -7,12 +7,13 @@ import {
   Logger,
 } from '@nestjs/common'
 import { FastifyReply, FastifyRequest } from 'fastify'
+import { I18nContext } from 'nestjs-i18n'
 import { QueryFailedError } from 'typeorm'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
-
 import { isDev } from '~/global/env'
+
 
 interface myError {
   readonly status: number
@@ -38,7 +39,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const status = this.getStatus(exception)
     let message = this.getErrorMessage(exception)
-
+    
     // 系统内部错误时
     if (status === HttpStatus.INTERNAL_SERVER_ERROR && !(exception instanceof BusinessException)) {
       Logger.error(exception, undefined, 'Catch')
@@ -47,10 +48,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
         message = ErrorEnum.SERVER_ERROR?.split(':')[1]
     }
     else {
-      this.logger.warn(`错误信息：(${status}) ${message} Path: ${decodeURI(url)}`,)
+      this.logger.warn(`Error：(${status}) ${message} Path: ${decodeURI(url)}`,)
     }
 
     const apiErrorCode = exception instanceof BusinessException ? exception.getErrorCode() : status
+    const i18n = I18nContext.current(host);
+    const lang = i18n.lang
+    console.log('message====================', message);
+    console.log('lang====================', lang);
 
     // 返回基础响应结果
     const resBody: IBaseResponse = {

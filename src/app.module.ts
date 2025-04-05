@@ -1,7 +1,7 @@
 import type { FastifyRequest } from 'fastify'
 
 import { ClassSerializerInterceptor, Module } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import { ClsModule } from 'nestjs-cls'
@@ -25,6 +25,8 @@ import { TestModule } from './modules/test/test.module'
 import { ToolsModule } from './modules/tools/tools.module'
 
 import { ThrottlerGuard } from '@nestjs/throttler'
+import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n'
+import { I18nRegToken, IIi8nConfig } from './config/I18n.config'
 import { DeviceModule } from './modules/device/device.module'
 import { ETableModule } from './modules/e_table/e_table.module'
 import { ETableDetailModule } from './modules/e_table_detail/e_table_detail.module'
@@ -37,8 +39,40 @@ import { WaveDeviceConfigModule } from './modules/wave_device_config/wave_device
 import { DatabaseModule } from './shared/database/database.module'
 import { SocketModule } from './socket/socket.module'
 
+
+// class I18nCustomLoader implements I18nLoader {
+//   constructor(
+//     private readonly options: I18nAbstractLoaderOptions & {
+//       translationsPath: string;
+//     },
+//   ) {}
+//   languages(): Promise<string[] | Observable<string[]>> {
+//     return ["en-US", "zh-CN"]
+    
+//   }
+//   load(): Promise<I18nTranslation | Observable<I18nTranslation>> {
+//     console.log('=====================load', );
+//     throw new Error('Method not implemented.')
+//   }
+  
+// }
+
+
 @Module({
   imports: [
+    I18nModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        ...configService.getOrThrow<IIi8nConfig>(I18nRegToken)
+      }),
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        new HeaderResolver(['x-lang']),
+        AcceptLanguageResolver,
+      ],
+      inject: [ConfigService],
+      logging: true,
+      // loader: I18nCustomLoader
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,

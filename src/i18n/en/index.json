@@ -1,0 +1,152 @@
+{
+    "System": {
+        "DEFAULT": "0:Unknown error",
+        "OperationSuccess": "Operation completed successfully",
+        "OperationFailed": "500:Operation failed",
+        "SERVER_ERROR": "500:Service is busy, please try again later",
+        "RequestTimeout": "Request timed out"
+    },
+    "WebSocket": {
+        "WebSocketDisconnected": "500:WebSocket disconnected",
+        "WebSocketConnected": "WebSocket connected"
+    },
+    "Auth": {
+        "DemoModeOperationNotAllowed": "500:Demo mode restrictions apply",
+        "AuthenticationFailed": "500:Authentication failed",
+        "INVALID_LOGIN": "1101:Login session expired, please log in again",
+        "NO_PERMISSION": "1102:Access denied",
+        "ONLY_ADMIN_CAN_LOGIN": "1103:Administrator access required",
+        "ACCOUNT_LOGGED_IN_ELSEWHERE": "1105:Your account was logged in from another location",
+        "GUEST_ACCOUNT_RESTRICTED_OPERATION": "1106:Guest accounts cannot perform this action",
+        "NO_LOGIN": "1108:Please log in again",
+        "SYSTEM_BUILTIN_FUNCTION_NOT_ALLOWED": "1016:System built-in features cannot be modified"
+    },
+    "Rule": {
+        "RoleValueLengthTooShort": "500:Role value must be at least 2 characters",
+        "RoleValueAlphanumericOnly": "500:Role value can only contain letters and numbers",
+        "RoleNameLengthTooShort": "500:Role name must be at least 2 characters",
+        "CronExpressionRequired": "500:Cron expression is required",
+        "InvalidPhoneNumberFormat": "500:Invalid phone number format",
+        "InvalidEmailFormat": "500:Invalid email format",
+        "InvalidIdFormat": "ID validation failed"
+    },
+    "Unique": {
+        "SYSTEM_USER_EXISTS": "1001:System user already exists",
+        "NODE_ROUTE_EXISTS": "1004:Node route already exists",
+        "DuplicateRecordExists": "500:Duplicate record detected",
+        "KeyNameAlreadyExists": "500:Key name already in use",
+        "DuplicateDictionaryName": "500:Dictionary name already exists",
+        "DuplicateEnglishDictionaryName": "500:English dictionary name already exists",
+        "DuplicateDictionaryCode": "500:Dictionary code already exists",
+        "DuplicateDictionaryItemName": "500:Dictionary item name already exists",
+        "DuplicateEnglishDictionaryItemName": "500:English dictionary item name already exists",
+        "DuplicateDictionaryItemCode": "500:Dictionary item code already exists",
+        "DuplicateDeviceAliasOrSN": "500:Duplicate device alias or serial number",
+        "TableNameExists": "500:Table name already exists",
+        "DuplicateChannelNumber": "500:Channel number already in use",
+        "UniqueAliasRequired": "500:Alias must be unique",
+        "DuplicateNetworkTemplateName": "500:Network template name already exists",
+        "DuplicateSMSContent": "500:Duplicate SMS content detected",
+        "DuplicateTaskTemplateName": "500:Task template name already exists",
+        "DuplicateSubtaskName": "500:Subtask name already exists",
+        "UniqueDictionaryKeyValueRequired": "500:Dictionary keys and values must be unique",
+        "DuplicateTaskName": "500:Task name already exists"
+    },
+    "DataLint": {
+        "ROLE_HAS_ASSOCIATED_USERS": "1008:This role has associated users. Please remove associations first",
+        "DEPARTMENT_HAS_ASSOCIATED_USERS": "1009:This department has associated users. Please remove associations first",
+        "DEPARTMENT_HAS_ASSOCIATED_ROLES": "1010:This department has associated roles. Please remove associations first",
+        "DEPARTMENT_HAS_CHILD_DEPARTMENTS": "1015:This department contains sub-departments. Please remove them first",
+        "MenuHasAssociatedRoles": "500:This menu has associated roles and cannot be deleted",
+        "RoleHasAssociatedUsers": "500:This role has associated users and cannot be deleted"
+    },
+    "NoExist": {
+        "RecordNotFound": "500:Record not found",
+        "EXECUTED_MISSION_NOT_FOUND": "1302:Task execution not found",
+        "MISSION_NOT_FOUND": "1304:Task not found",
+        "TaskNotFoundById": "500:Task not found with provided ID",
+        "ScheduledTaskNotFound": "500:Scheduled task not found",
+        "REQUESTED_RESOURCE_NOT_FOUND": "1107:The requested resource is unavailable",
+        "DEFAULT_ROLE_NOT_FOUND": "1023:Assigned default role not found",
+        "DEPARTMENT_NOT_FOUND": "1019:Department not found",
+        "USER_NOT_FOUND": "1017:User not found",
+        "UNABLE_TO_FIND_DEPARTMENT_FOR_USER": "1018:Could not locate department for current user",
+        "PARENT_MENU_NOT_FOUND": "1014:Parent menu not found",
+        "HFTableNameNotExists": "500:Frequency hopping table unavailable. Please refresh and try again",
+        "TypeNoLongerExists": "500:Selected type is no longer available",
+        "PARAMETER_CONFIG_KEY_EXISTS": "1022:Configuration key already exists"
+    },
+    "Request": {
+        "TOO_MANY_REQUESTS": "1201:Too many requests. Please wait a minute",
+        "REQUEST_INVALIDATED": "1104:This request has expired"
+    },
+    "Email": {
+        "VERIFICATION_CODE_SEND_FAILED": "1203:Failed to send verification code",
+        "MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY": "1202:Maximum 5 verification codes per day",
+        "VerificationCode": "Verification code"
+    },
+    "ShotMessage": {
+        "SystemDataLimitReached": "500:System data limit reached (100 entries). Please delete some entries"
+    },
+    "HopFreq": {
+        "DataLimitExceeded": "500:Total data exceeds limit (80 entries). Please reduce data or clean existing entries"
+    },
+    "Login": {
+        "INVALID_VERIFICATION_CODE": "1002:Verification code is incorrect",
+        "INVALID_USERNAME_PASSWORD": "1003:Invalid username or password"
+    },
+    "USER": {
+        "PASSWORD_MISMATCH": "1011:Old password does not match our records",
+        "LOGOUT_OWN_SESSION": "1012:To log out your current session, please use the logout option in the top-right corner",
+        "NOT_ALLOWED_TO_LOGOUT_USER": "1013:Not permitted to log out this user",
+        "CannotDeleteRootUser": "500:Root user cannot be deleted",
+        "UsernameFailed": "Username must be 4-20 characters (letters, numbers, underscores, or hyphens)",
+        "InvalidPasswordFormat": "500:Invalid password format",
+        "PasswordRequirements": "500:Password must contain letters and numbers (6-16 characters)"
+    },
+    "Role": {
+        "CannotDeleteSuperAdmin": "500:Super admin cannot be deleted"
+    },
+    "Menu": {
+        "ILLEGAL_OPERATION_CANNOT_CONVERT_NODE_TYPE": "1007:Invalid operation:Node type cannot be directly converted",
+        "ILLEGAL_OPERATION_DIRECTORY_PARENT": "1006:Invalid operation:This node only supports directory-type parent nodes",
+        "PERMISSION_REQUIRES_PARENT": "1005:Permission requires a parent node"
+    },
+    "Task": {
+        "INSECURE_MISSION": "1301:Unsafe task - please add @Mission annotation",
+        "MISSION_EXECUTION_FAILED": "1303:Task execution failed",
+        "ScheduledTaskParametersMissing": "500:Missing scheduled task parameters",
+        "EmailTaskParametersMissing": "500:Missing email task parameters",
+        "HttpRequestTaskParametersMissing": "500:Missing HTTP request parameters"
+    },
+    "Dict": {
+        "InvalidDictionaryFieldValue": "500:Selected value is not in current dictionary. Please update or choose valid entries",
+        "OperationFailedDictionaryOrParameterError": "500:Operation failed. Please check dictionary availability or parameters"
+    },
+    "File": {
+        "InvalidFileType": "500:Invalid file type",
+        "UploadFailed": "500:Upload failed"
+    },
+    "Utils": {
+        "InternalIP": "Internal IP address",
+        "ThirdPartyApiRequestFailed": "500:Third-party API request failed"
+    },
+    "Cron": {
+        "Deleted": "Deleted",
+        "ExpiredItemsCleared": "expired items cleared",
+        "DeleteExpired": "Deleting expired",
+        "IssuedAt": "Issued at",
+        "StartScanningClearExpired": "Scanning started to clear expired"
+    },
+    "See": {
+        "Closed": "Closed"
+    },
+    "Redis": {
+        "ReceiveEvent": "Received event:",
+        "PublishEvent": "Published event:"
+    },
+    "Log": {
+        "Response": "Response",
+        "Request": "Request"
+    }
+}

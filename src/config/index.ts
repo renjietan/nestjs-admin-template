@@ -1,5 +1,6 @@
 import { AppConfig, appRegToken, IAppConfig } from './app.config'
 import { DatabaseConfig, dbRegToken, IDatabaseConfig } from './database.config'
+import { I18nConfig, I18nRegToken, IIi8nConfig } from './I18n.config'
 import { IMailerConfig, MailerConfig, mailerRegToken } from './mailer.config'
 import { IOssConfig, OssConfig, ossRegToken } from './oss.config'
 import { IRedisConfig, RedisConfig, redisRegToken } from './redis.config'
@@ -22,6 +23,7 @@ export interface AllConfigType {
   [securityRegToken]: ISecurityConfig
   [swaggerRegToken]: ISwaggerConfig
   [ossRegToken]: IOssConfig
+  [I18nRegToken]: IIi8nConfig
 }
 
 export type ConfigKeyPaths = RecordNamePaths<AllConfigType>
@@ -34,4 +36,5 @@ export default {
   RedisConfig,
   SecurityConfig,
   SwaggerConfig,
+  I18nConfig
 }

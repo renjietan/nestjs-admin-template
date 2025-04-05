@@ -109,7 +109,6 @@ export class DictItemService {
       cur[pre] = res[value]
       return cur
     }, {}) as DictItemResult<T>
-    console.log(entity_obj);
     return entity_obj
   }
 }

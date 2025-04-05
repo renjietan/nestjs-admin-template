@@ -23,6 +23,8 @@ import { AccessTokenEntity } from '../../entities/access-token.entity'
 import { RoleEntity } from '../../entities/role.entity'
 import { UserEntity } from '../../entities/user.entity'
 
+import { I18nService } from 'nestjs-i18n'
+import { I18nTranslations } from 'types/i18n.generated'
 import { DictItemEntity } from '~/entities/dict-item.entity'
 import { DictItemService } from '../system/dict-item/dict-item.service'
 import { ParamConfigService } from '../system/param-config/param-config.service'
@@ -43,7 +45,8 @@ export class UserService {
     @InjectEntityManager() private entityManager: EntityManager,
     private readonly paramConfigService: ParamConfigService,
     private readonly qqService: QQService,
-    private readonly dict_item_service: DictItemService
+    private readonly dict_item_service: DictItemService,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   async findUserById(id: number): Promise<UserEntity | undefined> {
@@ -143,7 +146,7 @@ export class UserService {
       username,
     })
     if (!isEmpty(exists))
-      throw new BusinessException(ErrorEnum.SYSTEM_USER_EXISTS)
+      throw new BusinessException(this.i18n.t("index.Unique.SYSTEM_USER_EXISTS"))
     let dict_entites = {
       role: null
     }

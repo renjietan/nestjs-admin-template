@@ -81,7 +81,6 @@ export class DictTypeService {
             DictTypeEntity,
             insert_type_obj
           );
-          console.log("insert_entity", insert_entity);
           let items = e?.items ?? [];
           items = items.map((item, index) => ({
             label: item.label,
@@ -100,8 +99,6 @@ export class DictTypeService {
         }
         return res;
       } catch (error) {
-        console.log('==================== manager end error =======================');
-        console.log("error==============", error);
         throw new BusinessException(ErrorEnum.OperationFailed)
       }
     });

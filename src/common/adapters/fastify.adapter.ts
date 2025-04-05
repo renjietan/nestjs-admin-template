@@ -25,7 +25,6 @@ app.register(FastifyCookie, {
 app.getInstance().addHook('onRequest', (request, reply, done) => {
   // set undefined origin
   const { origin } = request.headers
-  debugger
   if (!origin)
     request.headers.origin = request.headers.host
   const { url } = request

@@ -21,7 +21,6 @@ const providers = [EntityExistConstraint, UniqueConstraint]
       inject: [ConfigService],
       useFactory: (configService: ConfigService<ConfigKeyPaths>) => {
         let loggerOptions: LoggerOptions = env('DB_LOGGING') as 'all'
-
         try {
           // 解析成 js 数组 ['error']
           loggerOptions = JSON.parse(loggerOptions)

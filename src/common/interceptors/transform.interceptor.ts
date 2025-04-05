@@ -21,7 +21,7 @@ import { BYPASS_KEY } from '../decorators/bypass.decorator'
 @Injectable()
 export class TransformInterceptor implements NestInterceptor {
   constructor(private readonly reflector: Reflector) {}
-
+  
   intercept(
     context: ExecutionContext,
     next: CallHandler<any>,
@@ -30,7 +30,6 @@ export class TransformInterceptor implements NestInterceptor {
       BYPASS_KEY,
       context.getHandler(),
     )
-
     if (bypass)
       return next.handle()
 
