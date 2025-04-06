@@ -1,9 +1,0 @@
-{
-    "RoleValueLengthTooShort": "500:Role value must be at least 2 characters",
-    "RoleValueAlphanumericOnly": "500:Role value can only contain letters and numbers",
-    "RoleNameLengthTooShort": "500:Role name must be at least 2 characters",
-    "CronExpressionRequired": "500:Cron expression is required",
-    "InvalidPhoneNumberFormat": "500:Invalid phone number format",
-    "InvalidEmailFormat": "500:Invalid email format",
-    "InvalidIdFormat": "ID validation failed"
-}

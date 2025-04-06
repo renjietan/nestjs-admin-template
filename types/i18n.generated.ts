@@ -153,15 +153,6 @@ export type I18nTranslations = {
             "PARAMETER_CONFIG_KEY_EXISTS": string;
         };
     };
-    "validation": {
-        "RoleValueLengthTooShort": string;
-        "RoleValueAlphanumericOnly": string;
-        "RoleNameLengthTooShort": string;
-        "CronExpressionRequired": string;
-        "InvalidPhoneNumberFormat": string;
-        "InvalidEmailFormat": string;
-        "InvalidIdFormat": string;
-    };
 };
 /* prettier-ignore */
 export type I18nPath = Path<I18nTranslations>;
