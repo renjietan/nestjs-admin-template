@@ -11,7 +11,6 @@ import { I18nContext } from 'nestjs-i18n'
 import { QueryFailedError } from 'typeorm'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { isDev } from '~/global/env'
 
 interface myError {
@@ -34,9 +33,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const request = ctx.getRequest<FastifyRequest>()
     const response = ctx.getResponse<FastifyReply>()
     const i18n = I18nContext.current(host)
-    const lang = i18n.lang
     const url = request.raw.url!
-    console.log('index.DEFAULT=============================', i18n.t('index.System.DEFAULT'))
     const status = this.getStatus(exception)
     let message = this.getErrorMessage(exception)
 
@@ -45,7 +42,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       Logger.error(exception, undefined, 'Catch')
       // 生产环境下隐藏错误信息
       if (!isDev)
-        message = ErrorEnum.SERVER_ERROR?.split(':')[1]
+        message = i18n.t("index.System.SERVER_ERROR")?.split(':')[1]
     }
     else {
       this.logger.warn(`Error：(${status}) ${message} Path: ${decodeURI(url)}`)

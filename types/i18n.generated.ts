@@ -5,173 +5,137 @@
 import { Path } from "nestjs-i18n";
 /* prettier-ignore */
 export type I18nTranslations = {
-    index: {
-      System: System$1;
-      Request: Request$2;
-      WebSocket: WebSocket$3;
-      Auth: Auth$4;
-      Dto: Dto$5;
-      Unique: Unique$6;
-      DataLint: DataLint$7;
-      NoExist: NoExist$8;
-      Task: Task$9;
-      File: File$10;
-      Email: Email$11;
-      Login: Login$12;
-      USER: USER$13;
-      Role: Role$14;
-      Menu: Menu$15;
-      Dict: Dict$16;
-      ShotMessage: ShotMessage$17;
-      HopFreq: HopFreq$18;
-    }
+    "index": {
+        "System": {
+            "DEFAULT": string;
+            "OperationSuccess": string;
+            "OperationFailed": string;
+            "SERVER_ERROR": string;
+            "RequestTimeout": string;
+            "ThirdPartyApiRequestFailed": string;
+        };
+        "Request": {
+            "TOO_MANY_REQUESTS": string;
+            "REQUEST_INVALIDATED": string;
+        };
+        "WebSocket": {
+            "WebSocketDisconnected": string;
+            "WebSocketConnected": string;
+        };
+        "Auth": {
+            "DemoModeOperationNotAllowed": string;
+            "AuthenticationFailed": string;
+            "INVALID_LOGIN": string;
+            "NO_PERMISSION": string;
+            "ONLY_ADMIN_CAN_LOGIN": string;
+            "ACCOUNT_LOGGED_IN_ELSEWHERE": string;
+            "GUEST_ACCOUNT_RESTRICTED_OPERATION": string;
+            "NO_LOGIN": string;
+            "SYSTEM_BUILTIN_FUNCTION_NOT_ALLOWED": string;
+        };
+        "Dto": {
+            "RoleValueLengthTooShort": string;
+            "RoleValueAlphanumericOnly": string;
+            "RoleNameLengthTooShort": string;
+            "CronExpressionRequired": string;
+            "InvalidPhoneNumberFormat": string;
+            "InvalidEmailFormat": string;
+            "InvalidIdFormat": string;
+        };
+        "Unique": {
+            "SYSTEM_USER_EXISTS": string;
+            "NODE_ROUTE_EXISTS": string;
+            "DuplicateRecordExists": string;
+            "KeyNameAlreadyExists": string;
+            "DuplicateDictionaryName": string;
+            "DuplicateEnglishDictionaryName": string;
+            "DuplicateDictionaryCode": string;
+            "DuplicateDictionaryItemName": string;
+            "DuplicateEnglishDictionaryItemName": string;
+            "DuplicateDictionaryItemCode": string;
+            "DuplicateDeviceAliasOrSN": string;
+            "TableNameExists": string;
+            "DuplicateChannelNumber": string;
+            "UniqueAliasRequired": string;
+            "DuplicateNetworkTemplateName": string;
+            "DuplicateSMSContent": string;
+            "DuplicateTaskTemplateName": string;
+            "DuplicateSubtaskName": string;
+            "UniqueDictionaryKeyValueRequired": string;
+            "DuplicateTaskName": string;
+        };
+        "DataLint": {
+            "ROLE_HAS_ASSOCIATED_USERS": string;
+            "DEPARTMENT_HAS_ASSOCIATED_USERS": string;
+            "DEPARTMENT_HAS_ASSOCIATED_ROLES": string;
+            "DEPARTMENT_HAS_CHILD_DEPARTMENTS": string;
+            "MenuHasAssociatedRoles": string;
+            "RoleHasAssociatedUsers": string;
+        };
+        "NoExist": {
+            "RecordNotFound": string;
+            "EXECUTED_MISSION_NOT_FOUND": string;
+            "MISSION_NOT_FOUND": string;
+            "TaskNotFoundById": string;
+            "ScheduledTaskNotFound": string;
+            "REQUESTED_RESOURCE_NOT_FOUND": string;
+            "DEFAULT_ROLE_NOT_FOUND": string;
+            "DEPARTMENT_NOT_FOUND": string;
+            "USER_NOT_FOUND": string;
+            "UNABLE_TO_FIND_DEPARTMENT_FOR_USER": string;
+            "PARENT_MENU_NOT_FOUND": string;
+            "HFTableNameNotExists": string;
+            "TypeNoLongerExists": string;
+            "PARAMETER_CONFIG_KEY_EXISTS": string;
+        };
+        "Task": {
+            "INSECURE_MISSION": string;
+            "MISSION_EXECUTION_FAILED": string;
+            "ScheduledTaskParametersMissing": string;
+            "EmailTaskParametersMissing": string;
+            "HttpRequestTaskParametersMissing": string;
+        };
+        "File": {
+            "InvalidFileType": string;
+            "UploadFailed": string;
+        };
+        "Email": {
+            "VERIFICATION_CODE_SEND_FAILED": string;
+            "MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY": string;
+            "VerificationCode": string;
+        };
+        "Login": {
+            "INVALID_VERIFICATION_CODE": string;
+            "INVALID_USERNAME_PASSWORD": string;
+        };
+        "USER": {
+            "PASSWORD_MISMATCH": string;
+            "LOGOUT_OWN_SESSION": string;
+            "NOT_ALLOWED_TO_LOGOUT_USER": string;
+            "CannotDeleteRootUser": string;
+            "UsernameFailed": string;
+            "InvalidPasswordFormat": string;
+            "PasswordRequirements": string;
+        };
+        "Role": {
+            "CannotDeleteSuperAdmin": string;
+        };
+        "Menu": {
+            "ILLEGAL_OPERATION_CANNOT_CONVERT_NODE_TYPE": string;
+            "ILLEGAL_OPERATION_DIRECTORY_PARENT": string;
+            "PERMISSION_REQUIRES_PARENT": string;
+        };
+        "Dict": {
+            "InvalidDictionaryFieldValue": string;
+            "OperationFailedDictionaryOrParameterError": string;
+        };
+        "ShotMessage": {
+            "SystemDataLimitReached": string;
+        };
+        "HopFreq": {
+            "DataLimitExceeded": string;
+        };
+    };
 };
 /* prettier-ignore */
 export type I18nPath = Path<I18nTranslations>;
-
-type System$1 = {
-  DEFAULT: string;
-  OperationSuccess: string;
-  OperationFailed: string;
-  SERVER_ERROR: string;
-  RequestTimeout: string;
-  ThirdPartyApiRequestFailed: string;
-};
-
-type Request$2 = {
-  TOO_MANY_REQUESTS: string;
-  REQUEST_INVALIDATED: string;
-};
-
-type WebSocket$3 = {
-  WebSocketDisconnected: string;
-  WebSocketConnected: string;
-};
-
-type Auth$4 = {
-  DemoModeOperationNotAllowed: string;
-  AuthenticationFailed: string;
-  INVALID_LOGIN: string;
-  NO_PERMISSION: string;
-  ONLY_ADMIN_CAN_LOGIN: string;
-  ACCOUNT_LOGGED_IN_ELSEWHERE: string;
-  GUEST_ACCOUNT_RESTRICTED_OPERATION: string;
-  NO_LOGIN: string;
-  SYSTEM_BUILTIN_FUNCTION_NOT_ALLOWED: string;
-};
-
-type Dto$5 = {
-  RoleValueLengthTooShort: string;
-  RoleValueAlphanumericOnly: string;
-  RoleNameLengthTooShort: string;
-  CronExpressionRequired: string;
-  InvalidPhoneNumberFormat: string;
-  InvalidEmailFormat: string;
-  InvalidIdFormat: string;
-};
-
-type Unique$6 = {
-  SYSTEM_USER_EXISTS: string;
-  NODE_ROUTE_EXISTS: string;
-  DuplicateRecordExists: string;
-  KeyNameAlreadyExists: string;
-  DuplicateDictionaryName: string;
-  DuplicateEnglishDictionaryName: string;
-  DuplicateDictionaryCode: string;
-  DuplicateDictionaryItemName: string;
-  DuplicateEnglishDictionaryItemName: string;
-  DuplicateDictionaryItemCode: string;
-  DuplicateDeviceAliasOrSN: string;
-  TableNameExists: string;
-  DuplicateChannelNumber: string;
-  UniqueAliasRequired: string;
-  DuplicateNetworkTemplateName: string;
-  DuplicateSMSContent: string;
-  DuplicateTaskTemplateName: string;
-  DuplicateSubtaskName: string;
-  UniqueDictionaryKeyValueRequired: string;
-  DuplicateTaskName: string;
-};
-
-type DataLint$7 = {
-  ROLE_HAS_ASSOCIATED_USERS: string;
-  DEPARTMENT_HAS_ASSOCIATED_USERS: string;
-  DEPARTMENT_HAS_ASSOCIATED_ROLES: string;
-  DEPARTMENT_HAS_CHILD_DEPARTMENTS: string;
-  MenuHasAssociatedRoles: string;
-  RoleHasAssociatedUsers: string;
-};
-
-type NoExist$8 = {
-  RecordNotFound: string;
-  EXECUTED_MISSION_NOT_FOUND: string;
-  MISSION_NOT_FOUND: string;
-  TaskNotFoundById: string;
-  ScheduledTaskNotFound: string;
-  REQUESTED_RESOURCE_NOT_FOUND: string;
-  DEFAULT_ROLE_NOT_FOUND: string;
-  DEPARTMENT_NOT_FOUND: string;
-  USER_NOT_FOUND: string;
-  UNABLE_TO_FIND_DEPARTMENT_FOR_USER: string;
-  PARENT_MENU_NOT_FOUND: string;
-  HFTableNameNotExists: string;
-  TypeNoLongerExists: string;
-  PARAMETER_CONFIG_KEY_EXISTS: string;
-};
-
-type Task$9 = {
-  INSECURE_MISSION: string;
-  MISSION_EXECUTION_FAILED: string;
-  ScheduledTaskParametersMissing: string;
-  EmailTaskParametersMissing: string;
-  HttpRequestTaskParametersMissing: string;
-};
-
-type File$10 = {
-  InvalidFileType: string;
-  UploadFailed: string;
-};
-
-type Email$11 = {
-  VERIFICATION_CODE_SEND_FAILED: string;
-  MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY: string;
-  VerificationCode: string;
-};
-
-type Login$12 = {
-  INVALID_VERIFICATION_CODE: string;
-  INVALID_USERNAME_PASSWORD: string;
-};
-
-type USER$13 = {
-  PASSWORD_MISMATCH: string;
-  LOGOUT_OWN_SESSION: string;
-  NOT_ALLOWED_TO_LOGOUT_USER: string;
-  CannotDeleteRootUser: string;
-  UsernameFailed: string;
-  InvalidPasswordFormat: string;
-  PasswordRequirements: string;
-};
-
-type Role$14 = {
-  CannotDeleteSuperAdmin: string;
-};
-
-type Menu$15 = {
-  ILLEGAL_OPERATION_CANNOT_CONVERT_NODE_TYPE: string;
-  ILLEGAL_OPERATION_DIRECTORY_PARENT: string;
-  PERMISSION_REQUIRES_PARENT: string;
-};
-
-type Dict$16 = {
-  InvalidDictionaryFieldValue: string;
-  OperationFailedDictionaryOrParameterError: string;
-};
-
-type ShotMessage$17 = {
-  SystemDataLimitReached: string;
-};
-
-type HopFreq$18 = {
-  DataLimitExceeded: string;
-};
