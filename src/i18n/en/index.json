@@ -65,7 +65,7 @@
     "MenuHasAssociatedRoles": "500:This menu has associated roles and cannot be deleted",
     "RoleHasAssociatedUsers": "500:This role has associated users and cannot be deleted"
   },
-  "NoExist": {
+  "Exist": {
     "RecordNotFound": "500:Record not found",
     "EXECUTED_MISSION_NOT_FOUND": "1302:Task execution not found",
     "MISSION_NOT_FOUND": "1304:Task not found",

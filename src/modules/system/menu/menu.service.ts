@@ -8,7 +8,6 @@ import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { RedisKeys } from '~/constants/cache.constant'
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { MenuEntity } from '~/entities/menu.entity'
 import { genAuthPermKey, genAuthTokenKey } from '~/helper/genRedisKey'
 import { SseService } from '~/modules/sse/sse.service'
@@ -17,6 +16,8 @@ import { deleteEmptyChildren, generatorMenu, generatorRouters } from '~/utils'
 
 import { RoleService } from '../role/role.service'
 
+import { I18nService } from 'nestjs-i18n'
+import { I18nTranslations } from 'types/i18n.generated'
 import { MenuDto, MenuQueryDto, MenuUpdateDto } from './menu.dto'
 
 @Injectable()
@@ -27,6 +28,7 @@ export class MenuService {
     private menuRepository: Repository<MenuEntity>,
     private roleService: RoleService,
     private sseService: SseService,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   /**
@@ -101,17 +103,17 @@ export class MenuService {
   async check(dto: Partial<MenuDto>): Promise<void | never> {
     if (dto.type === 2 && !dto.parentId) {
       // 无法直接创建权限，必须有parent
-      throw new BusinessException(ErrorEnum.PERMISSION_REQUIRES_PARENT)
+      throw new BusinessException(this.i18n.t("index.Menu.PERMISSION_REQUIRES_PARENT"))
     }
     if (dto.type === 1 && dto.parentId) {
       const parent = await this.getMenuItemInfo(dto.parentId)
       if (isEmpty(parent))
-        throw new BusinessException(ErrorEnum.PARENT_MENU_NOT_FOUND)
+        throw new BusinessException(this.i18n.t("index.Exist.PARENT_MENU_NOT_FOUND"))
 
       if (parent && parent.type === 1) {
         // 当前新增为菜单但父节点也为菜单时为非法操作
         throw new BusinessException(
-          ErrorEnum.ILLEGAL_OPERATION_DIRECTORY_PARENT,
+          this.i18n.t("index.Menu.ILLEGAL_OPERATION_DIRECTORY_PARENT")
         )
       }
     }

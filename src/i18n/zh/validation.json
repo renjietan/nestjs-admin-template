@@ -1,0 +1,9 @@
+{
+    "RoleValueLengthTooShort": "500:角色值长度不能小于2",
+    "RoleValueAlphanumericOnly": "500:角色值只能包含字母和数字",
+    "RoleNameLengthTooShort": "500:角色名称长度不能小于2",
+    "CronExpressionRequired": "500:Cron表达式不能为空，请输入有效的表达式",
+    "InvalidPhoneNumberFormat": "500:手机号格式不正确",
+    "InvalidEmailFormat": "500:邮箱格式不正确",
+    "InvalidIdFormat": "id验证失败"
+}

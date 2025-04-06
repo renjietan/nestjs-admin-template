@@ -39,22 +39,6 @@ import { WaveDeviceConfigModule } from './modules/wave_device_config/wave_device
 import { DatabaseModule } from './shared/database/database.module'
 import { SocketModule } from './socket/socket.module'
 
-// class I18nCustomLoader implements I18nLoader {
-//   constructor(
-//     private readonly options: I18nAbstractLoaderOptions & {
-//       translationsPath: string;
-//     },
-//   ) {}
-//   languages(): Promise<string[] | Observable<string[]>> {
-//     return ["en-US", "zh-CN"]
-
-//   }
-//   load(): Promise<I18nTranslation | Observable<I18nTranslation>> {
-//     console.log('=====================load', );
-//     throw new Error('Method not implemented.')
-//   }
-
-// }
 
 @Module({
   imports: [

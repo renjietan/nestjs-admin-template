@@ -22,7 +22,8 @@ import { SseService } from '~/modules/sse/sse.service'
 
 import { MenuService } from '../menu/menu.service'
 
-import { ErrorEnum } from '~/constants/error-code.constant'
+import { I18nService } from 'nestjs-i18n'
+import { I18nTranslations } from 'types/i18n.generated'
 import { RoleDto, RoleQueryDto, RoleUpdateDto } from './role.dto'
 import { RoleInfo } from './role.model'
 import { RoleService } from './role.service'
@@ -45,6 +46,7 @@ export class RoleController {
     private menuService: MenuService,
     @Inject(forwardRef(() => SseService))
     private sseService: SseService,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   @Get()
@@ -84,7 +86,7 @@ export class RoleController {
   @Perm(permissions.DELETE)
   async delete(@IdParam() id: number): Promise<void> {
     if (await this.roleService.checkUserByRoleId(id))
-      throw new BadRequestException(ErrorEnum.RoleHasAssociatedUsers)
+      throw new BadRequestException(this.i18n.t("index.DataLint.RoleHasAssociatedUsers"))
 
     await this.roleService.delete(id)
     await this.menuService.refreshOnlineUserPerms(false)

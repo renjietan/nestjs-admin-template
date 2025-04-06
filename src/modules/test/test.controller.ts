@@ -39,11 +39,6 @@ export class TestController {
     console.log('data=============', data)
     console.log('ip============', ip)
     console.log('uri============', uri)
-    // throw new CannotFindException()
-    // throw new SocketException("socket============")
-    // throw new BusinessException(
-    //   ErrorEnum.ILLEGAL_OPERATION_DIRECTORY_PARENT,
-    // )
   }
 
   @ApiOperation({

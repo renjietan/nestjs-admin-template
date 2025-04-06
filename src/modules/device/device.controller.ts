@@ -45,7 +45,6 @@ export class DeviceController {
   @ApiResult({ type: InsertResult })
   @Perm(permissions.CREATE)
   async create(@Body() data: DeviceDto, @AuthUser() user: IAuthUser) {
-    console.log('data================', data);
     return await this.deviceService.create(data, user?.uid)
   }
 

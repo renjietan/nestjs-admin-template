@@ -14,7 +14,8 @@ import { EventBusEvents } from '~/constants/event-bus.constant'
 import { TokenService } from '~/modules/auth/services/token.service'
 import { CacheService } from '~/shared/redis/cache.service'
 
-import { ErrorEnum } from '~/constants/error-code.constant'
+import { I18nService } from 'nestjs-i18n'
+import { I18nTranslations } from 'types/i18n.generated'
 import { BroadcastBaseGateway } from '../base.gateway'
 import { BusinessEvents } from '../business-event.constant'
 
@@ -34,6 +35,7 @@ export function createAuthGateway(options: AuthGatewayOptions): new (...args: an
       protected readonly jwtService: JwtService,
       protected readonly tokenService: TokenService,
       private readonly cacheService: CacheService,
+      private readonly i18n: I18nService<I18nTranslations>
     ) {
       super()
     }
@@ -43,7 +45,7 @@ export function createAuthGateway(options: AuthGatewayOptions): new (...args: an
 
     async authFailed(client: Socket) {
       client.send(
-        this.gatewayMessageFormat(BusinessEvents.AUTH_FAILED, ErrorEnum.AuthenticationFailed),
+        this.gatewayMessageFormat(BusinessEvents.AUTH_FAILED, this.i18n.t("index.Auth.AuthenticationFailed")),
       )
       client.disconnect()
     }

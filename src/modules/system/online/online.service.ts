@@ -7,7 +7,6 @@ import { UAParser } from 'ua-parser-js'
 import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
-import { ErrorEnum } from '~/constants/error-code.constant'
 
 import { AccessTokenEntity } from '~/entities/access-token.entity'
 import { genOnlineUserKey } from '~/helper/genRedisKey'
@@ -18,6 +17,8 @@ import { SseService } from '~/modules/sse/sse.service'
 
 import { getIpAddress } from '~/utils'
 
+import { I18nService } from 'nestjs-i18n'
+import { I18nTranslations } from 'types/i18n.generated'
 import { UserService } from '../../user/user.service'
 import { OnlineUserInfo } from './online.model'
 
@@ -29,6 +30,7 @@ export class OnlineService {
     private authService: AuthService,
     private tokenService: TokenService,
     private sseService: SseService,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   /** 在线用户数量变动时，通知前端实时更新在线用户数量或列表, 3 秒内最多推送一次，避免频繁触发 */
@@ -117,7 +119,7 @@ export class OnlineService {
     const rootUserId = await this.userService.findRootUserId()
     const targetUid = token.user.id
     if (targetUid === rootUserId || targetUid === user?.uid)
-      throw new BusinessException(ErrorEnum.NOT_ALLOWED_TO_LOGOUT_USER)
+      throw new BusinessException(this.i18n.t("index.USER.NOT_ALLOWED_TO_LOGOUT_USER"))
 
     const targetUser = await this.tokenService.verifyAccessToken(token.value)
     await this.authService.clearLoginStatus(targetUser, token.value)

@@ -15,13 +15,14 @@ import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { AppConfig, IAppConfig, RouterWhiteList } from '~/config'
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { env } from '~/global/env'
 
 import { genTokenBlacklistKey } from '~/helper/genRedisKey'
 
 import { AuthService } from '~/modules/auth/auth.service'
 
+import { I18nService } from 'nestjs-i18n'
+import { I18nTranslations } from 'types/i18n.generated'
 import { checkIsDemoMode } from '~/utils'
 import { AuthStrategy, PUBLIC_KEY } from '../auth.constant'
 import { TokenService } from '../services/token.service'
@@ -47,6 +48,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     private tokenService: TokenService,
     @InjectRedis() private readonly redis: Redis,
     @Inject(AppConfig.KEY) private appConfig: IAppConfig,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {
     super()
   }
@@ -56,7 +58,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
       context.getHandler(),
       context.getClass(),
     ])
-
+    
     const request = context.switchToHttp().getRequest<FastifyRequest<RequestType>>()
 
     // const response = context.switchToHttp().getResponse<FastifyReply>()
@@ -79,7 +81,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     // 检查 token 是否在黑名单中
     if (await this.redis.get(genTokenBlacklistKey(token))) {
       console.log('JwtAuthGuard1 token in black===========', token)
-      throw new BusinessException(ErrorEnum.INVALID_LOGIN)
+      throw new BusinessException(this.i18n.t("index.Auth.INVALID_LOGIN"))
     }
 
     request.accessToken = token
@@ -96,13 +98,13 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
 
       if (isEmpty(token)) {
         console.log('JwtAuthGuard2 no login===========', token)
-        throw new UnauthorizedException(ErrorEnum.NO_LOGIN)
+        throw new UnauthorizedException(this.i18n.t("index.Auth.NO_LOGIN"))
       }
 
       // 在 handleRequest 中 user 为 null 时会抛出 UnauthorizedException
       if (err instanceof UnauthorizedException) {
         console.log('JwtAuthGuard 3 user is null===========', err)
-        throw new BusinessException(ErrorEnum.INVALID_LOGIN)
+        throw new BusinessException(this.i18n.t("index.Auth.INVALID_LOGIN"))
       }
 
       // 判断 token 是否有效且存在, 如果不存在则认证失败
@@ -112,7 +114,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
 
       if (!isValid)
         console.log('JwtAuthGuard 4 token valid===========', token)
-      throw new BusinessException(ErrorEnum.INVALID_LOGIN)
+      throw new BusinessException(this.i18n.t("index.Auth.INVALID_LOGIN"))
     }
 
     // SSE 请求
@@ -127,7 +129,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
 
       if (Number(uid) !== request.user?.uid) {
         console.log('JwtAuthGuard 5 ===========', '路径参数 uid 与当前 token 登录的用户 uid 不一致')
-        throw new UnauthorizedException(ErrorEnum.INVALID_LOGIN)
+        throw new UnauthorizedException(this.i18n.t("index.Auth.INVALID_LOGIN"))
       }
     }
 
@@ -135,7 +137,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     if (pv !== `${request.user.pv}`) {
       // 密码版本不一致，登录期间已更改过密码
       console.log('JwtAuthGuard 6 ===========', '密码版本不一致，登录期间已更改过密码')
-      throw new BusinessException(ErrorEnum.INVALID_LOGIN)
+      throw new BusinessException(this.i18n.t("index.Auth.INVALID_LOGIN"))
     }
 
     // 不允许多端登录
@@ -145,7 +147,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
       if (token !== cacheToken) {
         // 与redis保存不一致 即二次登录
         console.log('JwtAuthGuard 7 ===========', '与redis保存不一致 即二次登录')
-        throw new BusinessException(ErrorEnum.ACCOUNT_LOGGED_IN_ELSEWHERE)
+        throw new BusinessException(this.i18n.t("index.Auth.ACCOUNT_LOGGED_IN_ELSEWHERE"))
       }
     }
 

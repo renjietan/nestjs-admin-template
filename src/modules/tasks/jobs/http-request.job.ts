@@ -3,7 +3,8 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 
 import { LoggerService } from '~/shared/logger/logger.service'
 
-import { ErrorEnum } from '~/constants/error-code.constant'
+import { I18nService } from 'nestjs-i18n'
+import { I18nTranslations } from 'types/i18n.generated'
 import { Mission } from '../mission.decorator'
 
 /**
@@ -15,6 +16,7 @@ export class HttpRequestJob {
   constructor(
     private readonly httpService: HttpService,
     private readonly logger: LoggerService,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   /**
@@ -27,7 +29,7 @@ export class HttpRequestJob {
       this.logger.log(result, HttpRequestJob.name)
     }
     else {
-      throw new BadRequestException(ErrorEnum.HttpRequestTaskParametersMissing)
+      throw new BadRequestException(this.i18n.t("index.Task.HttpRequestTaskParametersMissing"))
     }
   }
 }

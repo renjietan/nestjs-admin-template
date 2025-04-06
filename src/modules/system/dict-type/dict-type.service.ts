@@ -7,8 +7,9 @@ import { Repository } from "typeorm";
 import { Exact } from "~/common/dto/pager.dto";
 import { DictTypeEntity } from "~/entities/dict-type.entity";
 
+import { I18nService } from "nestjs-i18n";
+import { I18nTranslations } from "types/i18n.generated";
 import { BusinessException } from "~/common/exceptions/biz.exception";
-import { ErrorEnum } from "~/constants/error-code.constant";
 import { paginate } from "~/helper/paginate";
 import { Pagination } from "~/helper/paginate/pagination";
 import { DictItemService } from "../dict-item/dict-item.service";
@@ -21,7 +22,7 @@ export class DictTypeService {
     @InjectRepository(DictTypeEntity) private dictTypeRepository: Repository<DictTypeEntity>,
     @InjectRepository(DictItemEntity) private dictItemRepository: Repository<DictItemEntity>,
     private readonly dict_service: DictItemService,
-
+    private readonly i18n: I18nService<I18nTranslations>
   ) { }
 
   async patch(dto: PatchDto) {
@@ -62,7 +63,7 @@ export class DictTypeService {
           let entity_item = await manager.findOne(DictItemEntity, {
             where: query.items,
           });
-          if (entity_type || entity_item) throw new BusinessException(ErrorEnum.UniqueDictionaryKeyValueRequired)
+          if (entity_type || entity_item) throw new BusinessException(this.i18n.t("index.Unique.UniqueDictionaryKeyValueRequired"))
         }
         const res = [];
         let index = 0
@@ -99,7 +100,7 @@ export class DictTypeService {
         }
         return res;
       } catch (error) {
-        throw new BusinessException(ErrorEnum.OperationFailed)
+        throw new BusinessException(this.i18n.t("index.System.OperationFailed"))
       }
     });
   }

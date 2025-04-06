@@ -10,7 +10,8 @@ import { RoleEntity } from '~/entities/role.entity'
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
 
-import { ErrorEnum } from '~/constants/error-code.constant'
+import { I18nService } from 'nestjs-i18n'
+import { I18nTranslations } from 'types/i18n.generated'
 import { RoleDto, RoleQueryDto, RoleUpdateDto } from './role.dto'
 
 @Injectable()
@@ -21,6 +22,7 @@ export class RoleService {
     @InjectRepository(MenuEntity)
     private menuRepository: Repository<MenuEntity>,
     @InjectEntityManager() private entityManager: EntityManager,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   /**
@@ -80,7 +82,7 @@ export class RoleService {
 
   async delete(id: number): Promise<void> {
     if (id === ROOT_ROLE_ID)
-      throw new Error(ErrorEnum.CannotDeleteSuperAdmin)
+      throw new Error(this.i18n.t("index.Role.CannotDeleteSuperAdmin"))
     await this.roleRepository.delete(id)
   }
 

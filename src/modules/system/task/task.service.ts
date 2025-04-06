@@ -16,7 +16,6 @@ import { Like, Repository } from 'typeorm'
 import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
-import { ErrorEnum } from '~/constants/error-code.constant'
 
 import { TaskEntity } from '~/entities/task.entity'
 import { paginate } from '~/helper/paginate'
@@ -24,6 +23,8 @@ import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
 import { MISSION_DECORATOR_KEY } from '~/modules/tasks/mission.decorator'
 
+import { I18nService } from 'nestjs-i18n'
+import { I18nTranslations } from 'types/i18n.generated'
 import {
   SYS_TASK_QUEUE_NAME,
   SYS_TASK_QUEUE_PREFIX,
@@ -42,6 +43,7 @@ export class TaskService implements OnModuleInit {
     private moduleRef: ModuleRef,
     private reflector: Reflector,
     @InjectRedis() private redis: Redis,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   /**
@@ -120,7 +122,7 @@ export class TaskService implements OnModuleInit {
       .getOne()
 
     if (!task)
-      throw new NotFoundException(ErrorEnum.TaskNotFoundById)
+      throw new NotFoundException(this.i18n.t("index.NoExist.TaskNotFoundById"))
 
     return task
   }
@@ -130,7 +132,7 @@ export class TaskService implements OnModuleInit {
    */
   async delete(task: TaskEntity): Promise<void> {
     if (!task)
-      throw new BadRequestException(ErrorEnum.ScheduledTaskParametersMissing)
+      throw new BadRequestException(this.i18n.t("index.Task.ScheduledTaskParametersMissing"))
 
     await this.stop(task)
     await this.taskRepository.delete(task.id)
@@ -304,7 +306,7 @@ export class TaskService implements OnModuleInit {
 
       // 所执行的任务不存在
       if (!service || !(exec in service))
-        throw new NotFoundException(ErrorEnum.ScheduledTaskNotFound)
+        throw new NotFoundException(this.i18n.t("index.Exist.ScheduledTaskNotFound"))
 
       // 检测是否有Mission注解
       const hasMission = this.reflector.get<boolean>(
@@ -313,12 +315,12 @@ export class TaskService implements OnModuleInit {
       )
       // 如果没有，则抛出错误
       if (!hasMission)
-        throw new BusinessException(ErrorEnum.INSECURE_MISSION)
+        throw new BusinessException(this.i18n.t("index.Task.INSECURE_MISSION"))
     }
     catch (e) {
       if (e instanceof UnknownElementException) {
         // 任务不存在
-        throw new NotFoundException(`${ ErrorEnum.ScheduledTaskNotFound }`)
+        throw new NotFoundException(this.i18n.t("index.NoExist.ScheduledTaskNotFound"))
       }
       else {
         // 其余错误则不处理，继续抛出

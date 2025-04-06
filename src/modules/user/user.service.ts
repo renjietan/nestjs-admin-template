@@ -7,7 +7,6 @@ import { EntityManager, Like, Repository } from 'typeorm'
 import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { ROOT_ROLE_ID, SYS_USER_INITPASSWORD } from '~/constants/system.constant'
 import { genAuthPermKey, genAuthPVKey, genAuthTokenKey, genOnlineUserKey } from '~/helper/genRedisKey'
 
@@ -81,7 +80,7 @@ export class UserService {
       .getOne()
 
     if (isEmpty(user))
-      throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
+      throw new BusinessException(this.i18n.t("index.NoExist.USER_NOT_FOUND"))
 
     delete user?.psalt
 
@@ -94,7 +93,7 @@ export class UserService {
   async updateAccountInfo(uid: number, info: AccountUpdateDto): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: uid })
     if (isEmpty(user))
-      throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
+      throw new BusinessException(this.i18n.t("index.Exist.USER_NOT_FOUND"))
 
     const data = {
       ...(info.nickname ? { nickname: info.nickname } : null),
@@ -110,12 +109,12 @@ export class UserService {
   async updatePassword(uid: number, dto: PasswordUpdateDto): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: uid })
     if (isEmpty(user))
-      throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
+      throw new BusinessException(this.i18n.t("index.Exist.USER_NOT_FOUND"))
 
     const comparePassword = md5(`${dto.oldPassword}${user.psalt}`)
     // 原密码不一致，不允许更改
     if (user.password !== comparePassword)
-      throw new BusinessException(ErrorEnum.PASSWORD_MISMATCH)
+      throw new BusinessException(this.i18n.t("index.USER.PASSWORD_MISMATCH"))
 
     const password = md5(`${dto.newPassword}${user.psalt}`)
     await this.userRepository.update({ id: uid }, { password })
@@ -253,7 +252,7 @@ export class UserService {
   async delete(userIds: number[]): Promise<void | never> {
     const rootUserId = await this.findRootUserId()
     if (userIds.includes(rootUserId))
-      throw new BadRequestException(ErrorEnum.CannotDeleteRootUser)
+      throw new BadRequestException(this.i18n.t("index.USER.CannotDeleteRootUser"))
 
     await this.userRepository.delete(userIds)
   }
@@ -348,7 +347,7 @@ export class UserService {
   async exist(username: string) {
     const user = await this.userRepository.findOneBy({ username })
     if (isNil(user))
-      throw new BusinessException(ErrorEnum.SYSTEM_USER_EXISTS)
+      throw new BusinessException(this.i18n.t("index.Unique.SYSTEM_USER_EXISTS"))
 
     return true
   }
@@ -361,7 +360,7 @@ export class UserService {
       username,
     })
     if (!isEmpty(exists))
-      throw new BusinessException(ErrorEnum.SYSTEM_USER_EXISTS)
+      throw new BusinessException(this.i18n.t("index.Unique.SYSTEM_USER_EXISTS"))
 
     await this.entityManager.transaction(async (manager) => {
       const salt = randomValue(32)

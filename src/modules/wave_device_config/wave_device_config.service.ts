@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { I18nService } from 'nestjs-i18n'
 import { Equal, FindManyOptions, In, Repository } from 'typeorm'
+import { I18nTranslations } from 'types/i18n.generated'
 import { BusinessException } from '~/common/exceptions/biz.exception'
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { WaveDeviceConfigEntity } from '~/entities/wave_device_config'
 import { paginate } from '~/helper/paginate'
 import { DictItemService } from '../system/dict-item/dict-item.service'
@@ -15,7 +16,8 @@ import { SearcheWaveDeviceConfigDto } from './dto/search.dto'
 export class WaveDeviceConfigService {
   constructor(
     @InjectRepository(WaveDeviceConfigEntity) private readonly waveDeviceConfigEntity: Repository<WaveDeviceConfigEntity>,
-    private readonly dict_item_service: DictItemService
+    private readonly dict_item_service: DictItemService,
+    private readonly i18n: I18nService<I18nTranslations>
   ) { }
 
   async search(data: SearcheWaveDeviceConfigDto) {
@@ -66,7 +68,7 @@ export class WaveDeviceConfigService {
     const { list } = params
     const validate_error = await this.validate_wave_list(list)
     if (validate_error.length > 0) {
-      throw new BusinessException(ErrorEnum.OperationFailedDictionaryOrParameterError)
+      throw new BusinessException(this.i18n.t("index.Dict.OperationFailedDictionaryOrParameterError"))
     }
     return await this.waveDeviceConfigEntity.manager.transaction(async (manager) => {
       await manager.clear(WaveDeviceConfigEntity)

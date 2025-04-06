@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
+import { I18nTranslations } from "types/i18n.generated";
 import { Exact, Order } from "~/common/dto/pager.dto";
 import { BusinessException } from "~/common/exceptions/biz.exception";
-import { ErrorEnum } from "~/constants/error-code.constant";
 import { ETableEntity } from "~/entities/e_table";
 import { ETableDetailEntity } from "~/entities/e_table_detail";
 import { paginate } from "~/helper/paginate";
@@ -18,7 +19,8 @@ import { UpdateEncryptDto } from "./dto/update.e.table.detail.dto";
 export class ETableDetailService {
   constructor(
     @InjectRepository(ETableDetailEntity) private readonly encrypt_entity: Repository<ETableDetailEntity>,
-    private readonly dict_item_service: DictItemService
+    private readonly dict_item_service: DictItemService,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   async search(data: SearchEncryptDto) {
@@ -69,7 +71,7 @@ export class ETableDetailService {
     }).andWhere('encrypt.channelNo = :channelNo', {
       channelNo: data.channelNo,
     }).getOne();
-    if (!!encrypt) throw new BusinessException(ErrorEnum.DuplicateChannelNumber);
+    if (!!encrypt) throw new BusinessException(this.i18n.t("index.Unique.DuplicateChannelNumber"));
     let dict_entites = await this.dict_item_service.validateDict({
       waveType: data.waveType
     })
@@ -92,7 +94,7 @@ export class ETableDetailService {
         channelNo: data.channelNo,
       }
     })
-    if(res?.id != id) throw new BusinessException(ErrorEnum.DuplicateChannelNumber)
+    if(res?.id != id) throw new BusinessException(this.i18n.t("index.Unique.DuplicateChannelNumber"))
     return await this.encrypt_entity
       .createQueryBuilder()
       .update(ETableDetailEntity)

@@ -6,7 +6,8 @@ import { In, Like, Repository } from 'typeorm'
 import { Order } from '~/common/dto/pager.dto'
 import { BusinessException } from '~/common/exceptions/biz.exception'
 
-import { ErrorEnum } from '~/constants/error-code.constant'
+import { I18nService } from 'nestjs-i18n'
+import { I18nTranslations } from 'types/i18n.generated'
 import { DictItemEntity } from '~/entities/dict-item.entity'
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
@@ -17,6 +18,7 @@ export class DictItemService {
   constructor(
     @InjectRepository(DictItemEntity)
     private dictItemRepository: Repository<DictItemEntity>,
+    private readonly i18n: I18nService<I18nTranslations>
   ) { }
 
   /**
@@ -98,7 +100,7 @@ export class DictItemService {
       },
     })
     if (_res.length == 0)
-      throw new BusinessException(ErrorEnum.InvalidDictionaryFieldValue)
+      throw new BusinessException(this.i18n.t("index.Dict.InvalidDictionaryFieldValue"))
     
     const res = _res.reduce((cur, pre) => {
       cur[pre.value] = pre

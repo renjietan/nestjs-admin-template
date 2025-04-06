@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { I18nService } from "nestjs-i18n";
 import { Like, Not, Repository } from "typeorm";
+import { I18nTranslations } from "types/i18n.generated";
 import { IdsDto } from "~/common/dto/ids.dto";
 import { BusinessException } from "~/common/exceptions/biz.exception";
-import { ErrorEnum } from "~/constants/error-code.constant";
 import { DeviceEntity } from "~/entities/d_device";
 import { paginate } from "~/helper/paginate";
 import { DictItemService } from "../system/dict-item/dict-item.service";
@@ -15,7 +16,8 @@ export class DeviceService {
   constructor(
     @InjectRepository(DeviceEntity)
     private readonly d_device_entity: Repository<DeviceEntity>,
-    private readonly dict_item_service: DictItemService
+    private readonly dict_item_service: DictItemService,
+    private readonly i18n: I18nService<I18nTranslations>
   ) { }
 
   async search(data: SearchDto) {
@@ -52,7 +54,7 @@ export class DeviceService {
       ],
     });
     if (device_entity) {
-      throw new BusinessException(ErrorEnum.DuplicateDeviceAliasOrSN);
+      throw new BusinessException(this.i18n.t("index.Unique.DuplicateDeviceAliasOrSN"));
     }
     let dict_entites = await this.dict_item_service.validateDict({
       device_type: data.device_type,
@@ -84,7 +86,7 @@ export class DeviceService {
       ],
     });
     if (device_entity) {
-      throw new BusinessException(ErrorEnum.DuplicateDeviceAliasOrSN);
+      throw new BusinessException(this.i18n.t("index.Unique.DuplicateDeviceAliasOrSN"));
     }
     let dict_entites = await this.dict_item_service.validateDict({
       device_type: data.device_type,

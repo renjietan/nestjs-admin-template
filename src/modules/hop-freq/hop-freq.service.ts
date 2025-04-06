@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { I18nService } from "nestjs-i18n";
 import { Not, Repository } from "typeorm";
+import { I18nTranslations } from "types/i18n.generated";
 import { IdsDto } from "~/common/dto/ids.dto";
 import { PagerDto } from "~/common/dto/pager.dto";
 import { BusinessException } from "~/common/exceptions/biz.exception";
-import { ErrorEnum } from "~/constants/error-code.constant";
 import { FHoppingEntity } from "~/entities/f-hopping";
 import { FTableEntity } from "~/entities/f-table";
 import { paginate } from "~/helper/paginate";
@@ -26,7 +27,8 @@ export class HopFreqService {
     private readonly f_table_entity: Repository<FTableEntity>,
     @InjectRepository(FHoppingEntity)
     private readonly f_hopping_entity: Repository<FHoppingEntity>,
-    private readonly dict_item_service: DictItemService
+    private readonly dict_item_service: DictItemService,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   async init(dto: CreateFreqTableDto, uId: number) {
@@ -38,7 +40,7 @@ export class HopFreqService {
       await manager.clear(FHoppingEntity);
       let exist_count = await this.f_table_entity.count();
       if (exist_count + create_count > 80)
-        throw new BusinessException(ErrorEnum.DataLimitExceeded);
+        throw new BusinessException(this.i18n.t("index.HopFreq.DataLimitExceeded"));
       let res = await manager.save(FTableEntity, data);
       await manager.query("SET FOREIGN_KEY_CHECKS = 1;");
       return res;
@@ -64,7 +66,7 @@ export class HopFreqService {
   async pageByTableId(table_id, dto: PagerDto) {
     let table_entity = await this.findTableById(table_id);
     if (!table_entity)
-      throw new BusinessException(ErrorEnum.HFTableNameNotExists);
+      throw new BusinessException(this.i18n.t("index.Exist.HFTableNameNotExists"));
     return await paginate(
       this.f_hopping_entity,
       { page: dto.page, pageSize: dto.pageSize },
@@ -100,7 +102,7 @@ export class HopFreqService {
     let entity = await this.f_table_entity.findOne({
       where: { id: Not(id), alias: dto.alias },
     });
-    if (entity) throw new BusinessException(ErrorEnum.TableNameExists);
+    if (entity) throw new BusinessException(this.i18n.t("index.Unique.TableNameExists"));
     await this.f_table_entity
       .createQueryBuilder()
       .update(FTableEntity)
@@ -130,7 +132,7 @@ export class HopFreqService {
   async create_hzs(table_id: number, dto: CreateHzDtos, uId: number) {
     let table_entity = await this.findTableById(table_id);
     if (!table_entity)
-      throw new BusinessException(ErrorEnum.HFTableNameNotExists);
+      throw new BusinessException(this.i18n.t("index.Exist.HFTableNameNotExists"));
     if (dto.allow_clean == 1) {
       let res_del = await this.f_hopping_entity
         .createQueryBuilder()
@@ -157,7 +159,7 @@ export class HopFreqService {
     let res = (law_conf.length == 0 ? Object.values(hf_cof) : law_conf).reduce(
       (cur, pre) => {
         if (!hf_cof[pre.type])
-          throw new BusinessException(ErrorEnum.TypeNoLongerExists);
+          throw new BusinessException(this.i18n.t("index.Exist.TypeNoLongerExists"));
         let once_conf = hf_cof[pre.type];
         //单体 配置
         pre.point_count = pre.point_count

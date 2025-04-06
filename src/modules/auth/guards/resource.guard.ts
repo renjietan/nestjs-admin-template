@@ -8,8 +8,9 @@ import { DataSource, In, Repository } from 'typeorm'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 
-import { ErrorEnum } from '~/constants/error-code.constant'
 
+import { I18nService } from 'nestjs-i18n'
+import { I18nTranslations } from 'types/i18n.generated'
 import { ResourceObject } from '../../../common/decorators/auth/resource.decorator'
 import { PUBLIC_KEY, RESOURCE_KEY, Roles } from '../auth.constant'
 
@@ -18,6 +19,7 @@ export class ResourceGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private dataSource: DataSource,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<any> {
@@ -25,7 +27,6 @@ export class ResourceGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ])
-
     const request = context.switchToHttp().getRequest<FastifyRequest>()
     const isSse = request.headers.accept === 'text/event-stream'
     // 忽略 sse 请求
@@ -63,7 +64,7 @@ export class ResourceGuard implements CanActivate {
 
       const items = getRequestItems(request)
       if (isEmpty(items))
-        throw new BusinessException(ErrorEnum.REQUESTED_RESOURCE_NOT_FOUND)
+        throw new BusinessException(this.i18n.t("index.Exist.REQUESTED_RESOURCE_NOT_FOUND"))
 
       if (condition)
         return condition(repo, items, user)
@@ -79,7 +80,7 @@ export class ResourceGuard implements CanActivate {
       const records = await repo.find(recordQuery)
 
       if (isEmpty(records))
-        throw new BusinessException(ErrorEnum.REQUESTED_RESOURCE_NOT_FOUND)
+        throw new BusinessException(this.i18n.t("index.Exist.REQUESTED_RESOURCE_NOT_FOUND"))
     }
 
     return true

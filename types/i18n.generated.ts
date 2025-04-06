@@ -72,7 +72,7 @@ export type I18nTranslations = {
             "MenuHasAssociatedRoles": string;
             "RoleHasAssociatedUsers": string;
         };
-        "NoExist": {
+        "Exist": {
             "RecordNotFound": string;
             "EXECUTED_MISSION_NOT_FOUND": string;
             "MISSION_NOT_FOUND": string;
@@ -103,6 +103,7 @@ export type I18nTranslations = {
             "VERIFICATION_CODE_SEND_FAILED": string;
             "MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY": string;
             "VerificationCode": string;
+            "EmailTaskParametersMissing": string;
         };
         "Login": {
             "INVALID_VERIFICATION_CODE": string;
@@ -135,6 +136,31 @@ export type I18nTranslations = {
         "HopFreq": {
             "DataLimitExceeded": string;
         };
+        "NoExist": {
+            "RecordNotFound": string;
+            "EXECUTED_MISSION_NOT_FOUND": string;
+            "MISSION_NOT_FOUND": string;
+            "TaskNotFoundById": string;
+            "ScheduledTaskNotFound": string;
+            "REQUESTED_RESOURCE_NOT_FOUND": string;
+            "DEFAULT_ROLE_NOT_FOUND": string;
+            "DEPARTMENT_NOT_FOUND": string;
+            "USER_NOT_FOUND": string;
+            "UNABLE_TO_FIND_DEPARTMENT_FOR_USER": string;
+            "PARENT_MENU_NOT_FOUND": string;
+            "HFTableNameNotExists": string;
+            "TypeNoLongerExists": string;
+            "PARAMETER_CONFIG_KEY_EXISTS": string;
+        };
+    };
+    "validation": {
+        "RoleValueLengthTooShort": string;
+        "RoleValueAlphanumericOnly": string;
+        "RoleNameLengthTooShort": string;
+        "CronExpressionRequired": string;
+        "InvalidPhoneNumberFormat": string;
+        "InvalidEmailFormat": string;
+        "InvalidIdFormat": string;
     };
 };
 /* prettier-ignore */

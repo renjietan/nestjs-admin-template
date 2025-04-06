@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
+import { I18nTranslations } from "types/i18n.generated";
 import { BusinessException } from "~/common/exceptions/biz.exception";
-import { ErrorEnum } from "~/constants/error-code.constant";
 import { PMSubEntity } from "~/entities/pm_sub";
 import { PMSubNetWorkDeviceEntity } from "~/entities/pm_sub_network_device";
 import { paginate } from "~/helper/paginate";
@@ -16,7 +17,8 @@ export class PmSubService {
     @InjectRepository(PMSubEntity)
     private readonly pm_sub_entity: Repository<PMSubEntity>,
     @InjectRepository(PMSubNetWorkDeviceEntity)
-    private readonly pm_sub_network_entity: Repository<PMSubNetWorkDeviceEntity>
+    private readonly pm_sub_network_entity: Repository<PMSubNetWorkDeviceEntity>,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   // TAG(2025-03-17 00:09:46 谭人杰): 子任务接口
@@ -34,7 +36,7 @@ export class PmSubService {
 
   async complete(mId: number, dto: CompleteDto, uId: number) {
     let entites = await this.findByName_sub(dto.sub.pm_sub_name)
-    if(entites.length > 0 && dto.id != entites?.[0]?.id) throw new BusinessException(ErrorEnum.DuplicateSubtaskName)
+    if(entites.length > 0 && dto.id != entites?.[0]?.id) throw new BusinessException(this.i18n.t("index.Unique.DuplicateSubtaskName"))
     return await this.pm_sub_entity.manager.transaction(async (manager) => {
       let sub_entity = await manager.upsert(
         PMSubEntity,

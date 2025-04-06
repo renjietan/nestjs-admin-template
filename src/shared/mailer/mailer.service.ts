@@ -4,11 +4,12 @@ import { Inject, Injectable } from '@nestjs/common'
 import dayjs from 'dayjs'
 
 import Redis from 'ioredis'
+import { I18nService } from 'nestjs-i18n'
+import { I18nTranslations } from 'types/i18n.generated'
 
 import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { AppConfig, IAppConfig } from '~/config'
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { randomValue } from '~/utils'
 
 @Injectable()
@@ -17,6 +18,7 @@ export class MailerService {
     @Inject(AppConfig.KEY) private appConfig: IAppConfig,
     @InjectRedis() private redis: Redis,
     private mailerService: NestMailerService,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   async log(to: string, code: string, ip: string) {
@@ -49,7 +51,7 @@ export class MailerService {
   async checkCode(to, code) {
     const ret = await this.redis.get(`captcha:${to}`)
     if (ret !== code)
-      throw new BusinessException(ErrorEnum.INVALID_VERIFICATION_CODE)
+      throw new BusinessException(this.i18n.t("index.Login.INVALID_VERIFICATION_CODE"))
 
     await this.redis.del(`captcha:${to}`)
   }
@@ -60,12 +62,12 @@ export class MailerService {
     // ip限制
     const ipLimit = await this.redis.get(`ip:${ip}:send:limit`)
     if (ipLimit)
-      throw new BusinessException(ErrorEnum.TOO_MANY_REQUESTS)
+      throw new BusinessException(this.i18n.t("index.Request.TOO_MANY_REQUESTS"))
 
     // 1分钟最多接收1条
     const limit = await this.redis.get(`captcha:${to}:limit`)
     if (limit)
-      throw new BusinessException(ErrorEnum.TOO_MANY_REQUESTS)
+      throw new BusinessException(this.i18n.t("index.Request.TOO_MANY_REQUESTS"))
 
     // 1天一个邮箱最多接收5条
     let limitCountOfDay: string | number = await this.redis.get(
@@ -74,7 +76,7 @@ export class MailerService {
     limitCountOfDay = limitCountOfDay ? Number(limitCountOfDay) : 0
     if (limitCountOfDay > LIMIT_TIME) {
       throw new BusinessException(
-        ErrorEnum.MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY,
+        this.i18n.t("index.Email.MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY")
       )
     }
 
@@ -85,7 +87,7 @@ export class MailerService {
     ipLimitCountOfDay = ipLimitCountOfDay ? Number(ipLimitCountOfDay) : 0
     if (ipLimitCountOfDay > LIMIT_TIME) {
       throw new BusinessException(
-        ErrorEnum.MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY,
+        this.i18n.t("index.Email.MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY")
       )
     }
   }
@@ -113,7 +115,7 @@ export class MailerService {
   }
 
   async sendVerificationCode(to, code = randomValue(4, '1234567890')) {
-    const subject = `[${this.appConfig.name}] ${ ErrorEnum.VerificationCode }`
+    const subject = `[${this.appConfig.name}] ${ this.i18n.t("index.Email.VerificationCode") }`
 
     try {
       await this.mailerService.sendMail({
@@ -127,7 +129,7 @@ export class MailerService {
     }
     catch (error) {
       console.log(error)
-      throw new BusinessException(ErrorEnum.VERIFICATION_CODE_SEND_FAILED)
+      throw new BusinessException(this.i18n.t("index.Email.VERIFICATION_CODE_SEND_FAILED"))
     }
 
     return {

@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { I18nService } from "nestjs-i18n";
 import { Repository } from "typeorm";
+import { I18nTranslations } from "types/i18n.generated";
 import { BusinessException } from "~/common/exceptions/biz.exception";
-import { ErrorEnum } from "~/constants/error-code.constant";
 import { ETableEntity } from "~/entities/e_table";
 import { paginate } from "~/helper/paginate";
 import { BatchCreateEncryptDto } from "../e_table_detail/dto/batchCreate.e.table.detail.dto";
@@ -18,7 +19,8 @@ export class ETableService {
     @InjectRepository(ETableEntity)
     private readonly e_table_entity: Repository<ETableEntity>,
     private readonly e_table_entity_detail_service: ETableDetailService,
-    private readonly dict_item_service: DictItemService
+    private readonly dict_item_service: DictItemService,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   async search() {
@@ -42,7 +44,7 @@ export class ETableService {
         },
       });
       if (!!table)
-        throw new BusinessException(ErrorEnum.TableNameExists);
+        throw new BusinessException(this.i18n.t("index.Unique.TableNameExists"));
       let dict_entites = await this.dict_item_service.validateDict({
         waveType: data.waveType,
       });
@@ -108,10 +110,10 @@ export class ETableService {
       return await this.e_table_entity.manager.transaction(async () => {
         await this.e_table_entity.delete(id);
         await this.e_table_entity_detail_service.deleteByTableId(id);
-        return ErrorEnum.OperationSuccess;
+        return this.i18n.t("index.System.OperationSuccess");
       });
     } catch (error) {
-      throw new BusinessException(ErrorEnum.OperationFailed);
+      throw new BusinessException(this.i18n.t("index.System.OperationFailed"));
     }
   }
 }

@@ -9,12 +9,11 @@ import {
   ValidateNested
 } from "class-validator";
 import { AllowCleanDto } from "~/common/dto/clean.dto";
-import { ErrorEnum } from "~/constants/error-code.constant";
 import { FTableEntity } from "~/entities/f-table";
 import { IsUnique } from "~/shared/database/constraints/unique.constraint";
 
 export class CreateTableDto {
-  @IsUnique({ entity: FTableEntity, message: ErrorEnum.UniqueAliasRequired })
+  @IsUnique({ entity: FTableEntity, message: "index.Unique.UniqueAliasRequired" })
   @ApiProperty({ description: "别名", example: "别名" })
   alias: string;
 

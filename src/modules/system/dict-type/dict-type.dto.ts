@@ -5,24 +5,23 @@ import { PagerDto } from '~/common/dto/pager.dto'
 
 import { IsUnique } from '~/shared/database/constraints/unique.constraint'
 
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { DictTypeEntity } from '../../../entities/dict-type.entity'
 
 export class DictTypeDto extends PartialType(DictTypeEntity) {
   @ApiProperty({ description: '字典类型名称' })
-  @IsUnique({ entity: DictTypeEntity, message: ErrorEnum.DuplicateDictionaryName })
+  @IsUnique({ entity: DictTypeEntity, message: "index.Unique.DuplicateDictionaryName" })
   @IsString()
   @MinLength(1)
   name: string
 
   @ApiProperty({ description: '字典类型英文名称' })
-  @IsUnique({ entity: DictTypeEntity, message: ErrorEnum.DuplicateEnglishDictionaryName })
+  @IsUnique({ entity: DictTypeEntity, message: "index.Unique.DuplicateEnglishDictionaryName" })
   @IsString()
   @MinLength(1)
   en_name: string
 
   @ApiProperty({ description: '字典类型code' })
-  @IsUnique({ entity: DictTypeEntity, message: ErrorEnum.DuplicateDictionaryCode })
+  @IsUnique({ entity: DictTypeEntity, message: "index.Unique.DuplicateDictionaryCode" })
   @IsString()
   @MinLength(3)
   code: string

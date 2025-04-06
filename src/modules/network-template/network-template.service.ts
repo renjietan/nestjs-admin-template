@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { I18nService } from 'nestjs-i18n'
 import { Like, Repository } from 'typeorm'
+import { I18nTranslations } from 'types/i18n.generated'
 import { BusinessException } from '~/common/exceptions/biz.exception'
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { NNetWorkTemplateEntity } from '~/entities/n_network_template'
 import { paginate } from '~/helper/paginate'
 import { delChildren } from '~/utils/sql_str'
@@ -16,6 +17,7 @@ export class NetworkTemplateService {
   constructor(
     @InjectRepository(NNetWorkTemplateEntity) private readonly network_template_entity: Repository<NNetWorkTemplateEntity>,
     private readonly dict_item_service: DictItemService,
+    private readonly i18n: I18nService<I18nTranslations>
   ) { }
 
   async create(uId: number, data: NetWorkTemplateDTO) {
@@ -24,7 +26,7 @@ export class NetworkTemplateService {
       type: data?.type ?? 1
     }, false)
     if (entities.meta.itemCount > 0) {
-      throw new BusinessException(ErrorEnum.DuplicateNetworkTemplateName)
+      throw new BusinessException(this.i18n.t("index.Unique.DuplicateNetworkTemplateName"))
     }
     const entity = new NNetWorkTemplateEntity()
     entity.createBy = uId
@@ -41,7 +43,7 @@ export class NetworkTemplateService {
       type: data?.type ?? 1
     }, false)
     if (entities.meta.itemCount > 0 && entities?.items?.[0]?.id != id) {
-      throw new BusinessException(ErrorEnum.DuplicateNetworkTemplateName)
+      throw new BusinessException(this.i18n.t("index.Unique.DuplicateNetworkTemplateName"))
     }
     let dict_entites = await this.dict_item_service.validateDict({
       waveForm: data.waveForm,

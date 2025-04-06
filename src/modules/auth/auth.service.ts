@@ -7,7 +7,6 @@ import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 import { BusinessException } from '~/common/exceptions/biz.exception'
 
 import { AppConfig, IAppConfig, ISecurityConfig, SecurityConfig } from '~/config'
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { genAuthPermKey, genAuthPVKey, genAuthTokenKey, genTokenBlacklistKey } from '~/helper/genRedisKey'
 
 import { UserService } from '~/modules/user/user.service'
@@ -18,6 +17,8 @@ import { LoginLogService } from '../system/log/services/login-log.service'
 import { MenuService } from '../system/menu/menu.service'
 import { RoleService } from '../system/role/role.service'
 
+import { I18nService } from 'nestjs-i18n'
+import { I18nTranslations } from 'types/i18n.generated'
 import { TokenService } from './services/token.service'
 
 @Injectable()
@@ -31,17 +32,18 @@ export class AuthService {
     private tokenService: TokenService,
     @Inject(SecurityConfig.KEY) private securityConfig: ISecurityConfig,
     @Inject(AppConfig.KEY) private appConfig: IAppConfig,
+    private readonly i18n: I18nService<I18nTranslations>
   ) {}
 
   async validateUser(credential: string, password: string): Promise<any> {
     const user = await this.userService.findUserByUserName(credential)
 
     if (isEmpty(user))
-      throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
+      throw new BusinessException(this.i18n.t("index.Exist.USER_NOT_FOUND"))
 
     const comparePassword = md5(`${password}${user.psalt}`)
     if (user.password !== comparePassword)
-      throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD)
+      throw new BusinessException(this.i18n.t("index.Login.INVALID_USERNAME_PASSWORD"))
 
     if (user) {
       const { password, ...result } = user
@@ -63,11 +65,11 @@ export class AuthService {
   ): Promise<string> {
     const user = await this.userService.findUserByUserName(username)
     if (isEmpty(user))
-      throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD)
+      throw new BusinessException(this.i18n.t("index.Login.INVALID_USERNAME_PASSWORD"))
 
     const comparePassword = md5(`${password}${user.psalt}`)
     if (user.password !== comparePassword)
-      throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD)
+      throw new BusinessException(this.i18n.t("index.Login.INVALID_USERNAME_PASSWORD"))
 
     const roleIds = await this.roleService.getRoleIdsByUser(user.id)
 
@@ -98,7 +100,7 @@ export class AuthService {
 
     const comparePassword = md5(`${password}${user.psalt}`)
     if (user.password !== comparePassword)
-      throw new BusinessException(ErrorEnum.INVALID_USERNAME_PASSWORD)
+      throw new BusinessException(this.i18n.t("index.Login.INVALID_USERNAME_PASSWORD"))
   }
 
   async loginLog(uid: number, ip: string, ua: string) {

@@ -7,7 +7,6 @@ import { LessThan } from 'typeorm'
 
 import { CronOnce } from '~/common/decorators/cron-once.decorator'
 import { ConfigKeyPaths } from '~/config'
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { AccessTokenEntity } from '~/entities/access-token.entity'
 
 @Injectable()
@@ -35,7 +34,7 @@ export class CronService {
         await AccessTokenEntity.remove(token)
 
         this.logger.debug(
-          `--> Delete expired tokens: ${value}, ${ErrorEnum.IssuedAt} ${dayjs(created_at).format(
+          `--> Delete expired tokens: ${value}, Sign issue ${dayjs(created_at).format(
             'YYYY-MM-DD H:mm:ss',
           )}`,
         )

@@ -11,13 +11,12 @@ import {
 } from 'class-validator'
 
 import { PagerDto } from '~/common/dto/pager.dto'
-import { ErrorEnum } from '~/constants/error-code.constant'
 
 export class UserDto {
   @ApiProperty({ description: '登录账号', example: 'admin' })
   @IsString()
   @Matches(/^[\w-]{4,20}$/, {
-    message: ErrorEnum.UsernameFailed,
+    message: "index.USER.UsernameFailed",
   })
   username: string
 

@@ -12,20 +12,19 @@ import { OperatorDto } from '~/common/dto/operator.dto'
 import { PagerDto } from '~/common/dto/pager.dto'
 import { IsUnique } from '~/shared/database/constraints/unique.constraint'
 
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { RoleEntity } from '../../../entities/role.entity'
 
 export class RoleDto extends OperatorDto {
   @ApiProperty({ description: '角色名称' })
   @IsString()
-  @MinLength(2, { message: ErrorEnum.RoleNameLengthTooShort })
+  @MinLength(2, { message: "index.Dto.RoleNameLengthTooShort" })
   name: string
 
   @IsUnique({ entity: RoleEntity })
   @ApiProperty({ description: '角色标识' })
   @IsString()
-  @Matches(/^[a-z0-9]+$/i, { message: ErrorEnum.RoleValueAlphanumericOnly })
-  @MinLength(2, { message: ErrorEnum.RoleValueLengthTooShort })
+  @Matches(/^[a-z0-9]+$/i, { message: "index.Dto.RoleValueAlphanumericOnly" })
+  @MinLength(2, { message: "index.Dto.RoleValueLengthTooShort" })
   value: string
 
   @ApiProperty({ description: '角色备注' })

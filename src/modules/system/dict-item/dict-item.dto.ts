@@ -3,7 +3,6 @@ import { IsInt, IsOptional, IsString, MinLength } from 'class-validator'
 
 import { PagerDto } from '~/common/dto/pager.dto'
 
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { IsUnique } from '~/shared/database/constraints/unique.constraint'
 import { DictItemEntity } from '../../../entities/dict-item.entity'
 
@@ -12,19 +11,19 @@ export class DictItemDto extends PartialType(DictItemEntity) {
   @IsInt()
   typeId: number
 
-  @IsUnique({ entity: DictItemEntity, message: ErrorEnum.DuplicateEnglishDictionaryItemName })
+  @IsUnique({ entity: DictItemEntity, message: "index.Unique.DuplicateDictionaryItemName" })
   @ApiProperty({ description: '字典项键名' })
   @IsString()
   @MinLength(1)
   label: string
 
-  @IsUnique({ entity: DictItemEntity, message: ErrorEnum.DuplicateEnglishDictionaryItemName })
+  @IsUnique({ entity: DictItemEntity, message: "index.Unique.DuplicateEnglishDictionaryItemName" })
   @ApiProperty({ description: '字典项英文名称' })
   @IsString()
   @MinLength(1)
   en_label: string
 
-  @IsUnique({ entity: DictItemEntity, message: ErrorEnum.DuplicateDictionaryItemCode })
+  @IsUnique({ entity: DictItemEntity, message: "index.Unique.DuplicateDictionaryItemCode" })
   @ApiProperty({ description: '字典项值' })
   @IsString()
   @MinLength(1)

@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { I18nService } from 'nestjs-i18n'
 import { Brackets, Like, Repository } from 'typeorm'
+import { I18nTranslations } from 'types/i18n.generated'
 import { BusinessException } from '~/common/exceptions/biz.exception'
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { PShotMessageEntity } from '~/entities/p_shot_message'
 import { paginate } from '~/helper/paginate'
 import { IdsDto } from '../../common/dto/ids.dto'
@@ -14,6 +15,7 @@ import { UpdatePShotMessageDto } from './dto/update-p_shot_message.dto'
 export class PShotMessageService {
   constructor(
     @InjectRepository(PShotMessageEntity) private readonly p_shot_message_entity: Repository<PShotMessageEntity>,
+    private readonly i18n: I18nService<I18nTranslations>
   ) { }
 
   async create(dto: CreatePShotMessageDto, uId: number) {
@@ -26,10 +28,10 @@ export class PShotMessageService {
     ).getOne()
     const count = await this.p_shot_message_entity.createQueryBuilder('p_shot_message').getCount()
     if (data) {
-      throw new BusinessException(ErrorEnum.DuplicateSMSContent)
+      throw new BusinessException(this.i18n.t("index.Unique.DuplicateSMSContent"))
     }
     if (count >= 100) {
-      throw new BusinessException(ErrorEnum.SystemDataLimitReached)
+      throw new BusinessException(this.i18n.t("index.ShotMessage.SystemDataLimitReached"))
     }
     const temp = new PShotMessageEntity()
     temp.text_message = dto.text_message

@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { I18nService } from 'nestjs-i18n';
 import { Like, Repository } from 'typeorm';
+import { I18nTranslations } from 'types/i18n.generated';
 import { IdsDto } from '~/common/dto/ids.dto';
 import { BusinessException } from '~/common/exceptions/biz.exception';
-import { ErrorEnum } from '~/constants/error-code.constant';
 import { PMMasterEntity } from '~/entities/pm_master';
 import { paginate } from '~/helper/paginate';
 import { PMMasterSearchDto } from './dto/pm-master-search.dto';
@@ -12,7 +13,8 @@ import { PMMasterDto } from './dto/pm-master.dto';
 @Injectable()
 export class PmMasterService {
     constructor(
-        @InjectRepository(PMMasterEntity) private readonly pm_master_entity: Repository<PMMasterEntity>
+        @InjectRepository(PMMasterEntity) private readonly pm_master_entity: Repository<PMMasterEntity>,
+        private readonly i18n: I18nService<I18nTranslations>
     ) { }
 
     async search(dto: PMMasterSearchDto, isLike = true) {
@@ -28,7 +30,7 @@ export class PmMasterService {
             pm_name: dto.pm_name
         }, false)
         if (isExist.items.length > 0) {
-            throw new BusinessException(ErrorEnum.DuplicateTaskTemplateName)
+            throw new BusinessException(this.i18n.t("index.Unique.DuplicateTaskTemplateName"))
         }
         let _entity = new PMMasterEntity()
         _entity.createBy = uId
@@ -43,7 +45,7 @@ export class PmMasterService {
     async update(id: number, dto: PMMasterDto, uId: number) {
         let isExist = await this.search(dto)
         if (isExist.items.length > 0) {
-            throw new BusinessException(ErrorEnum.DuplicateTaskTemplateName)
+            throw new BusinessException(this.i18n.t("index.Unique.DuplicateTaskTemplateName"))
         }
         return await this.pm_master_entity.createQueryBuilder().update(PMMasterEntity).set({
             ...dto,
