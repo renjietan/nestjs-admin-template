@@ -7,18 +7,17 @@ import {
   IsInt,
   IsOptional,
   IsString,
-  Matches
+  Matches,
 } from 'class-validator'
 
 import { PagerDto } from '~/common/dto/pager.dto'
 import { ErrorEnum } from '~/constants/error-code.constant'
 
 export class UserDto {
-
   @ApiProperty({ description: '登录账号', example: 'admin' })
   @IsString()
-  @Matches(/^[a-zA-Z0-9_-]{4,20}$/, {
-    message: ErrorEnum.UsernameFailed
+  @Matches(/^[\w-]{4,20}$/, {
+    message: ErrorEnum.UsernameFailed,
   })
   username: string
 

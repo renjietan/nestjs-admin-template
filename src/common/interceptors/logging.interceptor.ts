@@ -6,7 +6,6 @@ import {
   NestInterceptor,
 } from '@nestjs/common'
 import { Observable, tap } from 'rxjs'
-import { ErrorEnum } from '~/constants/error-code.constant'
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -20,7 +19,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest()
     const content = `${request.method} -> ${request.url}`
     const isSse = request.headers.accept === 'text/event-stream'
-    this.logger.debug(`+++ ${ ErrorEnum.Response } ：${content}`)
+    this.logger.debug(`+++ Response ：${content}`)
     const now = Date.now()
 
     return call$.pipe(
@@ -28,7 +27,7 @@ export class LoggingInterceptor implements NestInterceptor {
         if (isSse)
           return
 
-        this.logger.debug(`--- ${ ErrorEnum.Request }：${content}${` +${Date.now() - now}ms`}`)
+        this.logger.debug(`--- Request：${content}${` +${Date.now() - now}ms`}`)
       },
       ),
     )

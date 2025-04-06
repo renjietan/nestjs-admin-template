@@ -1,7 +1,6 @@
-import { Logger } from '@nestjs/common'
 import type { Redis, RedisOptions } from 'ioredis'
+import { Logger } from '@nestjs/common'
 import IORedis from 'ioredis'
-import { ErrorEnum } from '~/constants/error-code.constant'
 
 export class RedisSubPub {
   public pubClient: Redis
@@ -32,7 +31,7 @@ export class RedisSubPub {
     const channel = this.channelPrefix + event
     const _data = JSON.stringify(data)
     if (event !== 'log')
-      Logger.debug(`${ ErrorEnum.PublishEvent }${channel} <- ${_data}`, RedisSubPub.name)
+      Logger.debug(`PublishEvent: ${channel} <- ${_data}`, RedisSubPub.name)
 
     await this.pubClient.publish(channel, _data)
   }
@@ -46,7 +45,7 @@ export class RedisSubPub {
     const cb = (channel, message) => {
       if (channel === myChannel) {
         if (event !== 'log')
-          Logger.debug(`${ ErrorEnum.ReceiveEvent }${channel} -> ${message}`, RedisSubPub.name)
+          Logger.debug(`ReceiveEvent: ${channel} -> ${message}`, RedisSubPub.name)
 
         callback(JSON.parse(message))
       }

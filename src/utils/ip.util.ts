@@ -36,13 +36,13 @@ export function getIp(request: FastifyRequest | IncomingMessage) {
 
   let ip: string
     = request.headers['x-forwarded-for']
-    || request.headers['X-Forwarded-For']
-    || request.headers['X-Real-IP']
-    || request.headers['x-real-ip']
-    || req?.ip
-    || req?.raw?.connection?.remoteAddress
-    || req?.raw?.socket?.remoteAddress
-    || undefined
+      || request.headers['X-Forwarded-For']
+      || request.headers['X-Real-IP']
+      || request.headers['x-real-ip']
+      || req?.ip
+      || req?.raw?.connection?.remoteAddress
+      || req?.raw?.socket?.remoteAddress
+      || undefined
   if (ip && ip.split(',').length > 0)
     ip = ip.split(',')[0]
 
@@ -51,7 +51,7 @@ export function getIp(request: FastifyRequest | IncomingMessage) {
 
 export async function getIpAddress(ip: string) {
   if (isLAN(ip))
-    return ErrorEnum.InternalIP
+    return 'Internal net IP'
   try {
     let { data } = await axios.get(
       `https://whois.pconline.com.cn/ipJson.jsp?ip=${ip}&json=true`,

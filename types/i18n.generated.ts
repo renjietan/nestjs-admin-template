@@ -6,29 +6,24 @@ import { Path } from "nestjs-i18n";
 /* prettier-ignore */
 export type I18nTranslations = {
     index: {
-        System: System$1;
-        WebSocket: WebSocket$2;
-        Auth: Auth$3;
-        Rule: Rule$4;
-        Unique: Unique$5;
-        DataLint: DataLint$6;
-        NoExist: NoExist$7;
-        Request: Request$8;
-        Email: Email$9;
-        ShotMessage: ShotMessage$10;
-        HopFreq: HopFreq$11;
-        Login: Login$12;
-        USER: USER$13;
-        Role: Role$14;
-        Menu: Menu$15;
-        Task: Task$16;
-        Dict: Dict$17;
-        File: File$18;
-        Utils: Utils$19;
-        Cron: Cron$20;
-        See: See$21;
-        Redis: Redis$22;
-        Log: Log$23;
+      System: System$1;
+      Request: Request$2;
+      WebSocket: WebSocket$3;
+      Auth: Auth$4;
+      Dto: Dto$5;
+      Unique: Unique$6;
+      DataLint: DataLint$7;
+      NoExist: NoExist$8;
+      Task: Task$9;
+      File: File$10;
+      Email: Email$11;
+      Login: Login$12;
+      USER: USER$13;
+      Role: Role$14;
+      Menu: Menu$15;
+      Dict: Dict$16;
+      ShotMessage: ShotMessage$17;
+      HopFreq: HopFreq$18;
     }
 };
 /* prettier-ignore */
@@ -40,14 +35,20 @@ type System$1 = {
   OperationFailed: string;
   SERVER_ERROR: string;
   RequestTimeout: string;
+  ThirdPartyApiRequestFailed: string;
 };
 
-type WebSocket$2 = {
+type Request$2 = {
+  TOO_MANY_REQUESTS: string;
+  REQUEST_INVALIDATED: string;
+};
+
+type WebSocket$3 = {
   WebSocketDisconnected: string;
   WebSocketConnected: string;
 };
 
-type Auth$3 = {
+type Auth$4 = {
   DemoModeOperationNotAllowed: string;
   AuthenticationFailed: string;
   INVALID_LOGIN: string;
@@ -59,7 +60,7 @@ type Auth$3 = {
   SYSTEM_BUILTIN_FUNCTION_NOT_ALLOWED: string;
 };
 
-type Rule$4 = {
+type Dto$5 = {
   RoleValueLengthTooShort: string;
   RoleValueAlphanumericOnly: string;
   RoleNameLengthTooShort: string;
@@ -69,7 +70,7 @@ type Rule$4 = {
   InvalidIdFormat: string;
 };
 
-type Unique$5 = {
+type Unique$6 = {
   SYSTEM_USER_EXISTS: string;
   NODE_ROUTE_EXISTS: string;
   DuplicateRecordExists: string;
@@ -92,7 +93,7 @@ type Unique$5 = {
   DuplicateTaskName: string;
 };
 
-type DataLint$6 = {
+type DataLint$7 = {
   ROLE_HAS_ASSOCIATED_USERS: string;
   DEPARTMENT_HAS_ASSOCIATED_USERS: string;
   DEPARTMENT_HAS_ASSOCIATED_ROLES: string;
@@ -101,7 +102,7 @@ type DataLint$6 = {
   RoleHasAssociatedUsers: string;
 };
 
-type NoExist$7 = {
+type NoExist$8 = {
   RecordNotFound: string;
   EXECUTED_MISSION_NOT_FOUND: string;
   MISSION_NOT_FOUND: string;
@@ -118,23 +119,23 @@ type NoExist$7 = {
   PARAMETER_CONFIG_KEY_EXISTS: string;
 };
 
-type Request$8 = {
-  TOO_MANY_REQUESTS: string;
-  REQUEST_INVALIDATED: string;
+type Task$9 = {
+  INSECURE_MISSION: string;
+  MISSION_EXECUTION_FAILED: string;
+  ScheduledTaskParametersMissing: string;
+  EmailTaskParametersMissing: string;
+  HttpRequestTaskParametersMissing: string;
 };
 
-type Email$9 = {
+type File$10 = {
+  InvalidFileType: string;
+  UploadFailed: string;
+};
+
+type Email$11 = {
   VERIFICATION_CODE_SEND_FAILED: string;
   MAXIMUM_FIVE_VERIFICATION_CODES_PER_DAY: string;
   VerificationCode: string;
-};
-
-type ShotMessage$10 = {
-  SystemDataLimitReached: string;
-};
-
-type HopFreq$11 = {
-  DataLimitExceeded: string;
 };
 
 type Login$12 = {
@@ -162,47 +163,15 @@ type Menu$15 = {
   PERMISSION_REQUIRES_PARENT: string;
 };
 
-type Task$16 = {
-  INSECURE_MISSION: string;
-  MISSION_EXECUTION_FAILED: string;
-  ScheduledTaskParametersMissing: string;
-  EmailTaskParametersMissing: string;
-  HttpRequestTaskParametersMissing: string;
-};
-
-type Dict$17 = {
+type Dict$16 = {
   InvalidDictionaryFieldValue: string;
   OperationFailedDictionaryOrParameterError: string;
 };
 
-type File$18 = {
-  InvalidFileType: string;
-  UploadFailed: string;
+type ShotMessage$17 = {
+  SystemDataLimitReached: string;
 };
 
-type Utils$19 = {
-  InternalIP: string;
-  ThirdPartyApiRequestFailed: string;
-};
-
-type Cron$20 = {
-  Deleted: string;
-  ExpiredItemsCleared: string;
-  DeleteExpired: string;
-  IssuedAt: string;
-  StartScanningClearExpired: string;
-};
-
-type See$21 = {
-  Closed: string;
-};
-
-type Redis$22 = {
-  ReceiveEvent: string;
-  PublishEvent: string;
-};
-
-type Log$23 = {
-  Response: string;
-  Request: string;
+type HopFreq$18 = {
+  DataLimitExceeded: string;
 };

@@ -7,7 +7,6 @@ import { interval, Observable } from 'rxjs'
 
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { OnlineService } from '../system/online/online.service'
 import { MessageEvent, SseService } from './sse.service'
 
@@ -62,7 +61,7 @@ export class SseController implements BeforeApplicationShutdown {
         this.sseService.removeClient(uid, subscriber)
         this.replyMap.delete(uid)
         this.onlineService.removeOnlineUser(req.accessToken)
-        console.log(`user-${uid}${ ErrorEnum.Closed }`)
+        console.log(`user-${uid} Closed`)
       })
     })
   }

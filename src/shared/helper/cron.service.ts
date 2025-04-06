@@ -19,7 +19,7 @@ export class CronService {
 
   @CronOnce(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async deleteExpiredJWT() {
-    this.logger.log(`--> ${ ErrorEnum.StartScanningClearExpired } token`)
+    this.logger.log(`--> The system starts to scan the table to clear the token`)
 
     const expiredTokens = await AccessTokenEntity.find({
       where: {
@@ -35,7 +35,7 @@ export class CronService {
         await AccessTokenEntity.remove(token)
 
         this.logger.debug(
-          `--> ${ ErrorEnum.DeleteExpired } token：${value}, ${ ErrorEnum.IssuedAt } ${dayjs(created_at).format(
+          `--> Delete expired tokens: ${value}, ${ErrorEnum.IssuedAt} ${dayjs(created_at).format(
             'YYYY-MM-DD H:mm:ss',
           )}`,
         )
@@ -44,6 +44,6 @@ export class CronService {
       }),
     )
 
-    this.logger.log(`--> ${ ErrorEnum.Deleted } ${deleteCount} ${ ErrorEnum.ExpiredItemsCleared } token`)
+    this.logger.log(`--> Deleted ${deleteCount} expired token`)
   }
 }

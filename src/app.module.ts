@@ -4,41 +4,40 @@ import { ClassSerializerInterceptor, Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
+import { ThrottlerGuard } from '@nestjs/throttler'
+
 import { ClsModule } from 'nestjs-cls'
+import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n'
 
 import config from '~/config'
+
 import { SharedModule } from '~/shared/shared.module'
-
 import { AllExceptionsFilter } from './common/filters/any-exception.filter'
-
 import { IdempotenceInterceptor } from './common/interceptors/idempotence.interceptor'
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor'
 import { TransformInterceptor } from './common/interceptors/transform.interceptor'
+import { I18nRegToken, IIi8nConfig } from './config/I18n.config'
 import { AuthModule } from './modules/auth/auth.module'
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard'
 import { RbacGuard } from './modules/auth/guards/rbac.guard'
-import { HealthModule } from './modules/health/health.module'
-import { SseModule } from './modules/sse/sse.module'
-import { SystemModule } from './modules/system/system.module'
-import { TasksModule } from './modules/tasks/tasks.module'
-import { TestModule } from './modules/test/test.module'
-import { ToolsModule } from './modules/tools/tools.module'
-
-import { ThrottlerGuard } from '@nestjs/throttler'
-import { AcceptLanguageResolver, HeaderResolver, I18nModule, QueryResolver } from 'nestjs-i18n'
-import { I18nRegToken, IIi8nConfig } from './config/I18n.config'
 import { DeviceModule } from './modules/device/device.module'
 import { ETableModule } from './modules/e_table/e_table.module'
 import { ETableDetailModule } from './modules/e_table_detail/e_table_detail.module'
+
+import { HealthModule } from './modules/health/health.module'
 import { HopFreqModule } from './modules/hop-freq/hop-freq.module'
 import { NetworkTemplateModule } from './modules/network-template/network-template.module'
 import { PShotMessageModule } from './modules/p_shot_message/p_shot_message.module'
 import { PmMasterModule } from './modules/pm-master/pm-master.module'
 import { PmSubModule } from './modules/pm-sub/pm-sub.module'
+import { SseModule } from './modules/sse/sse.module'
+import { SystemModule } from './modules/system/system.module'
+import { TasksModule } from './modules/tasks/tasks.module'
+import { TestModule } from './modules/test/test.module'
+import { ToolsModule } from './modules/tools/tools.module'
 import { WaveDeviceConfigModule } from './modules/wave_device_config/wave_device_config.module'
 import { DatabaseModule } from './shared/database/database.module'
 import { SocketModule } from './socket/socket.module'
-
 
 // class I18nCustomLoader implements I18nLoader {
 //   constructor(
@@ -48,21 +47,20 @@ import { SocketModule } from './socket/socket.module'
 //   ) {}
 //   languages(): Promise<string[] | Observable<string[]>> {
 //     return ["en-US", "zh-CN"]
-    
+
 //   }
 //   load(): Promise<I18nTranslation | Observable<I18nTranslation>> {
 //     console.log('=====================load', );
 //     throw new Error('Method not implemented.')
 //   }
-  
-// }
 
+// }
 
 @Module({
   imports: [
     I18nModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
-        ...configService.getOrThrow<IIi8nConfig>(I18nRegToken)
+        ...configService.getOrThrow<IIi8nConfig>(I18nRegToken),
       }),
       resolvers: [
         { use: QueryResolver, options: ['lang'] },
@@ -71,7 +69,6 @@ import { SocketModule } from './socket/socket.module'
       ],
       inject: [ConfigService],
       logging: true,
-      // loader: I18nCustomLoader
     }),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -126,7 +123,7 @@ import { SocketModule } from './socket/socket.module'
     { provide: APP_INTERCEPTOR, useClass: IdempotenceInterceptor },
 
     { provide: APP_GUARD, useClass: JwtAuthGuard }, // JWT TOKEN权限验证
-    { provide: APP_GUARD, useClass: RbacGuard },  // 接口权限
+    { provide: APP_GUARD, useClass: RbacGuard }, // 接口权限
     { provide: APP_GUARD, useClass: ThrottlerGuard }, // 接口限流;参考：https://gitcode.com/gh_mirrors/th/throttler
   ],
 })

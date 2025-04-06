@@ -14,7 +14,6 @@ import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { isDev } from '~/global/env'
 
-
 interface myError {
   readonly status: number
   readonly statusCode?: number
@@ -34,12 +33,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp()
     const request = ctx.getRequest<FastifyRequest>()
     const response = ctx.getResponse<FastifyReply>()
-
+    const i18n = I18nContext.current(host)
+    const lang = i18n.lang
     const url = request.raw.url!
-
+    console.log('index.DEFAULT=============================', i18n.t('index.System.DEFAULT'))
     const status = this.getStatus(exception)
     let message = this.getErrorMessage(exception)
-    
+
     // 系统内部错误时
     if (status === HttpStatus.INTERNAL_SERVER_ERROR && !(exception instanceof BusinessException)) {
       Logger.error(exception, undefined, 'Catch')
@@ -48,22 +48,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
         message = ErrorEnum.SERVER_ERROR?.split(':')[1]
     }
     else {
-      this.logger.warn(`Error：(${status}) ${message} Path: ${decodeURI(url)}`,)
+      this.logger.warn(`Error：(${status}) ${message} Path: ${decodeURI(url)}`)
     }
-
     const apiErrorCode = exception instanceof BusinessException ? exception.getErrorCode() : status
-    const i18n = I18nContext.current(host);
-    const lang = i18n.lang
-    console.log('message====================', message);
-    console.log('lang====================', lang);
-
     // 返回基础响应结果
     const resBody: IBaseResponse = {
       status: apiErrorCode,
       message,
       data: null,
     }
-
     response.status(status).send(resBody)
   }
 
@@ -72,12 +65,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
       return exception.getStatus()
     }
     else if (exception instanceof QueryFailedError) {
-      console.log("This is QueryFailedError");
-      // console.log('driverError', exception.driverError.code)
+      console.log('This is QueryFailedError')
       return HttpStatus.INTERNAL_SERVER_ERROR
     }
     else {
-      console.log("This is myError=========", exception);
+      console.log('This is myError=========', exception)
       return (exception as myError)?.status
         ?? (exception as myError)?.statusCode ?? HttpStatus.INTERNAL_SERVER_ERROR
     }
