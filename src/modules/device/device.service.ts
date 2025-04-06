@@ -85,6 +85,7 @@ export class DeviceService {
         },
       ],
     });
+
     if (device_entity) {
       throw new BusinessException(this.i18n.t("index.Unique.DuplicateDeviceAliasOrSN"));
     }
