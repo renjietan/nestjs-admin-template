@@ -1,22 +1,46 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, Entity } from "typeorm";
+import { IsEnum, IsIP, IsNotEmpty, IsNumber } from "class-validator";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Exact } from "~/common/dto/pager.dto";
 import { CompleteEntity } from "~/common/entity/common.entity";
+import { SubEntity } from "./t_sub";
 
 @Entity("t_sub_device")
 export class SubDeviceEntity extends CompleteEntity {
-  @ApiProperty({ description: '子任务-名称', example: "任务规划-子任务-名称" })
-  @Column("text", { name: "name", comment: '任务规划-子任务-名称' })
+  @IsNotEmpty()
+  @ApiProperty({ description: 'SN', example: "SN001" })
+  @Column("varchar", { name: "SN", comment: '设备SN号' })
   SN: string;
 
-  @ApiProperty({ description: '子任务-开始生效日期', example: '2024-01-01' })
-  @Column("text", { name: "startTIme", comment: '任务规划-子任务-开始生效日期' })
-  MAC: string;
+  @IsNotEmpty()
+  @IsNumber()
+  @ApiProperty({ description: '设备Mac地址', example: 1 })
+  @Column("int", { name: "MAC", comment: '设备Mac地址' })
+  MAC: number;
+  
+  @IsNotEmpty()
+  @IsIP()
+  @ApiProperty({ description: '设备IP地址', example: "192.168.0.13" })
+  @Column("varchar", { name: "IP", comment: '设备IP地址' })
+  IP: string;
 
-  @ApiProperty({ description: '子任务-结束生效日期', example: "2024-01-01" })
-  @Column("text", { name: "endTime", comment: '任务规划-子任务-结束生效日期' })
-  endTime: string;
+  @IsNotEmpty()
+  @IsIP()
+  @ApiProperty({ description: '设备网关地址', example: '255.255.255.0' })
+  @Column("varchar", { name: "dscription", comment: '设备网关地址' })
+  gatewayIP: string;
 
-  @ApiProperty({ description: '子任务-备注（非必填）', example: '任务规划-描述（非必填）', required: false })
-  @Column("text", { name: "dscription", comment: '任务规划-子任务-描述', nullable: false })
-  dscription: string;
+  @IsNotEmpty()
+  @IsEnum(Exact)
+  @ApiProperty({ description: '设备网关地址', example: 1, enum: Exact })
+  @Column("tinyint", { name: "isMaster", comment: '是否是主台', nullable: false, default: 1 })
+  isMaster: number
+
+  @ApiProperty({ description: '设备对应的配置(JSON字符串)', example: '{}', required: false })
+  @Column("varchar", { name: "conf", comment: '设备对应的配置(JSON字符串)', nullable: false })
+  conf: string;
+
+  @ManyToOne(() => SubEntity, (sub) => sub.devices, { onDelete: "CASCADE" })
+  @JoinColumn({ name: 'subId' })
+  sub: SubEntity
 }

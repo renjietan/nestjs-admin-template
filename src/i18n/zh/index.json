@@ -65,7 +65,7 @@
     "MenuHasAssociatedRoles": "500:该菜单存在关联角色，无法删除",
     "RoleHasAssociatedUsers": "500:该角色存在关联用户，无法删除"
   },
-  "NoExist": {
+  "Exist": {
     "RecordNotFound": "500:未找到该记录",
     "EXECUTED_MISSION_NOT_FOUND": "1302:所执行的任务不存在",
     "MISSION_NOT_FOUND": "1304:任务不存在",
@@ -79,7 +79,8 @@
     "PARENT_MENU_NOT_FOUND": "1014:父级菜单不存在",
     "HFTableNameNotExists": "500:跳频表已不存在,请刷新页面后,再试一次",
     "TypeNoLongerExists": "500:所选类型不存在，请重新选择有效类型",
-    "PARAMETER_CONFIG_KEY_EXISTS": "1022:参数配置键值对已存在"
+    "PARAMETER_CONFIG_KEY_EXISTS": "1022:参数配置键值对已存在",
+    "MissionPlanningNotExists": "500:该任务规划不可用，请返回列表重新选择"
   },
   "Task": {
     "INSECURE_MISSION": "1301:不安全的任务，确保执行的加入@Mission注解",

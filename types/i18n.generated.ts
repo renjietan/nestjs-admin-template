@@ -87,6 +87,7 @@ export type I18nTranslations = {
             "HFTableNameNotExists": string;
             "TypeNoLongerExists": string;
             "PARAMETER_CONFIG_KEY_EXISTS": string;
+            "MissionPlanningNotExists": string;
         };
         "Task": {
             "INSECURE_MISSION": string;
@@ -135,22 +136,6 @@ export type I18nTranslations = {
         };
         "HopFreq": {
             "DataLimitExceeded": string;
-        };
-        "NoExist": {
-            "RecordNotFound": string;
-            "EXECUTED_MISSION_NOT_FOUND": string;
-            "MISSION_NOT_FOUND": string;
-            "TaskNotFoundById": string;
-            "ScheduledTaskNotFound": string;
-            "REQUESTED_RESOURCE_NOT_FOUND": string;
-            "DEFAULT_ROLE_NOT_FOUND": string;
-            "DEPARTMENT_NOT_FOUND": string;
-            "USER_NOT_FOUND": string;
-            "UNABLE_TO_FIND_DEPARTMENT_FOR_USER": string;
-            "PARENT_MENU_NOT_FOUND": string;
-            "HFTableNameNotExists": string;
-            "TypeNoLongerExists": string;
-            "PARAMETER_CONFIG_KEY_EXISTS": string;
         };
     };
 };

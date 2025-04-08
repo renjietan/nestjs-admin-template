@@ -80,7 +80,7 @@ export class UserService {
       .getOne()
 
     if (isEmpty(user))
-      throw new BusinessException(this.i18n.t("index.NoExist.USER_NOT_FOUND"))
+      throw new BusinessException(this.i18n.t("index.Exist.USER_NOT_FOUND"))
 
     delete user?.psalt
 

@@ -122,7 +122,7 @@ export class TaskService implements OnModuleInit {
       .getOne()
 
     if (!task)
-      throw new NotFoundException(this.i18n.t("index.NoExist.TaskNotFoundById"))
+      throw new NotFoundException(this.i18n.t("index.Exist.TaskNotFoundById"))
 
     return task
   }
@@ -320,7 +320,7 @@ export class TaskService implements OnModuleInit {
     catch (e) {
       if (e instanceof UnknownElementException) {
         // 任务不存在
-        throw new NotFoundException(this.i18n.t("index.NoExist.ScheduledTaskNotFound"))
+        throw new NotFoundException(this.i18n.t("index.Exist.ScheduledTaskNotFound"))
       }
       else {
         // 其余错误则不处理，继续抛出

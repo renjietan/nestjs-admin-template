@@ -79,7 +79,8 @@
     "PARENT_MENU_NOT_FOUND": "1014:Parent menu not found",
     "HFTableNameNotExists": "500:Frequency hopping table unavailable. Please refresh and try again",
     "TypeNoLongerExists": "500:Selected type is no longer available",
-    "PARAMETER_CONFIG_KEY_EXISTS": "1022:Configuration key already exists"
+    "PARAMETER_CONFIG_KEY_EXISTS": "1022:Configuration key already exists",
+    "MissionPlanningNotExists": "The mission planning is unavailable. Return to list and select again"
   },
   "Task": {
     "INSECURE_MISSION": "1301:Unsafe task - please add @Mission annotation",

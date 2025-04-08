@@ -26,6 +26,7 @@ import { ETableDetailModule } from './modules/e_table_detail/e_table_detail.modu
 
 import { HealthModule } from './modules/health/health.module'
 import { HopFreqModule } from './modules/hop-freq/hop-freq.module'
+import { MissionPlanningModule } from './modules/mission_planning/mission_planning.module'
 import { NetworkTemplateModule } from './modules/network-template/network-template.module'
 import { PShotMessageModule } from './modules/p_shot_message/p_shot_message.module'
 import { SseModule } from './modules/sse/sse.module'
@@ -77,7 +78,8 @@ import { SocketModule } from './socket/socket.module'
     SharedModule,
     // 数据库
     DatabaseModule,
-
+    // 业务逻辑模块
+    MissionPlanningModule,
     TestModule,
     AuthModule,
     SystemModule,
