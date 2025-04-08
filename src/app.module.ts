@@ -79,7 +79,6 @@ import { SocketModule } from './socket/socket.module'
     // 数据库
     DatabaseModule,
     // 业务逻辑模块
-    MissionPlanningModule,
     TestModule,
     AuthModule,
     SystemModule,
@@ -95,6 +94,7 @@ import { SocketModule } from './socket/socket.module'
     NetworkTemplateModule,
     PShotMessageModule,
     WaveDeviceConfigModule,
+    MissionPlanningModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
