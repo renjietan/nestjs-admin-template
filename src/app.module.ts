@@ -28,8 +28,6 @@ import { HealthModule } from './modules/health/health.module'
 import { HopFreqModule } from './modules/hop-freq/hop-freq.module'
 import { NetworkTemplateModule } from './modules/network-template/network-template.module'
 import { PShotMessageModule } from './modules/p_shot_message/p_shot_message.module'
-import { PmMasterModule } from './modules/pm-master/pm-master.module'
-import { PmSubModule } from './modules/pm-sub/pm-sub.module'
 import { SseModule } from './modules/sse/sse.module'
 import { SystemModule } from './modules/system/system.module'
 import { TasksModule } from './modules/tasks/tasks.module'
@@ -94,8 +92,6 @@ import { SocketModule } from './socket/socket.module'
     ETableDetailModule,
     NetworkTemplateModule,
     PShotMessageModule,
-    PmMasterModule,
-    PmSubModule,
     WaveDeviceConfigModule,
   ],
   providers: [

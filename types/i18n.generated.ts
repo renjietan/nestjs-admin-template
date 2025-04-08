@@ -11,12 +11,12 @@ export type I18nTranslations = {
             "OperationSuccess": string;
             "OperationFailed": string;
             "SERVER_ERROR": string;
-            "RequestTimeout": string;
             "ThirdPartyApiRequestFailed": string;
         };
         "Request": {
             "TOO_MANY_REQUESTS": string;
             "REQUEST_INVALIDATED": string;
+            "RequestTimeout": string;
         };
         "WebSocket": {
             "WebSocketDisconnected": string;

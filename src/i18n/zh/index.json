@@ -4,12 +4,12 @@
     "OperationSuccess": "操作成功",
     "OperationFailed": "500:操作失败",
     "SERVER_ERROR": "500:服务繁忙，请稍后再试",
-    "RequestTimeout": "请求超时",
     "ThirdPartyApiRequestFailed": "500:第三方接口请求失败"
   },
   "Request": {
     "TOO_MANY_REQUESTS": "1201:请求频率过快，请一分钟后再试",
-    "REQUEST_INVALIDATED": "1104:当前请求已失效"
+    "REQUEST_INVALIDATED": "1104:当前请求已失效",
+    "RequestTimeout": "请求超时"
   },
   "WebSocket": {
     "WebSocketDisconnected": "500:WebSocket 断开",

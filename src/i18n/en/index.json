@@ -4,12 +4,12 @@
     "OperationSuccess": "Operation completed successfully",
     "OperationFailed": "500:Operation failed",
     "SERVER_ERROR": "500:Service is busy, please try again later",
-    "RequestTimeout": "Request timed out",
     "ThirdPartyApiRequestFailed": "500:Third-party API request failed"
   },
   "Request": {
     "TOO_MANY_REQUESTS": "1201:Too many requests. Please wait a minute",
-    "REQUEST_INVALIDATED": "1104:This request has expired"
+    "REQUEST_INVALIDATED": "1104:This request has expired",
+    "RequestTimeout": "Request timed out"
   },
   "WebSocket": {
     "WebSocketDisconnected": "500:WebSocket disconnected",

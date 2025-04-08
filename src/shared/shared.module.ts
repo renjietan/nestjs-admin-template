@@ -22,12 +22,15 @@ import { RedisModule } from './redis/redis.module'
     // schedule
     ScheduleModule.forRoot(),
     // rate limit
-    ThrottlerModule.forRoot([
-      {
-        limit: 30,
-        ttl: 60000,
-      },
-    ]),
+    ThrottlerModule.forRoot({
+      errorMessage: "index.Request.TOO_MANY_REQUESTS",
+      throttlers: [
+        {
+          limit: 30,
+          ttl: 60000,  
+        },
+      ]
+    }),
     EventEmitterModule.forRoot({
       wildcard: true,
       delimiter: '.',

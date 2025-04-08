@@ -45,7 +45,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       let error_array = error?.split(":");
       message = error_array?.[error_array.length - 1] ?? "";
     } catch (error) {
-      this.logger.error(`Error：(${status}) not i18n ${error?.message} Path: ${decodeURI(url)}`);
+      // this.logger.error(`Error：(${status}) not i18n ${error?.message} Path: ${decodeURI(url)}`);
     }
     // 系统内部错误时
     if (
