@@ -5,6 +5,7 @@ import { CompleteEntity } from "~/common/entity/common.entity";
 import { IsUnique } from "~/shared/database/constraints/unique.constraint";
 import { MasterEntity } from "./t_master";
 import { SubDeviceEntity } from "./t_sub_device";
+import { SubEncryptEntity } from "./t_sub_encrypt";
 import { SubHopEntity } from "./t_sub_hop";
 import { SubTimeSlotEntity } from "./t_sub_slot";
 
@@ -50,4 +51,7 @@ export class SubEntity extends CompleteEntity {
 
   @OneToMany(() => SubTimeSlotEntity, (d) => d.sub, { cascade: true })
   time_slots: Relation<SubTimeSlotEntity[]>;
+
+  @OneToMany(() => SubEncryptEntity, (d) => d.sub, { cascade: true })
+  encrypts: Relation<SubEncryptEntity[]>;
 }

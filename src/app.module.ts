@@ -33,6 +33,7 @@ import { SseModule } from './modules/sse/sse.module'
 import { SystemModule } from './modules/system/system.module'
 import { TasksModule } from './modules/tasks/tasks.module'
 import { TestModule } from './modules/test/test.module'
+import { TimeSlotModule } from './modules/time-slot/time-slot.module'
 import { ToolsModule } from './modules/tools/tools.module'
 import { WaveDeviceConfigModule } from './modules/wave_device_config/wave_device_config.module'
 import { DatabaseModule } from './shared/database/database.module'
@@ -95,6 +96,7 @@ import { SocketModule } from './socket/socket.module'
     PShotMessageModule,
     WaveDeviceConfigModule,
     MissionPlanningModule,
+    TimeSlotModule
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
