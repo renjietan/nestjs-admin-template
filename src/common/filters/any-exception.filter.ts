@@ -76,7 +76,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       return exception.getStatus();
     } else if (exception instanceof QueryFailedError) {
-      console.log("This is QueryFailedError");
       return HttpStatus.INTERNAL_SERVER_ERROR;
     } else {
       console.log("This is myError=========", exception);

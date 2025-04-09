@@ -1,11 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, Relation } from "typeorm";
 import { CompleteEntity } from "~/common/entity/common.entity";
-import { SubDeviceDto } from "~/modules/mission_planning/dto/mission_planning.dto";
 import { IsUnique } from "~/shared/database/constraints/unique.constraint";
 import { MasterEntity } from "./t_master";
 import { SubDeviceEntity } from "./t_sub_device";
+import { SubHopEntity } from "./t_sub_hop";
+import { SubTimeSlotEntity } from "./t_sub_slot";
 
 // 任务规划-子任务
 @Entity("t_sub")
@@ -39,8 +40,14 @@ export class SubEntity extends CompleteEntity {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "mId" })
-  master: MasterEntity;
+  master: Relation<MasterEntity>;
 
   @OneToMany(() => SubDeviceEntity, (d) => d.sub, { cascade: true })
-  devices: SubDeviceDto[];
+  devices: Relation<SubDeviceEntity[]>;
+
+  @OneToMany(() => SubHopEntity, (d) => d.sub, { cascade: true })
+  hops: Relation<SubHopEntity[]>;
+
+  @OneToMany(() => SubTimeSlotEntity, (d) => d.sub, { cascade: true })
+  time_slots: Relation<SubTimeSlotEntity[]>;
 }

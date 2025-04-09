@@ -16,7 +16,7 @@ import {
 } from "~/common/decorators/auth/permission.decorator";
 import { IdParam } from "~/common/decorators/path-param.decorator";
 import { MasterEntity } from "~/entities/t_master";
-import { MasterDto, SubDto } from "./dto/mission_planning.dto";
+import { MasterDto, SubDto, SubHopUpdateDto } from "./dto/mission_planning.dto";
 import { MissionPlanningService } from "./mission_planning.service";
 
 export const permissions = definePermission("t:mission", {
@@ -39,6 +39,7 @@ export class MissionPlanningController {
   })
   @ApiResult({ type: MasterEntity, isPage: true })
   @Get()
+  @Perm(permissions.LIST)
   findAll() {
     return this.missionPlanningService.findAll();
   }
@@ -80,7 +81,16 @@ export class MissionPlanningController {
   }
   
   /** ======================== 子任务 =============================== */
-  
+  @ApiOperation({
+    summary: "查询子任务列表",
+  })
+  @Perm(permissions.LIST)
+  @Get("sub/:mId")
+  async findSubList(@Param("mId") mId: number) {
+    return await this.missionPlanningService.findSubList(mId);
+  }
+
+
   @ApiOperation({
     summary: "新增子任务",
     description: "字段信息: 查询下方 SubDto",
@@ -93,7 +103,7 @@ export class MissionPlanningController {
     name: "mId"
   })
   async create_sub(@Param("mId") mId: string, @Body() dto: SubDto, @AuthUser() user: IAuthUser) {
-    return await this.missionPlanningService.create_sub(+mId, dto, user?.uid ?? 1);
+    return await this.missionPlanningService.create_sub(+mId, dto, user?.uid);
   }
 
   @ApiOperation({
@@ -125,17 +135,47 @@ export class MissionPlanningController {
     return await this.missionPlanningService.remove_sub(+id);
   }
 
+   /** ======================== 设备列表 =============================== */
   @ApiOperation({
-    summary: "设置设备 主台",
+    summary: "设置设备主台",
   })
   @ApiResult({ type: String })
   @Perm(permissions.UPDATE)
-  @Delete("setDeviceMaster/:id")
+  @Put("setDeviceMaster/:id")
   @ApiParam({
     type: String,
     name: "id"
   })
   async setDeviceMaster(@IdParam() id: number) {
     return await this.missionPlanningService.setDeviceMaster(id);
+  }
+
+  /** ======================== 调频表 =============================== */
+  @ApiOperation({
+    summary: "更新单个跳频表",
+  })
+  @ApiResult({ type: String })
+  @Perm(permissions.UPDATE)
+  @Put("hop/:id")
+  @ApiParam({
+    type: String,
+    name: "id"
+  })
+  async update_hop(@IdParam() id: number, @Body() dto: SubHopUpdateDto) {
+    return await this.missionPlanningService.update_hop(id, dto);
+  }
+
+  @ApiOperation({
+    summary: "删除单个跳频表",
+  })
+  @ApiResult({ type: String })
+  @Perm(permissions.DELETE)
+  @Delete("hop/:id")
+  @ApiParam({
+    type: String,
+    name: "id"
+  })
+  async delete_hop(@IdParam() id: number) {
+    return await this.missionPlanningService.delete(id);
   }
 }
