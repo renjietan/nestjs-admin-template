@@ -74,6 +74,9 @@ export class MissionPlanningService {
       },
       relations: {
         devices: true,
+        time_slots: true,
+        hops: true,
+        encrypts: true
       },
     });
   }

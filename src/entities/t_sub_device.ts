@@ -36,9 +36,9 @@ export class SubDeviceEntity extends CompleteEntity {
   @Column("tinyint", { name: "isMaster", comment: '是否是主台', nullable: false, default: 1 })
   isMaster: number
 
-  @ApiProperty({ description: '设备对应的配置(JSON字符串)', example: '{}', required: false })
-  @Column("varchar", { name: "conf", comment: '设备对应的配置(JSON字符串)', nullable: false })
-  conf: string;
+  @ApiProperty({ description: '设备对应的配置', example: {}, required: false })
+  @Column("simple-json", { name: "conf", comment: '设备对应的配置', nullable: false })
+  conf: {};
 
   @ManyToOne(() => SubEntity, (sub) => sub.devices, { onDelete: "CASCADE" })
   @JoinColumn({ name: 'subId' })
