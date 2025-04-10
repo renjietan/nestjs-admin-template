@@ -90,6 +90,16 @@ export class MissionPlanningController {
     return await this.missionPlanningService.findSubList(mId);
   }
 
+  @ApiOperation({
+    summary: "根据子任务ID查询子任务详情",
+  })
+  @Perm(permissions.LIST)
+  @Get("sub/detail/:subId")
+  async findSubById(@Param("subId") subId: number) {
+    return await this.missionPlanningService.findSubById(subId);
+  }
+
+
 
   @ApiOperation({
     summary: "新增子任务",

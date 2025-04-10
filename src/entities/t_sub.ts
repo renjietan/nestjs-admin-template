@@ -44,7 +44,7 @@ export class SubEntity extends CompleteEntity {
   master: Relation<MasterEntity>;
 
   @OneToMany(() => SubDeviceEntity, (d) => d.sub, { cascade: true })
-  devices: Relation<SubDeviceEntity[]>;
+  devices: SubDeviceEntity[];
 
   @OneToMany(() => SubHopEntity, (d) => d.sub, { cascade: true })
   hops: Relation<SubHopEntity[]>;

@@ -16,18 +16,6 @@ export class TimeSlotEntity extends CompleteEntity {
   @Column("int", { name: "radio", comment: "电台" })
   radio: number;
 
-  @ApiProperty({ description: "最小值", example: 1 })
-  @IsNotEmpty()
-  @IsPositive()
-  @Column("int", { name: "from", comment: "最小值" })
-  from: number;
-
-  @ApiProperty({ description: "最小值", example: 30 })
-  @IsNotEmpty()
-  @IsPositive()
-  @Column("int", { name: "to", comment: "最大值" })
-  to: number;
-
   @Column("simple-array", { name: "points", comment: "值 集合", nullable: false })
   points: string[];
 }

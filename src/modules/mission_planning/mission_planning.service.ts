@@ -66,52 +66,21 @@ export class MissionPlanningService {
 
   /** ======================== 子任务 =============================== */
   async findSubList(mId: number) {
-    return await this.sub_entity.find({
+    return paginate(this.sub_entity, { page: undefined, pageSize: undefined }, {
       where: {
         master: {
           id: mId,
         },
       },
-      relations: {
-        devices: true,
-        time_slots: true,
-        hops: true,
-        encrypts: true
-      },
-    });
+    })
   }
+
   async create_sub(mId: number, dto: SubDto, uId: number) {
     let m_entity = await this.findById(mId);
     if (!m_entity)
       throw new BusinessException(
         this.i18n.t("index.Exist.MissionPlanningNotExists")
       );
-    console.log({
-      ...dto,
-      createBy: uId,
-      devices: (dto?.devices ?? []).map((item) => ({
-        ...item,
-        createBy: uId,
-        updateBy: uId,
-      })),
-      hops: (dto?.hops ?? []).map((item) => ({
-        ...item,
-        createBy: uId,
-        updateBy: uId,
-      })),
-      time_slots: (dto?.time_slots ?? []).map((item) => ({
-        ...item,
-        createBy: uId,
-        updateBy: uId,
-      })),
-      encrypts: (dto?.encrypts ?? []).map((item) => ({
-        ...item,
-        createBy: uId,
-        updateBy: uId,
-      })),
-      master: m_entity,
-    });
-
     return this.sub_entity.save({
       ...dto,
       createBy: uId,
@@ -188,6 +157,12 @@ export class MissionPlanningService {
       where: {
         id: subId,
       },
+      relations: {
+        devices: true,
+        hops: true,
+        time_slots: true,
+        encrypts: true
+      }
     });
   }
 

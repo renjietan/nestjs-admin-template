@@ -22,16 +22,6 @@ export class SubTimeSlotEntity extends CompleteEntity {
   radio: number
 
   @IsNotEmpty()
-  @ApiProperty({ description: '最小值', example: 20 })
-  @Column("int", { name: "from", comment: '最小值' })
-  from: number
-
-  @IsNotEmpty()
-  @ApiProperty({ description: '最大值', example: 30 })
-  @Column("int", { name: "to", comment: '最大值' })
-  to: number
-
-  @IsNotEmpty()
   @Column("simple-array",{  name: "points", comment: "频点集合" })
   points: number[];
 

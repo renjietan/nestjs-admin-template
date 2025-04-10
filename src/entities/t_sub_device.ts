@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum, IsIP, IsNotEmpty, IsNumber } from "class-validator";
+import { IsEnum, IsIP, IsNotEmpty, IsNumber, IsObject } from "class-validator";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { Exact } from "~/common/dto/pager.dto";
 import { CompleteEntity } from "~/common/entity/common.entity";
@@ -36,8 +36,10 @@ export class SubDeviceEntity extends CompleteEntity {
   @Column("tinyint", { name: "isMaster", comment: '是否是主台', nullable: false, default: 1 })
   isMaster: number
 
-  @ApiProperty({ description: '设备对应的配置', example: {}, required: false })
-  @Column("simple-json", { name: "conf", comment: '设备对应的配置', nullable: false })
+  @ApiProperty({ description: '设备对应的配置', example: {}})
+  @IsNotEmpty()
+  @IsObject()
+  @Column("simple-json", { name: "conf", comment: '设备对应的配置', })
   conf: {};
 
   @ManyToOne(() => SubEntity, (sub) => sub.devices, { onDelete: "CASCADE" })
