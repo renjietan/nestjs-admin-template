@@ -34,7 +34,7 @@ export class MissionPlanningService {
     return this.master_entity.save({
       ...dto,
       createBy: uId,
-      updateBy: uId
+      updateBy: uId,
     });
   }
 
@@ -69,13 +69,16 @@ export class MissionPlanningService {
     return await this.sub_entity.find({
       where: {
         master: {
-          id: mId
-        }
+          id: mId,
+        },
       },
       relations: {
         devices: true,
-      }
-    })
+        time_slots: true,
+        hops: true,
+        encrypts: true
+      },
+    });
   }
   async create_sub(mId: number, dto: SubDto, uId: number) {
     let m_entity = await this.findById(mId);
@@ -83,56 +86,101 @@ export class MissionPlanningService {
       throw new BusinessException(
         this.i18n.t("index.Exist.MissionPlanningNotExists")
       );
+    console.log({
+      ...dto,
+      createBy: uId,
+      devices: (dto?.devices ?? []).map((item) => ({
+        ...item,
+        createBy: uId,
+        updateBy: uId,
+      })),
+      hops: (dto?.hops ?? []).map((item) => ({
+        ...item,
+        createBy: uId,
+        updateBy: uId,
+      })),
+      time_slots: (dto?.time_slots ?? []).map((item) => ({
+        ...item,
+        createBy: uId,
+        updateBy: uId,
+      })),
+      encrypts: (dto?.encrypts ?? []).map((item) => ({
+        ...item,
+        createBy: uId,
+        updateBy: uId,
+      })),
+      master: m_entity,
+    });
+
     return this.sub_entity.save({
       ...dto,
       createBy: uId,
-      devices: (dto?.devices ?? []).map(item => ({...item, createBy:uId, updateBy: uId})),
-      hops:  (dto?.hops ?? []).map(item => ({...item, createBy:uId, updateBy: uId})),
-      time_slots:  (dto?.time_slots ?? []).map(item => ({...item, createBy:uId, updateBy: uId})),
+      devices: (dto?.devices ?? []).map((item) => ({
+        ...item,
+        createBy: uId,
+        updateBy: uId,
+      })),
+      hops: (dto?.hops ?? []).map((item) => ({
+        ...item,
+        createBy: uId,
+        updateBy: uId,
+      })),
+      time_slots: (dto?.time_slots ?? []).map((item) => ({
+        ...item,
+        createBy: uId,
+        updateBy: uId,
+      })),
+      encrypts: (dto?.encrypts ?? []).map((item) => ({
+        ...item,
+        createBy: uId,
+        updateBy: uId,
+      })),
       master: m_entity,
     });
   }
 
-  async update_sub(id: number, dto: SubDto,uId: number) {
-    await  this.sub_entity.manager.transaction(async manager => {
-      let sub_entity = await this.findSubById(id)
-      await manager.delete(SubDeviceEntity, { sub: sub_entity })
-      await manager.delete(SubHopEntity, { sub: sub_entity })
-      if(!!sub_entity) {
-        !!dto.name && (sub_entity.name = dto.name)
-        !!dto.startTIme && (sub_entity.startTIme = dto.startTIme)
-        !!dto.endTime && (sub_entity.endTime = dto.endTime)
-        !!dto.dscription && (sub_entity.dscription = dto.dscription)
-        !!dto.devices && (sub_entity.devices = (dto?.devices ?? []).map(item => {
-          let temp = new SubDeviceEntity()
-          temp.createBy = uId
-          temp.updateBy = uId
-          temp.IP = item.IP
-          temp.MAC = item.MAC
-          temp.SN = item.SN
-          temp.conf = item.conf
-          temp.gatewayIP = item.gatewayIP
-          temp.isMaster =item.isMaster
-          temp.sub = sub_entity
-          return temp
-        }))
+  async update_sub(id: number, dto: SubDto, uId: number) {
+    await this.sub_entity.manager.transaction(async (manager) => {
+      let sub_entity = await this.findSubById(id);
+      await manager.delete(SubDeviceEntity, { sub: sub_entity });
+      await manager.delete(SubHopEntity, { sub: sub_entity });
+      if (!!sub_entity) {
+        !!dto.name && (sub_entity.name = dto.name);
+        !!dto.startTIme && (sub_entity.startTIme = dto.startTIme);
+        !!dto.endTime && (sub_entity.endTime = dto.endTime);
+        !!dto.dscription && (sub_entity.dscription = dto.dscription);
+        !!dto.devices &&
+          (sub_entity.devices = (dto?.devices ?? []).map((item) => {
+            let temp = new SubDeviceEntity();
+            temp.createBy = uId;
+            temp.updateBy = uId;
+            temp.IP = item.IP;
+            temp.MAC = item.MAC;
+            temp.SN = item.SN;
+            temp.conf = item.conf;
+            temp.gatewayIP = item.gatewayIP;
+            temp.isMaster = item.isMaster;
+            temp.sub = sub_entity;
+            return temp;
+          }));
 
-        !!dto.hops && (sub_entity.hops = (dto?.hops ?? []).map(item => {
-          let temp = new SubHopEntity()
-          temp.createBy = uId
-          temp.updateBy = uId
-          temp.alias = item.alias
-          temp.points = item.points
-          temp.sub = sub_entity
-          temp.type  = item.type
-          return temp
-        }))
-      
-        sub_entity.updateBy = uId
-        return await manager.save(sub_entity)
+        !!dto.hops &&
+          (sub_entity.hops = (dto?.hops ?? []).map((item) => {
+            let temp = new SubHopEntity();
+            temp.createBy = uId;
+            temp.updateBy = uId;
+            temp.alias = item.alias;
+            temp.points = item.points;
+            temp.sub = sub_entity;
+            temp.type = item.type;
+            return temp;
+          }));
+
+        sub_entity.updateBy = uId;
+        return await manager.save(sub_entity);
       }
-      return this.i18n.t("index.System.OperationSuccess")
-    })
+      return this.i18n.t("index.System.OperationSuccess");
+    });
   }
 
   async findSubById(subId: number) {
@@ -147,38 +195,51 @@ export class MissionPlanningService {
     await this.sub_entity.delete(id);
   }
 
-
   async setDeviceMaster(deviceId: number) {
-    await this.sub_device_entity.createQueryBuilder().update(SubDeviceEntity).set({
-      isMaster: 0
-    }).execute()
-    await this.sub_device_entity.createQueryBuilder().update(SubDeviceEntity).set({
-      isMaster: 1
-    }).where({
-      id: deviceId
-    }).execute()
+    await this.sub_device_entity
+      .createQueryBuilder()
+      .update(SubDeviceEntity)
+      .set({
+        isMaster: 0,
+      })
+      .execute();
+    await this.sub_device_entity
+      .createQueryBuilder()
+      .update(SubDeviceEntity)
+      .set({
+        isMaster: 1,
+      })
+      .where({
+        id: deviceId,
+      })
+      .execute();
   }
 
   /** ======================== 跳频表 =============================== */
   async update_hop(id: number, dto: SubHopUpdateDto) {
-    return this.sub_hop_entity.createQueryBuilder().update(SubHopEntity).set({
-      ...(!!dto.alias && { alias: dto.alias }),
-      ...(!!dto.points && { points: dto.points }),
-      ...(!!dto.type && { type: dto.type }),
-    }).where({
-      id
-    }).execute()
+    return this.sub_hop_entity
+      .createQueryBuilder()
+      .update(SubHopEntity)
+      .set({
+        ...(!!dto.alias && { alias: dto.alias }),
+        ...(!!dto.points && { points: dto.points }),
+        ...(!!dto.type && { type: dto.type }),
+      })
+      .where({
+        id,
+      })
+      .execute();
   }
 
   async delete(id: number) {
-    return this.sub_hop_entity.delete(id)
+    return this.sub_hop_entity.delete(id);
   }
 
   async removeHopBySubId(id: number) {
     return this.sub_hop_entity.delete({
       sub: {
-        id: id
-      }
-    })
+        id: id,
+      },
+    });
   }
 }
