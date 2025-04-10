@@ -20,21 +20,13 @@ import { I18nRegToken, IIi8nConfig } from './config/I18n.config'
 import { AuthModule } from './modules/auth/auth.module'
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard'
 import { RbacGuard } from './modules/auth/guards/rbac.guard'
-import { DeviceModule } from './modules/device/device.module'
-import { ETableModule } from './modules/e_table/e_table.module'
-import { ETableDetailModule } from './modules/e_table_detail/e_table_detail.module'
 
 import { HealthModule } from './modules/health/health.module'
-import { HopFreqModule } from './modules/hop-freq/hop-freq.module'
-import { MissionPlanningModule } from './modules/mission_planning/mission_planning.module'
-import { NetworkTemplateModule } from './modules/network-template/network-template.module'
-import { PShotMessageModule } from './modules/p_shot_message/p_shot_message.module'
 import { SseModule } from './modules/sse/sse.module'
 import { SystemModule } from './modules/system/system.module'
 import { TasksModule } from './modules/tasks/tasks.module'
 import { TestModule } from './modules/test/test.module'
 import { ToolsModule } from './modules/tools/tools.module'
-import { WaveDeviceConfigModule } from './modules/wave_device_config/wave_device_config.module'
 import { DatabaseModule } from './shared/database/database.module'
 import { SocketModule } from './socket/socket.module'
 
@@ -87,14 +79,10 @@ import { SocketModule } from './socket/socket.module'
     SocketModule,
     HealthModule,
     SseModule,
-    HopFreqModule,
-    DeviceModule,
-    ETableModule,
-    ETableDetailModule,
-    NetworkTemplateModule,
-    PShotMessageModule,
-    WaveDeviceConfigModule,
-    MissionPlanningModule,
+    // biz
+
+    // end biz
+
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
