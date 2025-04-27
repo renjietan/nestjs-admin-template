@@ -1,9 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiResult } from '~/common/decorators/api-result.decorator';
 import { AuthUser } from '~/common/decorators/auth/auth-user.decorator';
 import { definePermission, Perm } from '~/common/decorators/auth/permission.decorator';
-import { TimeSlotDto } from './dto/time-slot.dto';
+import { IdParam } from '~/common/decorators/path-param.decorator';
+import { IdsDto } from '~/common/dto/ids.dto';
+import { PointsDto, TimeSlotDto } from './dto/time-slot.dto';
 import { TimeSlotService } from './time-slot.service';
 
 export const permissions = definePermission("t:timeSlot", {
@@ -20,14 +22,22 @@ export class TimeSlotController {
   constructor(private readonly timeSlotService: TimeSlotService) {}
 
   @ApiOperation({
-    summary: "新增/编辑",
-    description: "编辑需传入id"
+    summary: "新增",
   })
-  @Perm([permissions.CREATE, permissions.UPDATE])
+  @Perm(permissions.CREATE)
   @ApiResult({ type: TimeSlotDto })
   @Post()
   async create(@Body() dto: TimeSlotDto, @AuthUser() user: IAuthUser) {
     return await this.timeSlotService.create(dto, user?.uid);
+  }
+
+  @ApiOperation({
+    summary: "更新 ",
+  })
+  @Perm(permissions.UPDATE)
+  @Put(":id")
+  async update(@IdParam() id: number, @Body() dto: PointsDto, @AuthUser() user: IAuthUser) {
+    return await this.timeSlotService.update(id, dto, user?.uid);
   }
 
   @ApiOperation({
@@ -44,8 +54,8 @@ export class TimeSlotController {
     summary: "删除",
   })
   @Perm(permissions.DELETE)
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    await this.timeSlotService.remove(+id);
+  @Delete()
+  async remove(@Body() dto: IdsDto) {
+    await this.timeSlotService.remove(dto);
   }
 }
