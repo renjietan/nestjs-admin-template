@@ -11,6 +11,8 @@ export const AppConfig = registerAs(appRegToken, () => ({
   baseUrl: env('APP_BASE_URL'),
   globalPrefix,
   locale: env('APP_LOCALE', 'zh-CN'),
+  super_admin: env('SUPER_ADMIN', 'admin'),
+  SUPER_PASSWORD: env('SUPER_PASSWORD', "admin_123"),
   /** 是否允许多端登录 */
   multiDeviceLogin: envBoolean('MULTI_DEVICE_LOGIN', true),
   logger: {

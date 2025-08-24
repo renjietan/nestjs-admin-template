@@ -1,6 +1,6 @@
 import type { FastifyRequest } from 'fastify'
 
-import { ClassSerializerInterceptor, Module } from '@nestjs/common'
+import { ClassSerializerInterceptor, Module, OnApplicationBootstrap } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
@@ -35,6 +35,8 @@ import { TasksModule } from './modules/tasks/tasks.module'
 import { TestModule } from './modules/test/test.module'
 import { TimeSlotModule } from './modules/time-slot/time-slot.module'
 import { ToolsModule } from './modules/tools/tools.module'
+import { UserDto } from './modules/user/dto/user.dto'
+import { UserService } from './modules/user/user.service'
 import { WaveDeviceConfigModule } from './modules/wave_device_config/wave_device_config.module'
 import { DatabaseModule } from './shared/database/database.module'
 import { SocketModule } from './socket/socket.module'
@@ -111,4 +113,23 @@ import { SocketModule } from './socket/socket.module'
     { provide: APP_GUARD, useClass: ThrottlerGuard }, // 接口限流;参考：https://gitcode.com/gh_mirrors/th/throttler
   ],
 })
-export class AppModule {}
+export class AppModule implements OnApplicationBootstrap {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly usersService: UserService,
+  ) { }
+  async onApplicationBootstrap() {
+    console.log('process.env=========================', process.env);
+    let isExist = await this.usersService.findUserByUserName("admin")
+    let SUPER_ADMIN = this.configService.get("SUPER_ADMIN")
+    let SUPER_PASSWORD = this.configService.get("SUPER_PASSWORD")
+    if (!isExist) {
+      let u = new UserDto()
+      u.nickname = "超级管理员"
+      u.password = SUPER_PASSWORD
+      u.remark = "超级管理员"
+      u.username = SUPER_ADMIN
+      await this.usersService.create(u)
+    }
+  }
+}

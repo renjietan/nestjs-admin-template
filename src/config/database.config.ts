@@ -14,7 +14,7 @@ const currentScript = process.env.npm_lifecycle_event
 const dataSourceOptions: DataSourceOptions = {
   type: 'mysql',
   host: env('DB_HOST', '127.0.0.1'),
-  port: envNumber('DB_PORT', 3300),
+  port: envNumber('DB_PORT', 3306),
   username: env('DB_USERNAME'),
   password: env('DB_PASSWORD'),
   database: env('DB_DATABASE'),
