@@ -119,7 +119,7 @@ export class AppModule implements OnApplicationBootstrap {
     private readonly usersService: UserService,
   ) { }
   async onApplicationBootstrap() {
-    console.log('process.env=========================', process.env);
+    // console.log('process.env=========================', process.env);
     let isExist = await this.usersService.findUserByUserName("admin")
     let SUPER_ADMIN = this.configService.get("SUPER_ADMIN")
     let SUPER_PASSWORD = this.configService.get("SUPER_PASSWORD")
@@ -129,6 +129,8 @@ export class AppModule implements OnApplicationBootstrap {
       u.password = SUPER_PASSWORD
       u.remark = "超级管理员"
       u.username = SUPER_ADMIN
+      let isExist = await this.usersService.exist(u.username)
+      if(isExist) return
       await this.usersService.create(u)
     }
   }
